@@ -5,6 +5,10 @@ namespace App\Controllers;
 use CodeIgniter\RESTful\ResourceController;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\UserModel;
+use CodeIgniter\I18n\Time;
+use ErrorException;
+
+use function PHPUnit\Framework\isNull;
 
 class Auth extends ResourceController
 {
@@ -18,29 +22,63 @@ class Auth extends ResourceController
     //     return $this->response->setJson(['msg' => 'success', 'data' => $data]);
     // }
 
+    public function login()
+    {
+        try {
+            $rules = [
+                'email' => 'required|valid_email',
+                'password' => 'required|min_length[8]'
+            ];
+
+            if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
+            $model = new UserModel();
+            $findUser = $model->where('email', $this->request->getVar("email"))->first();
+            if ($findUser == null) throw new \Exception('User not found', 404);
+            if (!(password_verify($this->request->getVar("password"), $findUser["password"]))) throw new \Exception('Password invalid', 400);
+            $response = [
+                'status' => 404,
+                'message' => 'berhasil',
+                'data' => $findUser
+            ];
+            return $this->respondCreated($response);
+        } catch (\Exception $e) {
+            return $this->respondCreated([
+                'status' => $e->getCode(),
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
     public function register()
     {
-        helper(['form']);
+
         $rules = [
-            'email' => 'required|valid_email',
+            'email' => 'required|trim|valid_email',
             'password' => 'required|min_length[8]',
             'confirmPassword' => 'required|matches[password]',
         ];
 
         if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
         $model = new UserModel();
+        $time = new Time("now");
         $data = [
             'email' => $this->request->getVar('email'),
-            // 'password' => password_hash($this->request->getVar('password'))
+            'password' => password_hash($this->request->getVar('password'), PASSWORD_BCRYPT),
+            'created_at' => $time->getTimestamp(),
+            'updated_at' => $time->getTimestamp()
         ];
-
-        $model->save($data);
-        $response = [
-            'status' => 200,
-            'message' => [
-                'success' => 'Berhasil'
-            ],
-        ];
-        return $this->respondCreated($response);
+        try {
+            $model->save($data);
+            $response = [
+                'status' => 200,
+                'message' => 'Berhasil'
+            ];
+            return $this->respondCreated($response);
+        } catch (\CodeIgniter\Database\Exceptions\DatabaseException $e) {
+            return $this->respondCreated([
+                'status' => 400,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }
