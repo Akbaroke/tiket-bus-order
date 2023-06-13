@@ -36,7 +36,7 @@ class Auth extends ResourceController
             if ($findUser == null) throw new \Exception('User not found', 404);
             if (!(password_verify($this->request->getVar("password"), $findUser["password"]))) throw new \Exception('Password invalid', 400);
             $response = [
-                'status' => 404,
+                'status' => 200,
                 'message' => 'berhasil',
                 'data' => $findUser
             ];
@@ -71,7 +71,7 @@ class Auth extends ResourceController
             $model->save($data);
             $response = [
                 'status' => 200,
-                'message' => 'Berhasil'
+                'message' => 'Berhasil',
             ];
             return $this->respondCreated($response);
         } catch (\CodeIgniter\Database\Exceptions\DatabaseException $e) {
