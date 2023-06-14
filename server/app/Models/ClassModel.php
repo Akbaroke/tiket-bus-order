@@ -4,18 +4,19 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 use Ramsey\Uuid\Uuid;
+use CodeIgniter\I18n\Time;
 
-class UserModel extends Model
+class ClassModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'users';
-    protected $primaryKey       = 'userId';
-    protected $casts = ['userId' => 'string'];
+    protected $table            = 'classes';
+    protected $primaryKey       = 'classId';
+    protected $casts = ['classId' => 'string'];
     protected $useAutoIncrement  = false;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['email', 'password', 'role', 'created_at', 'updated_at'];
+    protected $allowedFields    = ['className', 'seatingCapacity', 'created_at', 'updated_at'];
 
     // Dates
     protected $useTimestamps = false;
@@ -33,7 +34,7 @@ class UserModel extends Model
     protected $allowCallbacks = true;
     protected $beforeInsert = ['generateUUID'];
     protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
+    protected $beforeUpdate   = ['beforeUpdate'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = [];
@@ -41,7 +42,14 @@ class UserModel extends Model
     protected $afterDelete    = [];
     protected function generateUUID(array $data)
     {
-        $data['data']['userId'] = Uuid::uuid4()->toString();
+        $data['data']['classId'] = Uuid::uuid4()->toString();
+        return $data;
+    }
+
+    protected function beforeUpdate(array $data)
+    {
+        $time = new Time("now");
+        $data['data']['updated_at'] = $time->getTimestamp();
         return $data;
     }
 }
