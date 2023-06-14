@@ -9,7 +9,6 @@ class UserModel extends Model
     protected $DBGroup          = 'default';
     protected $table            = 'users';
     protected $primaryKey       = 'userId';
-    protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;

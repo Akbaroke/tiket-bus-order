@@ -6,9 +6,6 @@ use CodeIgniter\RESTful\ResourceController;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\UserModel;
 use CodeIgniter\I18n\Time;
-use ErrorException;
-
-use function PHPUnit\Framework\isNull;
 
 class Auth extends ResourceController
 {
@@ -58,16 +55,17 @@ class Auth extends ResourceController
             'confirmPassword' => 'required|matches[password]',
         ];
 
-        if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
-        $model = new UserModel();
-        $time = new Time("now");
-        $data = [
-            'email' => $this->request->getVar('email'),
-            'password' => password_hash($this->request->getVar('password'), PASSWORD_BCRYPT),
-            'created_at' => $time->getTimestamp(),
-            'updated_at' => $time->getTimestamp()
-        ];
         try {
+            if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
+            $model = new UserModel();
+            $time = new Time("now");
+            $data = [
+                'email' => $this->request->getVar('email'),
+                'password' => password_hash($this->request->getVar('password'), PASSWORD_BCRYPT),
+                'created_at' => $time->getTimestamp(),
+                'updated_at' => $time->getTimestamp()
+            ];
+
             $model->save($data);
             $response = [
                 'status' => 200,

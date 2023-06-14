@@ -3,6 +3,7 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use Ramsey\Uuid\Uuid;
 
 class Users extends Migration
 {
@@ -10,10 +11,9 @@ class Users extends Migration
     {
         $this->forge->addField([
             'userId' => [
-                'type' => 'INT',
-                'unsigned'       => true,
-                'auto_increment' => true,
-                'constraint' => 11
+                'type' => 'VARCHAR',
+                'constraint' => 255,
+                'default' => Uuid::uuid4()
             ],
             'email' => [
                 'type' => 'VARCHAR',
