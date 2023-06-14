@@ -19,7 +19,7 @@ $routes->set404Override();
 // where controller filters or CSRF protection are bypassed.
 // If you don't want to define all routes, please use the Auto Routing (Improved).
 // Set `$autoRoutesImproved` to true in `app/Config/Feature.php` and set the following to true.
-$routes->setAutoRoute(true);
+// $routes->setAutoRoute(true);
 
 /*
  * --------------------------------------------------------------------
@@ -31,7 +31,20 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 // $routes->get('/', 'Auth::index');
 
-$routes->resource('Auth');
+// route auth
+$routes->group("auth", function ($route) {
+    $route->post("login", "Auth::login");
+    $route->post("register", "Auth::register");
+});
+
+// route class
+$routes->group('class', function ($route) {
+    $route->get("", "Classes::index");
+    $route->get("(:any)", "Classes::getById/$1");
+    $route->post("create", "Classes::create");
+    $route->PUT("update/(:any)",  "Classes::update/$1");
+    $route->DELETE("delete/(:any)",  "Classes::delete/$1");
+});
 
 /*
  * --------------------------------------------------------------------

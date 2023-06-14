@@ -11,13 +11,12 @@ class Auth extends ResourceController
 {
     use ResponseTrait;
 
-    // public function index()
-    // {
-    //     header('Content-Type: application/json');
-    //     $model = new UserModel();
-    //     $data = $model->findAll();
-    //     return $this->response->setJson(['msg' => 'success', 'data' => $data]);
-    // }
+    protected $userModel;
+
+    public function __construct()
+    {
+        $this->userModel = new UserModel();
+    }
 
     public function login()
     {
@@ -28,17 +27,26 @@ class Auth extends ResourceController
             ];
 
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
-            $model = new UserModel();
-            $findUser = $model->where('email', $this->request->getVar("email"))->first();
+            $findUser = $this->userModel->where('email', $this->request->getVar("email"))->first();
             if ($findUser == null) throw new \Exception('User not found', 404);
             if (!(password_verify($this->request->getVar("password"), $findUser["password"]))) throw new \Exception('Password invalid', 400);
 
+            $session = session();
+            $config         = new \Config\Encryption();
+            $config->key    = $_ENV["encryption.key"];
+            $config->driver = $_ENV["encryption.driver"];
+            $encrypter = \Config\Services::encrypter($config);
             $filteredUser = array_diff_key($findUser, ['password' => '', 'created_at' => '', 'updated_at' => '']);
+            $data = $encrypter->encrypt(json_encode($filteredUser));
+            $session->set('data', $data);
 
             $response = [
                 'status' => 200,
                 'message' => 'berhasil',
-                'data' => $filteredUser
+                'data' => $filteredUser,
+                // "decode" => [
+                //     "encrypter" => json_decode($encrypter->decrypt($session->get("data")))
+                // ]
             ];
             return $this->respondCreated($response);
         } catch (\Exception $e) {
@@ -59,7 +67,6 @@ class Auth extends ResourceController
 
         try {
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
-            $model = new UserModel();
             $time = new Time("now");
             $data = [
                 'email' => $this->request->getVar('email'),
@@ -68,7 +75,7 @@ class Auth extends ResourceController
                 'updated_at' => $time->getTimestamp()
             ];
 
-            $model->save($data);
+            $this->userModel->save($data);
             $response = [
                 'status' => 200,
                 'message' => 'Berhasil',
