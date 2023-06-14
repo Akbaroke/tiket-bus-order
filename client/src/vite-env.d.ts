@@ -8,3 +8,5 @@ interface ImportMetaEnv {
 interface ImportMeta {
   env: ImportMetaEnv
 }
+
+export const env = import.meta.env
