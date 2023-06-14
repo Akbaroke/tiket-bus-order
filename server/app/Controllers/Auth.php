@@ -6,10 +6,6 @@ use CodeIgniter\RESTful\ResourceController;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\UserModel;
 use CodeIgniter\I18n\Time;
-use ErrorException;
-
-use function PHPUnit\Framework\isNull;
-
 class Auth extends ResourceController
 {
     use ResponseTrait;
@@ -35,10 +31,13 @@ class Auth extends ResourceController
             $findUser = $model->where('email', $this->request->getVar("email"))->first();
             if ($findUser == null) throw new \Exception('User not found', 404);
             if (!(password_verify($this->request->getVar("password"), $findUser["password"]))) throw new \Exception('Password invalid', 400);
+
+            $filteredUser = array_diff_key($findUser, ['password' => '', 'created_at' => '', 'updated_at' => '']);
+
             $response = [
                 'status' => 200,
                 'message' => 'berhasil',
-                'data' => $findUser
+                'data' => $filteredUser
             ];
             return $this->respondCreated($response);
         } catch (\Exception $e) {
@@ -51,7 +50,6 @@ class Auth extends ResourceController
 
     public function register()
     {
-
         $rules = [
             'email' => 'required|trim|valid_email',
             'password' => 'required|min_length[8]',
