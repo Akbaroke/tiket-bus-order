@@ -11,6 +11,7 @@ import {
 import axios from '../../api'
 import { FormValues } from './Auth.d'
 import { env } from '../../vite-env.d'
+import { useNavigate } from 'react-router-dom'
 
 const initialForm = {
   email: '',
@@ -22,6 +23,8 @@ function Signin(): JSX.Element {
     React.useState<FormValues>(initialForm)
   const [isLoading, setIsLoading] =
     React.useState<boolean>(false)
+
+  const navigate = useNavigate()
 
   const handleOnChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -54,6 +57,8 @@ function Signin(): JSX.Element {
           notifySuccess('Signin successful!', 'signin')
           break
         default:
+          console.log(data);
+          
           notifyError(
             `Signin failed! ${data?.message} `,
             'signin'
@@ -66,6 +71,7 @@ function Signin(): JSX.Element {
 
     setIsLoading(false)
     setForm(initialForm)
+    navigate('/home')
   }
 
   return (
