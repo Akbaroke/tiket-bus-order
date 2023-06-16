@@ -12,6 +12,8 @@ import axios from '../../api'
 import { FormValues } from './Auth.d'
 import { env } from '../../vite-env.d'
 import { useNavigate } from 'react-router-dom'
+import { useUser } from '../../stores/user'
+import { UserState } from '../../interfaces/store'
 
 const initialForm = {
   email: '',
@@ -23,6 +25,12 @@ function Signin(): JSX.Element {
     React.useState<FormValues>(initialForm)
   const [isLoading, setIsLoading] =
     React.useState<boolean>(false)
+  const setUser = useUser(
+    (state: unknown) => (state as UserState).setUser
+  )
+  const email = useUser(
+    (state: unknown) => (state as UserState).email
+  )
 
   const navigate = useNavigate()
 
@@ -54,11 +62,12 @@ function Signin(): JSX.Element {
       switch (data.status) {
         case 200:
           console.log(data)
+          setUser(data.data)
           notifySuccess('Signin successful!', 'signin')
+          setForm(initialForm)
           break
         default:
-          console.log(data);
-          
+          console.log(data)
           notifyError(
             `Signin failed! ${data?.message} `,
             'signin'
@@ -67,11 +76,10 @@ function Signin(): JSX.Element {
       }
     } catch (error) {
       notifyError('Signin failed!', 'signin')
+      setForm(initialForm)
     }
 
     setIsLoading(false)
-    setForm(initialForm)
-    navigate('/home')
   }
 
   return (
@@ -87,6 +95,7 @@ function Signin(): JSX.Element {
         value={form.email}
         onChange={handleOnChange}
       />
+      <h1>{email}</h1>
       <InputAuth
         icon={<BiLockAlt />}
         label="password"
