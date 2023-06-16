@@ -41,17 +41,19 @@ class Auth extends ResourceController
             $response = [
                 'status' => 200,
                 'message' => 'berhasil',
-                'data' =>  $encodedData,
+                'data' =>  [
+                    'encrypt' => $encodedData,
+                    'email' => $filteredUser["email"],
+                    'role' => $filteredUser['role']
+                ],
                 // 'decode' => [
                 //     'encrypter' => unserialize($encrypter->decrypt(base64_decode("kbqNRw6NCfZrA92qsffCU0g43llRR6mo+YbcbONhRpHULNUhAsDjmULJoyQr5aTM+lRS+Kil3ciatSlMVgT3gznYxs2RxTFdrVLWYq09kIdiMZTdwXbUytRTNxkHJOEO5kBbRsDRBl8OOrQkiegHA3FQNlwiUPCpRr7qlOSVGnArxlCbJJ0qNSgb/OF8ZuX4udvDMzalHVhFlNc9oYbu5SBVCXS1mwJoqLAJMmqsUfTIm6m11gWos1C9nopM9VB+vbrSDJSdoC0R4Ka2Kg==")))
                 // ]
             ];
 
-
-
-            return $this->respondCreated($response);
+            return $this->respond($response);
         } catch (\Exception $e) {
-            return $this->respondCreated([
+            return $this->respond([
                 'status' => 500,
                 'message' => $e->getMessage()
             ]);
@@ -83,7 +85,27 @@ class Auth extends ResourceController
             ];
             return $this->respondCreated($response);
         } catch (\CodeIgniter\Database\Exceptions\DatabaseException $e) {
-            return $this->respondCreated([
+            return $this->respond([
+                'status' => 400,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function decrypt()
+    {
+        $rules = ["encrypt" => "required"];
+        try {
+            if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
+            $encrypter = \Config\Services::encrypter();
+            $response = [
+                'status' => 200,
+                'message' => 'berhasil',
+                'data' => unserialize($encrypter->decrypt(base64_decode($this->request->getVar("encrypt"))))
+            ];
+            return $this->respondCreated($response);
+        } catch (\Exception $e) {
+            return $this->respond([
                 'status' => 400,
                 'message' => $e->getMessage()
             ]);

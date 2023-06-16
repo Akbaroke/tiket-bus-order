@@ -32,19 +32,19 @@ $routes->setAutoRoute(true);
 // $routes->get('/', 'Auth::index');
 
 // route auth
-$routes->group("auth", function ($route) {
-    $route->post("login", "Auth::login");
-    $route->post("register", "Auth::register");
-});
+// $routes->group("auth", function ($route) {
+//     $route->post("login", "Auth::login");
+//     $route->post("register", "Auth::register");
+// });
 
 // route class
-$routes->group('class', function ($route) {
-    $route->get("", "Classes::index");
-    $route->get("(:any)", "Classes::getById/$1");
-    $route->post("create", "Classes::create");
-    $route->PUT("update/(:any)",  "Classes::update/$1");
-    $route->DELETE("delete/(:any)",  "Classes::delete/$1");
-});
+// $routes->group('class', function ($route) {
+//     $route->get("", "Classes::index");
+//     $route->get("(:any)", "Classes::getById/$1");
+//     $route->post("create", "Classes::create");
+//     $route->PUT("update/(:any)",  "Classes::update/$1");
+//     $route->DELETE("delete/(:any)",  "Classes::delete/$1");
+// });
 
 /*
  * --------------------------------------------------------------------
