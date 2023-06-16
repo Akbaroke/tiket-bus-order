@@ -18,6 +18,10 @@ class ClassBus extends Migration
                 'constraint' => 100,
                 'unique' => true
             ],
+            'format' => [
+                'type' => 'VARCHAR',
+                'constraint' => 3,
+            ],
             'seatingCapacity' => [
                 'type' => 'INT',
                 'constraint' => 11,

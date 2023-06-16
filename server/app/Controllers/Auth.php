@@ -98,10 +98,13 @@ class Auth extends ResourceController
         try {
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             $encrypter = \Config\Services::encrypter();
+            $user = unserialize($encrypter->decrypt(base64_decode($this->request->getVar("encrypt"))));
+            $data = $this->userModel->where('userId', $user["userId"])->first();
+            if ($data == null) throw new \Exception("User not found");
             $response = [
                 'status' => 200,
                 'message' => 'berhasil',
-                'data' => unserialize($encrypter->decrypt(base64_decode($this->request->getVar("encrypt"))))
+                'data' => $user
             ];
             return $this->respondCreated($response);
         } catch (\Exception $e) {

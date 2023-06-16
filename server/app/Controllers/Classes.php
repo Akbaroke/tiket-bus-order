@@ -66,6 +66,7 @@ class Classes extends ResourceController
             $rules = [
                 'className' => 'required|min_length[1]',
                 'seatingCapacity' => 'required|integer|greater_than_equal_to[20]',
+                'format' => 'required|min_length[3]|max_length[3]',
                 'encrypt' => 'required'
             ];
 
@@ -81,6 +82,7 @@ class Classes extends ResourceController
             $data = [
                 'className' => $this->request->getVar('className'),
                 'seatingCapacity' => $this->request->getVar('seatingCapacity'),
+                'format' => $this->request->getVar('format'),
                 'created_at' => $time->getTimestamp(),
                 'updated_at' => $time->getTimestamp()
             ];
@@ -112,6 +114,7 @@ class Classes extends ResourceController
             $rules = [
                 'className' => 'required|min_length[1]',
                 'seatingCapacity' => 'required|integer|greater_than_equal_to[20]',
+                'format' => 'required|min_length[3]|max_length[3]',
                 'encrypt' => 'required'
             ];
 
@@ -128,6 +131,7 @@ class Classes extends ResourceController
             $data = [
                 'className' => $this->request->getVar('className'),
                 'seatingCapacity' => $this->request->getVar('seatingCapacity'),
+                'format' => $this->request->getVar('format'),
             ];
 
             $this->classModel->update($classId, $data);
@@ -177,7 +181,8 @@ class Classes extends ResourceController
     {
         $encrypter = \Config\Services::encrypter();
         $result = unserialize($encrypter->decrypt(base64_decode($enc)));
-        if (!$result || $result["role"] !== "admin") {
+        $data = $this->userModel->where('userId', $result["userId"])->first();
+        if (!$result || $result["role"] !== "admin" || $data == null) {
             return false;
         }
         return true;
