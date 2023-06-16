@@ -6,6 +6,9 @@ use CodeIgniter\RESTful\ResourceController;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\UserModel;
 use CodeIgniter\I18n\Time;
+use CodeIgniter\Cookie\Cookie;
+use CodeIgniter\Cookie\CookieStore;
+use Config\Services;
 
 class Auth extends ResourceController
 {
@@ -31,27 +34,25 @@ class Auth extends ResourceController
             if ($findUser == null) throw new \Exception('User not found', 404);
             if (!(password_verify($this->request->getVar("password"), $findUser["password"]))) throw new \Exception('Password invalid', 400);
 
-            $session = session();
-            $config         = new \Config\Encryption();
-            $config->key    = $_ENV["encryption.key"];
-            $config->driver = $_ENV["encryption.driver"];
-            $encrypter = \Config\Services::encrypter($config);
+            $encrypter = \Config\Services::encrypter();
             $filteredUser = array_diff_key($findUser, ['password' => '', 'created_at' => '', 'updated_at' => '']);
-            $data = $encrypter->encrypt(json_encode($filteredUser));
-            $session->set('data', $data);
-
+            $data = $encrypter->encrypt(serialize($filteredUser));
+            $encodedData = base64_encode($data);
             $response = [
                 'status' => 200,
                 'message' => 'berhasil',
-                'data' => $filteredUser,
-                // "decode" => [
-                //     "encrypter" => json_decode($encrypter->decrypt($session->get("data")))
+                'data' =>  $encodedData,
+                // 'decode' => [
+                //     'encrypter' => unserialize($encrypter->decrypt(base64_decode("kbqNRw6NCfZrA92qsffCU0g43llRR6mo+YbcbONhRpHULNUhAsDjmULJoyQr5aTM+lRS+Kil3ciatSlMVgT3gznYxs2RxTFdrVLWYq09kIdiMZTdwXbUytRTNxkHJOEO5kBbRsDRBl8OOrQkiegHA3FQNlwiUPCpRr7qlOSVGnArxlCbJJ0qNSgb/OF8ZuX4udvDMzalHVhFlNc9oYbu5SBVCXS1mwJoqLAJMmqsUfTIm6m11gWos1C9nopM9VB+vbrSDJSdoC0R4Ka2Kg==")))
                 // ]
             ];
+
+
+
             return $this->respondCreated($response);
         } catch (\Exception $e) {
             return $this->respondCreated([
-                'status' => $e->getCode(),
+                'status' => 500,
                 'message' => $e->getMessage()
             ]);
         }

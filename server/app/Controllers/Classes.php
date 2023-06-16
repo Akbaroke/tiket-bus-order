@@ -5,6 +5,7 @@ namespace App\Controllers;
 use CodeIgniter\RESTful\ResourceController;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\ClassModel;
+use App\Models\UserModel;
 use CodeIgniter\I18n\Time;
 
 class Classes extends ResourceController
@@ -12,10 +13,12 @@ class Classes extends ResourceController
     use ResponseTrait;
 
     protected $classModel;
+    protected $userModel;
 
     public function __construct()
     {
         $this->classModel = new ClassModel();
+        $this->userModel = new UserModel();
     }
 
     public function index()
@@ -57,21 +60,23 @@ class Classes extends ResourceController
         }
     }
 
-    public function create($userId = null)
+    public function create()
     {
         try {
-            if (!$this->adminOnly()) {
+            $rules = [
+                'className' => 'required|min_length[1]',
+                'seatingCapacity' => 'required|integer|greater_than_equal_to[20]',
+                'encrypt' => 'required'
+            ];
+
+            if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
+            if (!$this->adminOnly($this->request->getVar('encrypt'))) {
                 return $this->respond([
                     'status' => 403,
                     'message' => 'akses ditolak'
                 ]);
             };
-            $rules = [
-                'className' => 'required|min_length[1]',
-                'seatingCapacity' => 'required|integer|greater_than_equal_to[20]'
-            ];
 
-            if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             $time = new Time("now");
             $data = [
                 'className' => $this->request->getVar('className'),
@@ -93,24 +98,30 @@ class Classes extends ResourceController
                 'status' => $e->getCode(),
                 'message' => $e->getMessage()
             ]);
+        } catch (\CodeIgniter\Database\Exceptions\DatabaseException $e) {
+            return $this->respondCreated([
+                'status' => 400,
+                'message' => $e->getMessage()
+            ]);
         }
     }
 
     public function update($classId = null)
     {
         try {
-            if (!$this->adminOnly()) {
+            $rules = [
+                'className' => 'required|min_length[1]',
+                'seatingCapacity' => 'required|integer|greater_than_equal_to[20]',
+                'encrypt' => 'required'
+            ];
+
+            if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
+            if (!$this->adminOnly($this->request->getVar('encrypt'))) {
                 return $this->respond([
                     'status' => 403,
                     'message' => 'akses ditolak'
                 ]);
             };
-            $rules = [
-                'className' => 'required|min_length[1]',
-                'seatingCapacity' => 'required|integer|greater_than_equal_to[20]'
-            ];
-
-            if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             $findClass = $this->classModel->where('classId', $classId)->first();
             if ($findClass == null) throw new \Exception('Class not found', 404);
 
@@ -137,7 +148,7 @@ class Classes extends ResourceController
     public function delete($classId = null)
     {
         try {
-            if (!$this->adminOnly()) {
+            if (!$this->adminOnly($this->request->getVar('encrypt'))) {
                 return $this->respond([
                     'status' => 403,
                     'message' => 'akses ditolak'
@@ -162,18 +173,13 @@ class Classes extends ResourceController
         }
     }
 
-    protected function adminOnly()
+    protected function adminOnly($enc = null)
     {
-        $config = new \Config\Encryption();
-        $config->key = $_ENV["encryption.key"];
-        $config->driver = $_ENV["encryption.driver"];
-        $encrypter = \Config\Services::encrypter($config);
-        $session = session();
-        $result = json_decode($encrypter->decrypt($session->get("data")));
-        if (!$result || $result->role !== "admin") {
+        $encrypter = \Config\Services::encrypter();
+        $result = unserialize($encrypter->decrypt(base64_decode($enc)));
+        if (!$result || $result["role"] !== "admin") {
             return false;
         }
-
         return true;
     }
 }
