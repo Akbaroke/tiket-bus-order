@@ -11,9 +11,8 @@ import {
 import axios from '../../api'
 import { FormValues } from './Auth.d'
 import { env } from '../../vite-env.d'
-import { useNavigate } from 'react-router-dom'
-import { useUser } from '../../stores/user'
-import { UserState } from '../../interfaces/store'
+import { useDispatch } from 'react-redux/es/exports'
+import { setUser } from '../../redux/actions/user'
 
 const initialForm = {
   email: '',
@@ -21,18 +20,11 @@ const initialForm = {
 }
 
 function Signin(): JSX.Element {
+  const dispatch = useDispatch()
   const [form, setForm] =
     React.useState<FormValues>(initialForm)
   const [isLoading, setIsLoading] =
     React.useState<boolean>(false)
-  const setUser = useUser(
-    (state: unknown) => (state as UserState).setUser
-  )
-  const email = useUser(
-    (state: unknown) => (state as UserState).email
-  )
-
-  const navigate = useNavigate()
 
   const handleOnChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -62,7 +54,7 @@ function Signin(): JSX.Element {
       switch (data.status) {
         case 200:
           console.log(data)
-          setUser(data.data)
+          dispatch(setUser(data.data))
           notifySuccess('Signin successful!', 'signin')
           setForm(initialForm)
           break
@@ -95,7 +87,6 @@ function Signin(): JSX.Element {
         value={form.email}
         onChange={handleOnChange}
       />
-      <h1>{email}</h1>
       <InputAuth
         icon={<BiLockAlt />}
         label="password"

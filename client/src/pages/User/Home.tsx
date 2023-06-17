@@ -4,7 +4,7 @@ import { env } from '../../vite-env.d'
 
 function Home() {
   React.useEffect(() => {
-    kirimData()
+    // kirimData()
   }, [])
 
   const kirimData = async () => {

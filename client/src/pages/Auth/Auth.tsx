@@ -2,6 +2,7 @@ import * as React from 'react'
 import clsx from 'clsx'
 import Signin from './Signin'
 import Signup from './Signup'
+import { Link } from 'react-router-dom'
 
 function Auth(): JSX.Element {
   const [switchForm, setSwitchForm] =
@@ -44,6 +45,10 @@ function Auth(): JSX.Element {
           </div>
         </div>
         {!switchForm ? <Signin /> : <Signup />}
+      </div>
+      <div>
+        <Link to="/admin">Admin</Link>{' '}
+        <Link to="/home">User</Link>
       </div>
     </div>
   )
