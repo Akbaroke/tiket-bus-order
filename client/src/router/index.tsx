@@ -8,6 +8,7 @@ import Guest from '../middlewares/Guest'
 import ViewScedule from '../pages/Admin/Scedule/ViewScedule'
 import AddClass from '../pages/Admin/Class/AddClass'
 import EditClass from '../pages/Admin/Class/EditClass'
+import ViewClass from '../pages/Admin/Class/ViewClass'
 
 export default function root() {
   return (
@@ -38,6 +39,10 @@ export default function root() {
           </Admin>
         }>
         <Route index element={<ViewScedule />} />
+        <Route
+          path="/admin/viewclass"
+          element={<ViewClass />}
+        />
         <Route
           path="/admin/addclass"
           element={<AddClass />}

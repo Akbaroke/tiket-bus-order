@@ -14,13 +14,13 @@ type UserAction = {
 const initialState = {
   email: '',
   role: '',
+  encrypt: '',
 }
 
 const reducerUser = (
   state = initialState,
   action: UserAction
 ) => {
-  // const { email, role, encrypt } = action.payload
   switch (action.type) {
     case ActionType.SET_USER:
       if (action.payload.encrypt) {
@@ -32,6 +32,7 @@ const reducerUser = (
       return {
         email: action.payload.email,
         role: action.payload.role,
+        encrypt: action.payload.encrypt,
       }
     case ActionType.RESET_USER:
       return initialState

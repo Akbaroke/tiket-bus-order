@@ -8,7 +8,7 @@ type Props = {
   type?: 'text' | 'email' | 'number' | 'password'
 } & React.InputHTMLAttributes<HTMLInputElement>
 
-function InputAuth({
+function InputLabel({
   label,
   icon,
   type = 'text',
@@ -58,4 +58,4 @@ function InputAuth({
   )
 }
 
-export default InputAuth
+export default InputLabel

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { BiLockAlt } from 'react-icons/bi'
 import Button from '../../components/Button'
-import InputAuth from '../../components/InputAuth'
+import InputLabel from '../../components/InputLabel'
 import { HiOutlineMail } from 'react-icons/hi'
 import {
   notifyError,
@@ -78,7 +78,7 @@ function Signin(): JSX.Element {
     <form
       className="flex flex-col gap-5"
       onSubmit={handleOnSubmit}>
-      <InputAuth
+      <InputLabel
         icon={<HiOutlineMail />}
         label="email Address"
         type="email"
@@ -87,7 +87,7 @@ function Signin(): JSX.Element {
         value={form.email}
         onChange={handleOnChange}
       />
-      <InputAuth
+      <InputLabel
         icon={<BiLockAlt />}
         label="password"
         type="password"

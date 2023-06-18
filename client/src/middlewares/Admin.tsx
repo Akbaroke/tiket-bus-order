@@ -28,8 +28,13 @@ export default function Admin({ children }: Props) {
         const result = await DecryptFromServer(
           to_stores || ''
         )
-        console.log(result)
-        dispatch(setUser(result))
+        const newResult = Object.assign({
+          email: result.email,
+          role: result.role,
+          encrypt: to_stores,
+        })
+        console.log(newResult)
+        dispatch(setUser(newResult))
       } catch (error) {
         console.error('Error decrypting data:', error)
         navigate('/')

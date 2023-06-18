@@ -1,7 +1,7 @@
 import * as React from 'react'
 import axios from '../../api'
 import { FormValues } from './Auth.d'
-import InputAuth from '../../components/InputAuth'
+import InputLabel from '../../components/InputLabel'
 import { HiOutlineMail } from 'react-icons/hi'
 import { BiLockAlt } from 'react-icons/bi'
 import Button from '../../components/Button'
@@ -74,7 +74,7 @@ function Signup(): JSX.Element {
     <form
       className="flex flex-col gap-5"
       onSubmit={handleOnSubmit}>
-      <InputAuth
+      <InputLabel
         icon={<HiOutlineMail />}
         label="email Address"
         type="email"
@@ -83,7 +83,7 @@ function Signup(): JSX.Element {
         value={form.email}
         onChange={handleOnChange}
       />
-      <InputAuth
+      <InputLabel
         icon={<BiLockAlt />}
         label="password"
         type="password"
@@ -92,7 +92,7 @@ function Signup(): JSX.Element {
         value={form.password}
         onChange={handleOnChange}
       />
-      <InputAuth
+      <InputLabel
         icon={<BiLockAlt />}
         label="confirm password"
         type="password"
@@ -104,7 +104,7 @@ function Signup(): JSX.Element {
         type="submit"
         text="Continue"
         className="h-[60px]"
-        disabled={isLoading}
+        isLoading={isLoading}
       />
     </form>
   )
