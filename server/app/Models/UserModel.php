@@ -4,6 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 use Ramsey\Uuid\Uuid;
+use CodeIgniter\I18n\Time;
 
 class UserModel extends Model
 {
@@ -31,17 +32,34 @@ class UserModel extends Model
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert = ['generateUUID'];
+    protected $beforeInsert = ['generateUUID', 'beforeInsert'];
     protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
+    protected $beforeUpdate   = ['beforeUpdate'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
     protected function generateUUID(array $data)
     {
         $data['data']['userId'] = Uuid::uuid4()->toString();
+        return $data;
+    }
+
+    protected function beforeInsert(array $data)
+    {
+        $time = new Time("now");
+        $data['data']['created_at'] = $time->getTimestamp();
+        $data['data']['updated_at'] = $time->getTimestamp();
+        return $data;
+    }
+
+
+    protected function beforeUpdate(array $data)
+    {
+        $time = new Time("now");
+        $data['data']['updated_at'] = $time->getTimestamp();
         return $data;
     }
 }

@@ -6,17 +6,17 @@ use CodeIgniter\Model;
 use Ramsey\Uuid\Uuid;
 use CodeIgniter\I18n\Time;
 
-class ClassModel extends Model
+class BusFleetModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'classes';
-    protected $primaryKey       = 'classId';
-    protected $casts = ['classId' => 'string'];
+    protected $table            = 'busFleet';
+    protected $primaryKey       = 'busFleetId';
+    protected $casts = ['busFleetId' => 'string'];
     protected $useAutoIncrement  = false;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['className', 'format', 'seatingCapacity', 'created_at', 'updated_at'];
+    protected $allowedFields    = ['name', 'created_at', 'updated_at'];
 
     // Dates
     protected $useTimestamps = false;
@@ -42,7 +42,7 @@ class ClassModel extends Model
     protected $afterDelete    = [];
     protected function generateUUID(array $data)
     {
-        $data['data']['classId'] = Uuid::uuid4()->toString();
+        $data['data']['busFleetId'] = Uuid::uuid4()->toString();
         return $data;
     }
 

@@ -6,7 +6,6 @@ use CodeIgniter\RESTful\ResourceController;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\ClassModel;
 use App\Models\UserModel;
-use CodeIgniter\I18n\Time;
 
 class Classes extends ResourceController
 {
@@ -71,20 +70,12 @@ class Classes extends ResourceController
             ];
 
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
-            if (!$this->adminOnly($this->request->getVar('encrypt'))) {
-                return $this->respond([
-                    'status' => 403,
-                    'message' => 'akses ditolak'
-                ]);
-            };
+            if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
 
-            $time = new Time("now");
             $data = [
                 'className' => $this->request->getVar('className'),
                 'seatingCapacity' => $this->request->getVar('seatingCapacity'),
-                'format' => $this->request->getVar('format'),
-                'created_at' => $time->getTimestamp(),
-                'updated_at' => $time->getTimestamp()
+                'format' => $this->request->getVar('format')
             ];
 
             $this->classModel->save($data);
@@ -119,12 +110,7 @@ class Classes extends ResourceController
             ];
 
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
-            if (!$this->adminOnly($this->request->getVar('encrypt'))) {
-                return $this->respond([
-                    'status' => 403,
-                    'message' => 'akses ditolak'
-                ]);
-            };
+            if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
             $findClass = $this->classModel->where('classId', $classId)->first();
             if ($findClass == null) throw new \Exception('Class not found', 404);
 
@@ -152,13 +138,11 @@ class Classes extends ResourceController
     public function delete($classId = null)
     {
         try {
-            if (!$this->adminOnly($this->request->getVar('encrypt'))) {
-                return $this->respond([
-                    'status' => 403,
-                    'message' => 'akses ditolak'
-                ]);
-            };
-
+            $rules = [
+                'encrypt' => 'required',
+            ];
+            if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
+            if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
             $findClass = $this->classModel->where('classId', $classId)->first();
             if ($findClass == null) throw new \Exception('Class not found', 404);
 
