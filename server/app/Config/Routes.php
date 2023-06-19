@@ -31,14 +31,18 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 // $routes->get('/', 'Auth::index');
 
+
+// $routes->resource("auth");
+
 // route auth
 // $routes->group("auth", function ($route) {
 //     $route->post("login", "Auth::login");
 //     $route->post("register", "Auth::register");
 // });
 
+// $routes->resource("class");
 // route class
-// $routes->group('class', function ($route) {
+// $routes->group('clasess', function ($route) {
 //     $route->get("", "Classes::index");
 //     $route->get("(:any)", "Classes::getById/$1");
 //     $route->post("create", "Classes::create");

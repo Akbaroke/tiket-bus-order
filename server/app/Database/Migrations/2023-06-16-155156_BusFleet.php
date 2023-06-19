@@ -4,28 +4,19 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Users extends Migration
+class BusFleet extends Migration
 {
     public function up()
     {
         $this->forge->addField([
-            'userId' => [
+            'busFleetId' => [
+                'type' => 'VARCHAR',
+                'constraint' => 36
+            ],
+            'name' => [
                 'type' => 'VARCHAR',
                 'constraint' => 36,
-            ],
-            'email' => [
-                'type' => 'VARCHAR',
-                'constraint' => 100,
                 'unique' => true
-            ],
-            'password' => [
-                'type' => 'VARCHAR',
-                'constraint' => '255'
-            ],
-            'role' => [
-                'type' => "ENUM",
-                'constraint' => "'user', 'admin'",
-                'default' => "user"
             ],
             'created_at' => [
                 'type' => 'BIGINT',
@@ -39,12 +30,12 @@ class Users extends Migration
             ]
         ]);
 
-        $this->forge->addKey('userId',  TRUE);
-        $this->forge->createTable('users', TRUE);
+        $this->forge->addKey('busFleetId',  TRUE);
+        $this->forge->createTable('busFleet', TRUE);
     }
 
     public function down()
     {
-        $this->forge->dropTable('users');
+        $this->forge->dropTable('busFleet');
     }
 }
