@@ -16,6 +16,7 @@ import {
   notifyLoading,
   notifySuccess,
 } from '../../../components/Toast'
+import { useNavigate } from 'react-router-dom'
 
 interface State {
   user: UserInfo
@@ -46,6 +47,7 @@ export default function AddClass() {
   const { encrypt } = useSelector(
     (state: State) => state.user
   )
+  const navigate = useNavigate()
 
   const handleOnChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -72,7 +74,7 @@ export default function AddClass() {
     setIsLoading(true)
 
     try {
-      const { data } = await axios.post(
+      await axios.post(
         `${env.VITE_APP_URL}/classes/create`,
         {
           className: form.name,
@@ -83,7 +85,7 @@ export default function AddClass() {
       )
       notifySuccess('Add new class successful!', 'addclass')
       setForm(initialForm)
-      console.log(data)
+      navigate('/admin/class')
     } catch (error) {
       console.log(error)
       notifyError('Add new class failed!', 'addclass')

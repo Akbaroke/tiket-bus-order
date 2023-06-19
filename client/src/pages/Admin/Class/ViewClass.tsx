@@ -7,6 +7,8 @@ import {
   MdReduceCapacity,
 } from 'react-icons/md'
 import Search from '../../../components/Search'
+import { HiPlus } from 'react-icons/hi'
+import { Link } from 'react-router-dom'
 
 interface Classes {
   classId: string
@@ -37,18 +39,24 @@ export default function ViewClass() {
   return (
     <div className="p-10">
       <div className="flex flex-col gap-2">
-        <h1>List Category Class</h1>
-        <div>
+        <div className="flex justify-between gap-5">
           <Search
             setClearValue={() => setSeacrh('')}
             value={seacrh}
             onChange={e => setSeacrh(e.target.value)}
+            className="flex-1"
           />
+          <Link
+            to="/admin/class/add"
+            className="grid place-items-center w-[48px] h-[48px] rounded-[10px] bg-[#0266FF] text-[22px] text-white shadow-lg">
+            <HiPlus />
+          </Link>
         </div>
       </div>
       <div className="flex flex-wrap gap-4">
         {classes.map(item => (
-          <div
+          <Link
+            to={`/admin/class/${item.classId}`}
             key={item.classId}
             className="p-5 rounded-[10px] shadow-lg w-[216px] h-[157px] relative">
             <HiRectangleGroup className="text-[71px] text-[#D2D2D2]" />
@@ -67,7 +75,7 @@ export default function ViewClass() {
                 {item.format}
               </p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

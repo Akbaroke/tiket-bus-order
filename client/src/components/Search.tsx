@@ -1,15 +1,26 @@
+import clsx from 'clsx'
 import * as React from 'react'
 import { LuSearch } from 'react-icons/lu'
 import { RxCross2 } from 'react-icons/rx'
 
 type Props = {
   value: string
+  className?: string
   setClearValue: () => void
 } & React.InputHTMLAttributes<HTMLInputElement>
 
-function Search({ value, setClearValue, ...props }: Props) {
+function Search({
+  value,
+  setClearValue,
+  className,
+  ...props
+}: Props) {
   return (
-    <div className="flex justify-between rounded-[10px] shadow-lg overflow-hidden">
+    <div
+      className={clsx(
+        'flex justify-between rounded-[10px] shadow-lg overflow-hidden',
+        className
+      )}>
       <input
         {...props}
         value={value}
