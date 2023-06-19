@@ -1,7 +1,6 @@
 import { Link, Outlet } from 'react-router-dom'
 import { GiMeepleGroup } from 'react-icons/gi'
 import { HiOutlineBuildingOffice2 } from 'react-icons/hi2'
-import NavDropdown from '../../components/NavDropdown'
 import Nav from '../../components/Nav'
 
 function Dashboard() {
@@ -19,13 +18,18 @@ function Dashboard() {
             icon={<GiMeepleGroup />}
             to="/admin/class"
           />
-          <NavDropdown
+          <Nav
+            text="Armada"
+            icon={<HiOutlineBuildingOffice2 />}
+            to="/admin/armada"
+          />
+          {/* <NavDropdown
             text="Armada"
             icon={<HiOutlineBuildingOffice2 />}>
             <Link to="/admin/viewarmada">View Armada</Link>
             <Link to="/admin/addarmada">Add Armada</Link>
             <Link to="/admin/editarmada">Edit Armada</Link>
-          </NavDropdown>
+          </NavDropdown> */}
         </div>
       </aside>
 

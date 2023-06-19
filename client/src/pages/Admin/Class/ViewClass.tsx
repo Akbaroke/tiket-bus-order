@@ -15,21 +15,50 @@ interface Classes {
   className: string
   format: string
   seatingCapacity: string
-  updated_at: string
-  created_at: string
 }
 
 export default function ViewClass() {
   const [classes, setClasses] = React.useState<Classes[]>(
     []
   )
-  const [seacrh, setSeacrh] = React.useState<string>('')
+  const [search, setSearch] = React.useState<string>('')
+  const [searchResult, setSearchResult] = React.useState<
+    Classes[]
+  >([])
 
   React.useEffect(() => {
     getAllClasses()
   }, [])
 
-  const getAllClasses = async () => {
+  React.useEffect(() => {
+    if (classes && search) {
+      setSearchResult(filterSearch(search, classes))
+    } else {
+      setSearchResult(classes || [])
+    }
+  }, [classes, search])
+
+  function filterSearch(
+    search: string,
+    classes: Classes[]
+  ): Classes[] {
+    const filteredSearch = classes.filter(
+      item =>
+        item.className
+          .toString()
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        item.format
+          .toString()
+          .includes(search.toLowerCase()) ||
+        item.seatingCapacity
+          .toString()
+          .includes(search.toLowerCase())
+    )
+    return filteredSearch
+  }
+
+  const getAllClasses = async (): Promise<void> => {
     const { data } = await axios.get(
       `${env.VITE_APP_URL}/classes`
     )
@@ -41,9 +70,9 @@ export default function ViewClass() {
       <div className="flex flex-col gap-2">
         <div className="flex justify-between gap-5">
           <Search
-            setClearValue={() => setSeacrh('')}
-            value={seacrh}
-            onChange={e => setSeacrh(e.target.value)}
+            setClearValue={() => setSearch('')}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
             className="flex-1"
           />
           <Link
@@ -54,7 +83,7 @@ export default function ViewClass() {
         </div>
       </div>
       <div className="flex flex-wrap gap-4">
-        {classes.map(item => (
+        {searchResult.map(item => (
           <Link
             to={`/admin/class/${item.classId}`}
             key={item.classId}
@@ -69,7 +98,7 @@ export default function ViewClass() {
                 {item.seatingCapacity}
               </p>
             </div>
-            <div className="px-1 border border-[#5799FF] bg-[#E3EEFF] rounded-[3px] w-max h-max flex justify-center items-center gap-1 text-[#5799FF] absolute top-7 right-2">
+            <div className="px-1 border border-[#5799FF] bg-[#E3EEFF] rounded-[3px] w-max h-max flex justify-center items-center gap-1 text-[#5799FF] absolute top-7 right-4">
               <MdOutlineAirlineSeatReclineExtra className="text-[12px] font-semibold" />
               <p className="text-[12px] font-medium">
                 {item.format}

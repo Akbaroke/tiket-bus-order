@@ -17,6 +17,7 @@ import {
   notifySuccess,
 } from '../../../components/Toast'
 import { useNavigate, useParams } from 'react-router-dom'
+import ButtonModal from '../../../components/ButtonModal'
 
 interface State {
   user: UserInfo
@@ -92,12 +93,12 @@ export default function EditClass() {
     e: React.SyntheticEvent
   ): Promise<void> => {
     e.preventDefault()
-    notifyLoading('Send data...', 'addclass')
+    notifyLoading('Send data...', 'editclass')
     setIsLoading(true)
 
     try {
-      await axios.post(
-        `${env.VITE_APP_URL}/classes/create`,
+      const { data } = await axios.post(
+        `${env.VITE_APP_URL}/classes/update/${params.id}`,
         {
           className: form.name,
           seatingCapacity: form.capacity,
@@ -105,13 +106,36 @@ export default function EditClass() {
           encrypt: encrypt,
         }
       )
-      notifySuccess('Add new class successful!', 'addclass')
+      console.log(data)
+
+      notifySuccess('Edit class successful!', 'editclass')
       navigate('/admin/class')
     } catch (error) {
       console.log(error)
-      notifyError('Add new class failed!', 'addclass')
+      notifyError('Edit class failed!', 'editclass')
     }
     setIsLoading(false)
+  }
+
+  const handleDeleteClass = async () => {
+    notifyLoading('Delete processing...', 'deleteclass')
+    try {
+      const { data } = await axios.post(
+        `${env.VITE_APP_URL}/classes/delete/${params.id}`,
+        {
+          encrypt: encrypt,
+        }
+      )
+      console.log(data)
+      notifySuccess(
+        'Delete class successful!',
+        'deleteclass'
+      )
+      navigate('/admin/class')
+    } catch (error) {
+      console.log(error)
+      notifyError('Delete class failed!', 'deleteclass')
+    }
   }
 
   return (
@@ -148,12 +172,28 @@ export default function EditClass() {
             selectedValue={form.format}
             onChange={handleOptionChange}
           />
-          <Button
-            className="h-[60px] w-full mt-2"
-            type="submit"
-            isLoading={isLoading}>
-            Submit
-          </Button>
+          <div className="flex flex-row-reverse justify-between gap-4 w-full">
+            <Button
+              className="h-[50px] w-full"
+              type="submit"
+              isLoading={isLoading}>
+              Update
+            </Button>
+            <ButtonModal
+              className="h-[50px] w-full bg-white border border-red-500 text-red-500"
+              type="button"
+              isLoading={isLoading}
+              text="Delete"
+              title="Delete Class"
+              cancelButtonText="No, Cancel"
+              modalButtonText="Yes, Delete"
+              modalButtonAction={handleDeleteClass}>
+              <p className="text-sm">
+                You will remove the "<b>{form.name}</b>"
+                class. Are you sure ?
+              </p>
+            </ButtonModal>
+          </div>
         </form>
       </div>
     </div>

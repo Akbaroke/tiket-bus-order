@@ -132,7 +132,7 @@ export default function AddClass() {
             className="h-[60px] w-full mt-2"
             type="submit"
             isLoading={isLoading}>
-            Submit
+            Save
           </Button>
         </form>
       </div>

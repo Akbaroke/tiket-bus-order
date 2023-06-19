@@ -9,6 +9,9 @@ import ViewScedule from '../pages/Admin/Scedule/ViewScedule'
 import AddClass from '../pages/Admin/Class/AddClass'
 import EditClass from '../pages/Admin/Class/EditClass'
 import ViewClass from '../pages/Admin/Class/ViewClass'
+import ViewArmada from '../pages/Admin/Armada/ViewArmada'
+import AddArmada from '../pages/Admin/Armada/AddArmada'
+import EditArmada from '../pages/Admin/Armada/EditArmada'
 
 export default function root() {
   return (
@@ -50,6 +53,18 @@ export default function root() {
         <Route
           path="/admin/class/:id"
           element={<EditClass />}
+        />
+        <Route
+          path="/admin/armada"
+          element={<ViewArmada />}
+        />
+        <Route
+          path="/admin/armada/add"
+          element={<AddArmada />}
+        />
+        <Route
+          path="/admin/armada/:id"
+          element={<EditArmada />}
         />
       </Route>
     </Routes>
