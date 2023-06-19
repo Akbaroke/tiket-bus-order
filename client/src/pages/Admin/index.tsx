@@ -2,6 +2,7 @@ import { Link, Outlet } from 'react-router-dom'
 import { GiMeepleGroup } from 'react-icons/gi'
 import { HiOutlineBuildingOffice2 } from 'react-icons/hi2'
 import NavDropdown from '../../components/NavDropdown'
+import Nav from '../../components/Nav'
 
 function Dashboard() {
   return (
@@ -13,13 +14,11 @@ function Dashboard() {
           </h1>
         </Link>
         <div className="flex flex-col">
-          <NavDropdown
+          <Nav
             text="class"
-            icon={<GiMeepleGroup />}>
-            <Link to="/admin/viewclass">View Class</Link>
-            <Link to="/admin/addclass">Add Class</Link>
-            <Link to="/admin/editclass">Edit Class</Link>
-          </NavDropdown>
+            icon={<GiMeepleGroup />}
+            to="/admin/class"
+          />
           <NavDropdown
             text="Armada"
             icon={<HiOutlineBuildingOffice2 />}>

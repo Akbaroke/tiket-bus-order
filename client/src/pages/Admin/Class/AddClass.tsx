@@ -11,9 +11,20 @@ import axios from '../../../api'
 import { useSelector } from 'react-redux'
 import { UserInfo } from '../../../redux/reducers/user'
 import SelectOption from '../../../components/SelectOption'
+import {
+  notifyError,
+  notifyLoading,
+  notifySuccess,
+} from '../../../components/Toast'
 
 interface State {
   user: UserInfo
+}
+
+type Form = {
+  name: string
+  capacity: string
+  format: string
 }
 
 const initialForm = {
@@ -29,7 +40,9 @@ const formatSeat = [
 ]
 
 export default function AddClass() {
-  const [form, setForm] = React.useState(initialForm)
+  const [form, setForm] = React.useState<Form>(initialForm)
+  const [isLoading, setIsLoading] =
+    React.useState<boolean>(false)
   const { encrypt } = useSelector(
     (state: State) => state.user
   )
@@ -55,16 +68,28 @@ export default function AddClass() {
     e: React.SyntheticEvent
   ): Promise<void> => {
     e.preventDefault()
-    const { data } = await axios.post(
-      `${env.VITE_APP_URL}/classes/create`,
-      {
-        className: form.name,
-        seatingCapacity: form.capacity,
-        format: form.format,
-        encrypt: encrypt,
-      }
-    )
-    console.log(data)
+    notifyLoading('Send data...', 'addclass')
+    setIsLoading(true)
+
+    try {
+      const { data } = await axios.post(
+        `${env.VITE_APP_URL}/classes/create`,
+        {
+          className: form.name,
+          seatingCapacity: form.capacity,
+          format: form.format,
+          encrypt: encrypt,
+        }
+      )
+      notifySuccess('Add new class successful!', 'addclass')
+      setForm(initialForm)
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+      notifyError('Add new class failed!', 'addclass')
+    }
+
+    setIsLoading(false)
   }
 
   return (
@@ -103,7 +128,8 @@ export default function AddClass() {
           />
           <Button
             className="h-[60px] w-full mt-2"
-            type="submit">
+            type="submit"
+            isLoading={isLoading}>
             Submit
           </Button>
         </form>

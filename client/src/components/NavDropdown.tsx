@@ -47,8 +47,8 @@ export default function NavDropdown({
     <div ref={dropdownRef}>
       <div
         className={clsx(
-          'flex gap-[18px] items-center px-9 py-6 w-full border hover:border-[#F0EFF2] transition-all cursor-pointer [&>svg]:text-[20px]',
-          isOpen ? 'border-[#F0EFF2]' : 'border-white'
+          'flex gap-[18px] items-center px-9 py-6 w-full border border-x-0 hover:border-y-[#F0EFF2] transition-all cursor-pointer [&>svg]:text-[20px]',
+          isOpen ? 'border-y-[#F0EFF2]' : 'border-white'
         )}
         onClick={toggleDropdown}>
         {icon}

@@ -100,7 +100,7 @@ function Signin(): JSX.Element {
         type="submit"
         text="Continue"
         className="h-[60px]"
-        disabled={isLoading}
+        isLoading={isLoading}
       />
     </form>
   )

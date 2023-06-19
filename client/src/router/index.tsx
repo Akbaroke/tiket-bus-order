@@ -40,15 +40,15 @@ export default function root() {
         }>
         <Route index element={<ViewScedule />} />
         <Route
-          path="/admin/viewclass"
+          path="/admin/class"
           element={<ViewClass />}
         />
         <Route
-          path="/admin/addclass"
+          path="/admin/class/add"
           element={<AddClass />}
         />
         <Route
-          path="/admin/editclass"
+          path="/admin/class/:id"
           element={<EditClass />}
         />
       </Route>
