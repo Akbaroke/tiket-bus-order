@@ -16,7 +16,7 @@ class BusModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['classId', 'busFleetId', 'created_at', 'updated_at'];
+    protected $allowedFields    = ['classId', 'busFleetId', 'created_at', 'updated_at', 'code'];
 
     // Dates
     protected $useTimestamps = false;

@@ -18,6 +18,12 @@ class BusFleet extends Migration
                 'constraint' => 36,
                 'unique' => true
             ],
+            "amount_bus" => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'null' => true,
+                'default' => 0
+            ],
             'created_at' => [
                 'type' => 'BIGINT',
                 'constraint' => 20,
