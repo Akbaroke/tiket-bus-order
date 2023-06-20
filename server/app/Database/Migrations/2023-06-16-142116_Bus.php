@@ -21,6 +21,11 @@ class Bus extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => 36,
             ],
+            'code' => [
+                'type' => 'VARCHAR',
+                'constraint' => 11,
+                'null' => true
+            ],
             'created_at' => [
                 'type' => 'BIGINT',
                 'constraint' => 20,
