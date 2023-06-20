@@ -59,7 +59,7 @@ export default function ButtonModal({
         onClick={toggleModal}
         disabled={isLoading || disabled}
         className={clsx(
-          'flex items-center justify-center gap-x-2 text-white py-2 rounded-[10px] [&>svg]:w-5 [&>svg]:h-5 bg-[#0266FF] active:scale-95 transition-all cursor-pointer',
+          'flex items-center justify-center gap-x-2 py-2 rounded-[10px] [&>svg]:w-5 [&>svg]:h-5 bg-[#0266FF] active:scale-95 transition-all cursor-pointer',
           className,
           disabled && 'bg-gray-400',
           isLoading && 'bg-gray-400 cursor-wait'

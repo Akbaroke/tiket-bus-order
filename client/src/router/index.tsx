@@ -12,6 +12,8 @@ import ViewClass from '../pages/Admin/Class/ViewClass'
 import ViewArmada from '../pages/Admin/Armada/ViewArmada'
 import AddArmada from '../pages/Admin/Armada/AddArmada'
 import EditArmada from '../pages/Admin/Armada/EditArmada'
+import ViewBus from '../pages/Admin/Bus/ViewBus'
+import AddBus from '../pages/Admin/Bus/AddBus'
 
 export default function root() {
   return (
@@ -66,6 +68,8 @@ export default function root() {
           path="/admin/armada/:id"
           element={<EditArmada />}
         />
+        <Route path="/admin/bus" element={<ViewBus />} />
+        <Route path="/admin/bus/add" element={<AddBus />} />
       </Route>
     </Routes>
   )

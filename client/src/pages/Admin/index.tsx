@@ -1,6 +1,7 @@
 import { Link, Outlet } from 'react-router-dom'
 import { GiMeepleGroup } from 'react-icons/gi'
 import { HiOutlineBuildingOffice2 } from 'react-icons/hi2'
+import { BsBusFront } from 'react-icons/bs'
 import Nav from '../../components/Nav'
 
 function Dashboard() {
@@ -13,6 +14,11 @@ function Dashboard() {
           </h1>
         </Link>
         <div className="flex flex-col">
+          <Nav
+            text="Bus"
+            icon={<BsBusFront />}
+            to="/admin/bus"
+          />
           <Nav
             text="class"
             icon={<GiMeepleGroup />}
