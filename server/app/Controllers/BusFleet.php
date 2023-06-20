@@ -38,7 +38,7 @@ class BusFleet extends ResourceController
         }
     }
 
-    public function findById($busFleetId = null)
+    public function getById($busFleetId = null)
     {
         try {
             $data = $this->BusFleetModel->where("busFleetId", $busFleetId)->first();

@@ -180,7 +180,7 @@ export default function EditClass() {
               Update
             </Button>
             <ButtonModal
-              className="h-[50px] w-full bg-white border border-red-500 text-red-500"
+              className="h-[50px] w-full bg-white border border-red-500 text-red-600"
               type="button"
               isLoading={isLoading}
               text="Delete"
