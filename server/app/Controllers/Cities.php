@@ -4,26 +4,26 @@ namespace App\Controllers;
 
 use CodeIgniter\RESTful\ResourceController;
 use CodeIgniter\API\ResponseTrait;
-use App\Models\BusFleetModel;
+use App\Models\CityModel;
 use App\Models\UserModel;
 
-class BusFleet extends ResourceController
+class Cities extends ResourceController
 {
     use ResponseTrait;
 
-    protected $BusFleetModel;
+    protected $CityModel;
     protected $UserModel;
 
     public function __construct()
     {
-        $this->BusFleetModel = new BusFleetModel();
+        $this->CityModel = new CityModel();
         $this->UserModel = new UserModel();
     }
 
     public function index()
     {
         try {
-            $data = $this->BusFleetModel->findAll();
+            $data = $this->CityModel->findAll();
             $response = [
                 "status" => 200,
                 "message" => "Berhasil",
@@ -38,10 +38,10 @@ class BusFleet extends ResourceController
         }
     }
 
-    public function getById($busFleetId = null)
+    public function getById($cityId = null)
     {
         try {
-            $data = $this->BusFleetModel->where("busFleetId", $busFleetId)->first();
+            $data = $this->CityModel->where("cityId", $cityId)->first();
             if ($data == null) throw new \Exception("data not found", 404);
             $response = [
                 "status" => 200,
@@ -66,13 +66,12 @@ class BusFleet extends ResourceController
             ];
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
-            $this->BusFleetModel->save([
+            $this->CityModel->save([
                 "name" => $this->request->getVar("name"),
             ]);
             $response = [
                 'status' => 200,
                 'message' => 'berhasil',
-
             ];
             return $this->respondCreated($response);
         } catch (\Exception $e) {
@@ -83,7 +82,7 @@ class BusFleet extends ResourceController
         }
     }
 
-    public function update($busFleetId = null)
+    public function update($cityId = null)
     {
         try {
             $rules = [
@@ -92,9 +91,9 @@ class BusFleet extends ResourceController
             ];
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
-            $findFleetBus = $this->BusFleetModel->where("busFleetId", $busFleetId)->first();
-            if ($findFleetBus == null) throw new \Exception("Bus not found", 404);
-            $this->BusFleetModel->update($busFleetId, [
+            $findCity = $this->CityModel->where("cityId", $cityId)->first();
+            if ($findCity == null) throw new \Exception("City not found", 404);
+            $this->CityModel->update($cityId, [
                 "name" => $this->request->getVar("name"),
             ]);
             $response = [
@@ -110,7 +109,7 @@ class BusFleet extends ResourceController
         }
     }
 
-    public function delete($busFleetId = null)
+    public function delete($cityId = null)
     {
         try {
             $rules = [
@@ -118,10 +117,10 @@ class BusFleet extends ResourceController
             ];
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
-            $findFleetBus = $this->BusFleetModel->where('busFleetId', $busFleetId)->first();
-            if ($findFleetBus == null) throw new \Exception('fleet bus not found', 404);
+            $findCity = $this->CityModel->where('cityId', $cityId)->first();
+            if ($findCity == null) throw new \Exception('City not found', 404);
 
-            $this->BusFleetModel->delete($busFleetId);
+            $this->CityModel->delete($cityId);
 
             $response = [
                 'status' => 200,

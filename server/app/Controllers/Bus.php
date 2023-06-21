@@ -26,7 +26,7 @@ class Bus extends ResourceController
     public function index()
     {
         try {
-            $data = $this->BusModel->select('bus.code, bus.busId as id, c.className as class, c.seatingCapacity, c.format, f.name as armada')
+            $data = $this->BusModel->select('bus.code, bus.busId as id, bus.classId as id_class, c.className as class, c.seatingCapacity, c.format, f.name as armada')
                 ->join('classes as c', 'c.classId = bus.classId')
                 ->join('busFleet as f', 'f.busFleetId = bus.busFleetId')
                 ->findAll();
@@ -45,10 +45,10 @@ class Bus extends ResourceController
         }
     }
 
-    public function findById($busId = null)
+    public function getById($busId = null)
     {
         try {
-            $data = $this->BusModel->select('bus.code, bus.busId as id, c.className as class, c.seatingCapacity, c.format, f.name as fleetName')
+            $data = $this->BusModel->select('bus.code, bus.busId as id, bus.classId as id_class, c.className as class, c.seatingCapacity, c.format, f.name as fleetName')
                 ->join('classes as c', 'c.classId = bus.classId')
                 ->join('busFleet as f', 'f.busFleetId = bus.busFleetId')
                 ->where("bus.busId", $busId)
@@ -82,10 +82,10 @@ class Bus extends ResourceController
             ];
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
-            $findBusFleet = $this->BusFleetModel->where("busFleetId", $busFleetId)->first();
-            $findBusLatest = $this->BusModel->where("busFleetId", $busFleetId)->orderBy('created_at', 'DESC')->get()->getRow();
+            $findBusFleet = $this->BusFleetModel->query("SELECT * FROM busFleet WHERE busFleetId = ? FOR UPDATE", [$busFleetId])->getRow();
+            $findBusLatest = $this->BusModel->query("SELECT * FROM bus WHERE busFleetId = ? ORDER BY created_at DESC FOR UPDATE", [$busFleetId])->getRow();
             if ($findBusFleet == null) throw new \Exception("Armada tidak ditemukan", 404);
-            $name =  explode(" ", $findBusFleet["name"]);
+            $name =  explode(" ", $findBusFleet->name);
             $code = "";
             foreach ($name as $x) {
                 $code .= substr(strtoupper($x), 0, 1);
@@ -108,7 +108,7 @@ class Bus extends ResourceController
                 "code" => $code,
             ]);
 
-            $this->BusFleetModel->update($busFleetId, ["name" => $findBusFleet["name"], "amount_bus" => $findBusFleet["amount_bus"] + 1]);
+            $this->BusFleetModel->update($busFleetId, ["name" => $findBusFleet->name, "amount_bus" => $findBusFleet->amount_bus + 1]);
             $response = [
                 'status' => 200,
                 'message' => 'berhasil',
@@ -127,6 +127,7 @@ class Bus extends ResourceController
     public function update($busId = null)
     {
         try {
+            $this->BusModel->transBegin();
             $rules = [
                 'classId' => 'required',
                 'encrypt' => 'required',
@@ -140,6 +141,7 @@ class Bus extends ResourceController
                 "classId" => $this->request->getVar("classId"),
                 "busFleetId" => $this->request->getVar("busFleetId")
             ]);
+            $this->BusModel->transCommit();
             $response = [
                 'status' => 200,
                 'message' => 'berhasil',
@@ -147,6 +149,7 @@ class Bus extends ResourceController
             ];
             return $this->respondCreated($response);
         } catch (\Exception $e) {
+            $this->BusModel->transRollback();
             return $this->respond([
                 'status' => $e->getCode() ?? 500,
                 'message' => $e->getMessage()
@@ -157,25 +160,28 @@ class Bus extends ResourceController
     public function delete($busId = null)
     {
         try {
+            $this->BusModel->transBegin();
             $rules = [
                 'encrypt' => 'required',
             ];
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
-            $findClass = $this->BusModel->where('busId', $busId)->first();
-            if ($findClass == null) throw new \Exception('Class not found', 404);
-
+            $findBus = $this->BusModel->query("SELECT * FROM bus AS b JOIN busfleet AS f ON f.busFleetId = b.busFleetId WHERE b.busId = ? FOR UPDATE", [$busId])->getRow();
+            if ($findBus == null) throw new \Exception('Bus not found', 404);
             $this->BusModel->delete($busId);
-
+            $this->BusFleetModel->update($findBus->busFleetId, ["name" => $findBus->name, "amount_bus" => $findBus->amount_bus - 1]);
+            $this->BusModel->transCommit();
             $response = [
                 'status' => 200,
                 'message' => 'berhasil',
             ];
             return $this->respondUpdated($response);
         } catch (\Exception $e) {
+            $this->BusModel->transRollback();
             return $this->respond([
                 'status' => $e->getCode(),
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                $findBus
             ]);
         }
     }

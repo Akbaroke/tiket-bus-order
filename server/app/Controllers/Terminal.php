@@ -4,26 +4,32 @@ namespace App\Controllers;
 
 use CodeIgniter\RESTful\ResourceController;
 use CodeIgniter\API\ResponseTrait;
-use App\Models\BusFleetModel;
+use App\Models\TerminalModel;
+use App\Models\CityModel;
 use App\Models\UserModel;
 
-class BusFleet extends ResourceController
+class Terminal extends ResourceController
 {
     use ResponseTrait;
 
-    protected $BusFleetModel;
     protected $UserModel;
+    protected $TerminalModel;
+    protected $CityModel;
 
     public function __construct()
     {
-        $this->BusFleetModel = new BusFleetModel();
         $this->UserModel = new UserModel();
+        $this->TerminalModel = new TerminalModel();
+        $this->CityModel = new CityModel();
     }
 
     public function index()
     {
         try {
-            $data = $this->BusFleetModel->findAll();
+            $data = $this->TerminalModel->select('terminal.terminalId, c.cityId as id_city, terminal.name, c.name as city')
+                ->join('cities as c', 'c.cityId = terminal.cityId')
+                ->findAll();
+
             $response = [
                 "status" => 200,
                 "message" => "Berhasil",
@@ -38,10 +44,14 @@ class BusFleet extends ResourceController
         }
     }
 
-    public function getById($busFleetId = null)
+    public function getById($terminalId = null)
     {
         try {
-            $data = $this->BusFleetModel->where("busFleetId", $busFleetId)->first();
+            $data = $this->TerminalModel->select('terminal.terminalId, c.cityId as id_city, terminal.name, c.name as city')
+                ->join('cities as c', 'c.cityId = terminal.cityId')
+                ->where("terminalId", $terminalId)
+                ->first();
+
             if ($data == null) throw new \Exception("data not found", 404);
             $response = [
                 "status" => 200,
@@ -59,23 +69,32 @@ class BusFleet extends ResourceController
 
     public function create()
     {
+        $cityId = $this->request->getVar('cityId');
+        $name = $this->request->getVar("name");
         try {
+            $this->TerminalModel->transBegin();
             $rules = [
                 'name' => 'required|min_length[3]',
+                'cityId' => 'required',
                 'encrypt' => 'required',
             ];
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
-            $this->BusFleetModel->save([
-                "name" => $this->request->getVar("name"),
-            ]);
+            $findCity = $this->CityModel->query("SELECT * FROM cities WHERE cityId = ? FOR UPDATE", [$cityId])->getRow();
+
+            if ($findCity == null) throw new \Exception("City not found", 404);
+            $this->TerminalModel->save(['name' => $name, 'cityId' => $cityId]);
+            $this->CityModel->update($cityId, ["name" => $findCity->name, "amount_terminal" => $findCity->amount_terminal + 1]);
+
             $response = [
                 'status' => 200,
                 'message' => 'berhasil',
-
             ];
+
+            $this->TerminalModel->transCommit();
             return $this->respondCreated($response);
         } catch (\Exception $e) {
+            $this->TerminalModel->transRollback();
             return $this->respond([
                 'status' => 500,
                 'message' => $e->getMessage()
@@ -83,26 +102,32 @@ class BusFleet extends ResourceController
         }
     }
 
-    public function update($busFleetId = null)
+    public function update($terminalId = null)
     {
+        $cityId = $this->request->getVar('cityId');
+        $name = $this->request->getVar("name");
         try {
+            $this->TerminalModel->transBegin();
             $rules = [
                 'name' => 'required|min_length[3]',
+                'cityId' => 'required',
                 'encrypt' => 'required',
             ];
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
-            $findFleetBus = $this->BusFleetModel->where("busFleetId", $busFleetId)->first();
-            if ($findFleetBus == null) throw new \Exception("Bus not found", 404);
-            $this->BusFleetModel->update($busFleetId, [
-                "name" => $this->request->getVar("name"),
-            ]);
+            $findTerminal = $this->TerminalModel->where("terminalId", $terminalId)->first();
+            // $findTerminal = $this->TerminalModel->query("SELECT * FROM terminal WHERE terminalId = ? FOR UPDATE",[$terminalId])->getRow();
+            if ($findTerminal == null) throw new \Exception("Bus not found", 404);
+            $this->TerminalModel->update($terminalId, ['name' => $name, 'cityId' => $cityId]);
             $response = [
                 'status' => 200,
                 'message' => 'berhasil',
+
             ];
+            $this->TerminalModel->transCommit();
             return $this->respondCreated($response);
         } catch (\Exception $e) {
+            $this->TerminalModel->transRollback();
             return $this->respond([
                 'status' => $e->getCode() ?? 500,
                 'message' => $e->getMessage()
@@ -110,32 +135,34 @@ class BusFleet extends ResourceController
         }
     }
 
-    public function delete($busFleetId = null)
+    public function delete($terminalId = null)
     {
         try {
+            $this->TerminalModel->transBegin();
             $rules = [
-                'encrypt' => 'required',
+                'encrypt' => 'required'
             ];
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
-            $findFleetBus = $this->BusFleetModel->where('busFleetId', $busFleetId)->first();
-            if ($findFleetBus == null) throw new \Exception('fleet bus not found', 404);
-
-            $this->BusFleetModel->delete($busFleetId);
-
+            $findTerminal = $this->TerminalModel->query("SELECT t.terminalId AS terminalId, c.cityId AS cityId, t.name AS terminal, c.name AS city, c.amount_terminal FROM terminal AS t JOIN cities AS c ON c.cityId = t.cityId WHERE terminalId = ? FOR UPDATE", [$terminalId])->getRow();
+            if ($findTerminal == null) throw new \Exception("Bus not found", 404);
             $response = [
                 'status' => 200,
                 'message' => 'berhasil',
+
             ];
-            return $this->respondUpdated($response);
+            $this->TerminalModel->delete($terminalId);
+            $this->CityModel->update($findTerminal->cityId, ["name" => $findTerminal->terminal, "amount_terminal" => $findTerminal->amount_terminal - 1]);
+            $this->TerminalModel->transCommit();
+            return $this->respondCreated($response);
         } catch (\Exception $e) {
+            $this->TerminalModel->transRollback();
             return $this->respond([
-                'status' => $e->getCode(),
+                'status' => $e->getCode() ?? 500,
                 'message' => $e->getMessage()
             ]);
         }
     }
-
 
     protected function adminOnly($enc = null)
     {

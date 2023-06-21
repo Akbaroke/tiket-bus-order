@@ -4,12 +4,12 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class BusFleet extends Migration
+class City extends Migration
 {
     public function up()
     {
         $this->forge->addField([
-            'busFleetId' => [
+            'cityId' => [
                 'type' => 'VARCHAR',
                 'constraint' => 36
             ],
@@ -18,12 +18,12 @@ class BusFleet extends Migration
                 'constraint' => 36,
                 'unique' => true
             ],
-            "amount_bus" => [
+            "amount_terminal" => [
                 'type' => 'INT',
                 'constraint' => 11,
                 'null' => true,
                 'default' => 0,
-                'unsigned' => true,
+                'unsigned' => true
             ],
             'created_at' => [
                 'type' => 'BIGINT',
@@ -37,12 +37,12 @@ class BusFleet extends Migration
             ]
         ]);
 
-        $this->forge->addKey('busFleetId',  TRUE);
-        $this->forge->createTable('busFleet', TRUE);
+        $this->forge->addKey('cityId',  TRUE);
+        $this->forge->createTable('cities', TRUE);
     }
 
     public function down()
     {
-        $this->forge->dropTable('busFleet');
+        $this->forge->dropTable('cities');
     }
 }
