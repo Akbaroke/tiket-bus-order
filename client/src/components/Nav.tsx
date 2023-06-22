@@ -1,5 +1,4 @@
 import clsx from 'clsx'
-import * as React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 type Props = {
@@ -9,49 +8,27 @@ type Props = {
 }
 
 export default function Nav({ text, to, icon }: Props) {
-  const [isOpen, setIsOpen] = React.useState<boolean>(false)
-  const elementRef = React.useRef<HTMLAnchorElement>(null)
   const location = useLocation()
   const route = location.pathname
-
-  const handleClickOutside = (event: MouseEvent) => {
-    const target = event.target as Node
-    if (
-      elementRef.current &&
-      !elementRef.current.contains(target)
-    ) {
-      setIsOpen(false)
-    }
-  }
-
-  React.useEffect(() => {
-    document.addEventListener('click', handleClickOutside)
-
-    return () => {
-      document.removeEventListener(
-        'click',
-        handleClickOutside
-      )
-    }
-  }, [])
 
   return (
     <Link
       to={to}
-      ref={elementRef}
       className={clsx(
-        'flex gap-[18px] items-center px-9 py-6 w-full border border-x-0 hover:border-y-[#F0EFF2] transition-all cursor-pointer [&>svg]:text-[20px]',
-        isOpen ? 'border-y-[#F0EFF2]' : '',
-        route === to
-          ? 'border-y-[#F0EFF2]'
-          : 'border-y-white'
-      )}
-      onClick={() => {
-        setIsOpen(!isOpen)
-      }}>
+        'flex gap-[18px] items-center px-9 py-6 w-full border border-x-0 hover:border-y-[#F0EFF2] transition-all cursor-pointer [&>svg]:text-[20px] ',
+        route.includes(to)
+          ? 'border-y-[#F0EFF2] [&>svg]:text-[#095BA8]'
+          : 'border-y-white [&>svg]:text-[#095BA8]/50'
+      )}>
       {icon}
       <div className="flex w-full justify-between items-center">
-        <p className="text-[14px] font-medium capitalize">
+        <p
+          className={clsx(
+            'text-[14px] font-medium capitalize',
+            route.includes(to)
+              ? 'text-[#262626]'
+              : 'text-[#9F9F9F]'
+          )}>
           {text}
         </p>
       </div>

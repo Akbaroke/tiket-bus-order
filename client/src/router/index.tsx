@@ -1,34 +1,42 @@
-import { Route, Routes } from 'react-router';
-import Auth from '../pages/Auth/Auth'
+import { Route, Routes } from 'react-router'
 import Home from '../pages/User/Home'
 import Dashboard from '../pages/Admin'
 import Admin from '../middlewares/Admin'
 import User from '../middlewares/User'
 import Guest from '../middlewares/Guest'
-import ViewScedule from '../pages/Admin/Scedule/ViewScedule'
 import AddClass from '../pages/Admin/Class/AddClass'
-import EditClass from '../pages/Admin/Class/EditClass'
 import ViewClass from '../pages/Admin/Class/ViewClass'
 import ViewArmada from '../pages/Admin/Armada/ViewArmada'
 import AddArmada from '../pages/Admin/Armada/AddArmada'
 import EditArmada from '../pages/Admin/Armada/EditArmada'
 import ViewBus from '../pages/Admin/Bus/ViewBus'
 import AddBus from '../pages/Admin/Bus/AddBus'
+import Signin from '../pages/Auth/Signin'
+import Signup from '../pages/Auth/Signup'
+import { SWRProvider } from '../contexts/swr-context'
 
 export default function root() {
   return (
     <Routes>
       <Route
-        path="/"
+        path="/signin"
         element={
           <Guest>
-            <Auth />
+            <Signin />
+          </Guest>
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          <Guest>
+            <Signup />
           </Guest>
         }
       />
 
       <Route
-        path="/home"
+        path="/"
         element={
           <User>
             <Home />
@@ -40,10 +48,19 @@ export default function root() {
         path="/admin"
         element={
           <Admin>
-            <Dashboard />
+            <SWRProvider>
+              <Dashboard />
+            </SWRProvider>
           </Admin>
         }>
-        <Route index element={<ViewScedule />} />
+        <Route
+          index
+          element={
+            <div className="grid place-items-center h-screen">
+              Dashboard Admin
+            </div>
+          }
+        />
         <Route
           path="/admin/class"
           element={<ViewClass />}
@@ -51,10 +68,6 @@ export default function root() {
         <Route
           path="/admin/class/add"
           element={<AddClass />}
-        />
-        <Route
-          path="/admin/class/:id"
-          element={<EditClass />}
         />
         <Route
           path="/admin/armada"

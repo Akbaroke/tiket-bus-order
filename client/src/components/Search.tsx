@@ -9,37 +9,35 @@ type Props = {
   setClearValue: () => void
 } & React.InputHTMLAttributes<HTMLInputElement>
 
-function Search({
-  value,
-  setClearValue,
-  className,
-  ...props
-}: Props) {
-  return (
-    <div
-      className={clsx(
-        'flex justify-between rounded-[10px] shadow-lg overflow-hidden',
-        className
-      )}>
-      <input
-        {...props}
-        value={value}
-        type="text"
-        placeholder="Search"
-        className="placeholder:text-black w-full h-full px-5 py-3"
-      />
-      <div className="px-5 py-3">
-        {value.length > 0 ? (
-          <RxCross2
-            onClick={setClearValue}
-            className="cursor-pointer"
-          />
-        ) : (
-          <LuSearch />
-        )}
+const Search = React.forwardRef<HTMLInputElement, Props>(
+  ({ value, setClearValue, className, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={clsx(
+          'flex justify-between rounded-[10px] shadow-lg overflow-hidden items-center px-[10px]',
+          className
+        )}>
+        <input
+          {...props}
+          value={value}
+          type="text"
+          placeholder="Search"
+          className="placeholder:text-black w-full h-full px-2 text-[14px]"
+        />
+        <div>
+          {value.length > 0 ? (
+            <RxCross2
+              onClick={setClearValue}
+              className="cursor-pointer"
+            />
+          ) : (
+            <LuSearch />
+          )}
+        </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
+)
 
 export default Search

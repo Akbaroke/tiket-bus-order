@@ -10,7 +10,6 @@ import { env } from '../../../vite-env.d'
 import axios from '../../../api'
 import { useSelector } from 'react-redux'
 import { UserInfo } from '../../../redux/reducers/user'
-import SelectOption from '../../../components/SelectOption'
 import {
   notifyError,
   notifyLoading,
@@ -121,13 +120,13 @@ export default function AddBus() {
             onChange={handleOnChange}
             required
           />
-          <SelectOption
+          {/* <SelectOption
             icon={<MdAirlineSeatReclineExtra />}
             label="format seat"
             options={formatSeat}
             selectedValue={form.format}
             onChange={handleOptionChange}
-          />
+          /> */}
           <Button
             className="h-[60px] w-full mt-2"
             type="submit"

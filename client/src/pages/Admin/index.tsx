@@ -1,27 +1,22 @@
 import { Link, Outlet } from 'react-router-dom'
-import { GiMeepleGroup } from 'react-icons/gi'
 import { HiOutlineBuildingOffice2 } from 'react-icons/hi2'
-import { BsBusFront } from 'react-icons/bs'
+import { BsFillBusFrontFill } from 'react-icons/bs'
 import Nav from '../../components/Nav'
+import { MdHotelClass } from 'react-icons/md'
+import { Image } from '@mantine/core'
+import LOGO from '../../assets/Logo.svg'
 
 function Dashboard() {
   return (
     <main className="flex">
       <aside className="w-[300px] rounded-tr-[40px] shadow-xl h-screen py-10">
         <Link to="/admin" className="block mb-10 px-8">
-          <h1 className="font-bold text-[35px] text-blue-500 align-middle">
-            GO🚍BUS
-          </h1>
+          <Image src={LOGO} width={180} />
         </Link>
         <div className="flex flex-col">
           <Nav
-            text="Bus"
-            icon={<BsBusFront />}
-            to="/admin/bus"
-          />
-          <Nav
             text="class"
-            icon={<GiMeepleGroup />}
+            icon={<MdHotelClass />}
             to="/admin/class"
           />
           <Nav
@@ -29,13 +24,11 @@ function Dashboard() {
             icon={<HiOutlineBuildingOffice2 />}
             to="/admin/armada"
           />
-          {/* <NavDropdown
-            text="Armada"
-            icon={<HiOutlineBuildingOffice2 />}>
-            <Link to="/admin/viewarmada">View Armada</Link>
-            <Link to="/admin/addarmada">Add Armada</Link>
-            <Link to="/admin/editarmada">Edit Armada</Link>
-          </NavDropdown> */}
+          <Nav
+            text="Bus"
+            icon={<BsFillBusFrontFill />}
+            to="/admin/bus"
+          />
         </div>
       </aside>
 

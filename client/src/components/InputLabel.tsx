@@ -19,12 +19,12 @@ function InputLabel({
   const labelName = label.toLowerCase().split(' ')[0]
 
   return (
-    <div className="flex items-center border-[3px] rounded-[10px] gap-5 px-[30px] relative">
-      <div className="py-[24px] [&>svg]:text-[24px]">
+    <div className="flex items-center border-[2px] sm:border-[3px] rounded-[10px] gap-5 px-[22px] sm:px-[30px] relative">
+      <div className="py-[20px] sm:py-[24px] [&>svg]:text-[20px] sm:[&>svg]:text-[24px]">
         {icon}
       </div>
       <span className="w-[3px] h-[30px] bg-[#f0eff2] rounded-xl"></span>
-      <div className="flex flex-col gap-[2px] w-56">
+      <div className="flex flex-col gap-[2px] w-full">
         <label
           htmlFor={labelName}
           className="capitalize text-[#989b9b] text-[14px] font-medium">
@@ -45,7 +45,7 @@ function InputLabel({
       </div>
       {type === 'password' ? (
         <div
-          className="absolute right-6 cursor-pointer [&>svg]:text-[20px] [&>svg]:text-[#989b9b]"
+          className="absolute right-6 cursor-pointer [&>svg]:text-[16px] sm:[&>svg]:text-[20px] [&>svg]:text-[#989b9b]"
           onClick={() =>
             setIsPasswordHide(
               isPasswordHide => !isPasswordHide

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { DecryptFromServer } from '../utils/Decrypt'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { setUser } from '../redux/actions/user'
 import { UserInfo } from '../redux/reducers/user'
 
@@ -16,9 +16,13 @@ interface State {
 export default function Guest({ children }: Props) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const location = useLocation().pathname
   const { email, role } = useSelector(
     (state: State) => state.user
   )
+
+  const AuthLocation =
+    location === '/signup' ? '/signup' : '/signin'
 
   const to_stores = localStorage.getItem('token')
 
@@ -32,7 +36,7 @@ export default function Guest({ children }: Props) {
         dispatch(setUser(result))
       } catch (error) {
         console.error('Error decrypting data:', error)
-        navigate('/')
+        navigate(AuthLocation)
       }
     }
 
@@ -43,10 +47,10 @@ export default function Guest({ children }: Props) {
             navigate('/admin')
             break
           case 'user':
-            navigate('/home')
+            navigate('/')
             break
           default:
-            navigate('/')
+            navigate(AuthLocation)
             break
         }
       }
@@ -57,9 +61,16 @@ export default function Guest({ children }: Props) {
       setState()
       protectedAdminOnly()
     } else {
-      navigate('/')
+      navigate(AuthLocation)
     }
-  }, [dispatch, navigate, to_stores, email, role])
+  }, [
+    dispatch,
+    navigate,
+    to_stores,
+    email,
+    role,
+    AuthLocation,
+  ])
 
   return children
 }

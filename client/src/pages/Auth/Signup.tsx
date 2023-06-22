@@ -11,6 +11,7 @@ import {
   notifyLoading,
   notifySuccess,
 } from '../../components/Toast'
+import AuthLayout from '../../components/Layouts/AuthLayout'
 
 const initialForm = {
   email: '',
@@ -71,42 +72,44 @@ function Signup(): JSX.Element {
   }
 
   return (
-    <form
-      className="flex flex-col gap-5"
-      onSubmit={handleOnSubmit}>
-      <InputLabel
-        icon={<HiOutlineMail />}
-        label="email Address"
-        type="email"
-        autoFocus
-        required
-        value={form.email}
-        onChange={handleOnChange}
-      />
-      <InputLabel
-        icon={<BiLockAlt />}
-        label="password"
-        type="password"
-        minLength={8}
-        required
-        value={form.password}
-        onChange={handleOnChange}
-      />
-      <InputLabel
-        icon={<BiLockAlt />}
-        label="confirm password"
-        type="password"
-        required
-        value={form.confirm}
-        onChange={handleOnChange}
-      />
-      <Button
-        type="submit"
-        text="Continue"
-        className="h-[60px]"
-        isLoading={isLoading}
-      />
-    </form>
+    <AuthLayout>
+      <form
+        className="flex flex-col gap-5"
+        onSubmit={handleOnSubmit}>
+        <InputLabel
+          icon={<HiOutlineMail />}
+          label="email Address"
+          type="email"
+          autoFocus
+          required
+          value={form.email}
+          onChange={handleOnChange}
+        />
+        <InputLabel
+          icon={<BiLockAlt />}
+          label="password"
+          type="password"
+          minLength={8}
+          required
+          value={form.password}
+          onChange={handleOnChange}
+        />
+        <InputLabel
+          icon={<BiLockAlt />}
+          label="confirm password"
+          type="password"
+          required
+          value={form.confirm}
+          onChange={handleOnChange}
+        />
+        <Button
+          type="submit"
+          text="Continue"
+          className="sm:h-[60px] h-[50px]"
+          isLoading={isLoading}
+        />
+      </form>
+    </AuthLayout>
   )
 }
 

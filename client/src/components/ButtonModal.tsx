@@ -14,6 +14,7 @@ type ButtonProps = {
   modalButtonAction: () => void
   modalButtonText: string
   cancelButtonText: string
+  isLeftButton?: boolean
 } & React.ButtonHTMLAttributes<HTMLButtonElement>
 
 const modalVariants = {
@@ -44,6 +45,7 @@ export default function ButtonModal({
   modalButtonAction,
   modalButtonText,
   cancelButtonText,
+  isLeftButton = true,
   ...props
 }: ButtonProps) {
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
@@ -89,12 +91,14 @@ export default function ButtonModal({
                 {children}
               </div>
               <div className="flex justify-center gap-4 p-5">
-                <Button
-                  type="button"
-                  text={cancelButtonText}
-                  onClick={toggleModal}
-                  className="bg-red-600 p-3 text-sm"
-                />
+                {isLeftButton ? (
+                  <Button
+                    type="button"
+                    text={cancelButtonText}
+                    onClick={toggleModal}
+                    className="bg-red-600 p-3 text-sm"
+                  />
+                ) : null}
                 <Button
                   type="button"
                   text={modalButtonText}
