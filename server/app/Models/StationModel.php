@@ -6,12 +6,12 @@ use CodeIgniter\Model;
 use Ramsey\Uuid\Uuid;
 use CodeIgniter\I18n\Time;
 
-class TerminalModel extends Model
+class StationModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'terminal';
-    protected $primaryKey       = 'terminalId';
-    protected $casts = ['terminalId' => 'string'];
+    protected $table            = 'station';
+    protected $primaryKey       = 'stationId';
+    protected $casts = ['stationId' => 'string'];
     protected $useAutoIncrement  = false;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
@@ -42,7 +42,7 @@ class TerminalModel extends Model
     protected $afterDelete    = [];
     protected function generateUUID(array $data)
     {
-        $data['data']['terminalId'] = Uuid::uuid4()->toString();
+        $data['data']['stationId'] = Uuid::uuid4()->toString();
         return $data;
     }
 

@@ -16,7 +16,7 @@ class CityModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'amount_terminal', 'created_at', 'updated_at'];
+    protected $allowedFields    = ['name', 'amount_station', 'created_at', 'updated_at'];
 
     // Dates
     protected $useTimestamps = false;

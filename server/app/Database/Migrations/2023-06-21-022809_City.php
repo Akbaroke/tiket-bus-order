@@ -18,7 +18,7 @@ class City extends Migration
                 'constraint' => 36,
                 'unique' => true
             ],
-            "amount_terminal" => [
+            "amount_station" => [
                 'type' => 'INT',
                 'constraint' => 11,
                 'null' => true,

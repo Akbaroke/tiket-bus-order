@@ -4,12 +4,12 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Terminal extends Migration
+class Station extends Migration
 {
     public function up()
     {
         $this->forge->addField([
-            'terminalId' => [
+            'stationId' => [
                 'type' => 'VARCHAR',
                 'constraint' => 36
             ],
@@ -20,7 +20,6 @@ class Terminal extends Migration
             'name' => [
                 'type' => 'VARCHAR',
                 'constraint' => 36,
-                'unique' => true
             ],
             'created_at' => [
                 'type' => 'BIGINT',
@@ -34,13 +33,13 @@ class Terminal extends Migration
             ]
         ]);
 
-        $this->forge->addKey('terminalId',  TRUE);
+        $this->forge->addKey('stationId',  TRUE);
         $this->forge->addForeignKey('cityId', 'cities', 'cityId', 'CASCADE', 'CASCADE');
-        $this->forge->createTable('terminal', TRUE);
+        $this->forge->createTable('station', TRUE);
     }
 
     public function down()
     {
-        $this->forge->dropTable('terminal');
+        $this->forge->dropTable('station');
     }
 }

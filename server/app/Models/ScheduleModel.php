@@ -16,7 +16,7 @@ class ScheduleModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['date', 'from', 'to', 'terminal', 'time', 'created_at', 'updated_at'];
+    protected $allowedFields    = ['date', 'from', 'to', 'time', 'created_at', 'updated_at'];
 
     // Dates
     protected $useTimestamps = false;
