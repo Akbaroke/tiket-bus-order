@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux'
 import { UserInfo } from '../../../redux/reducers/user'
 import { useSWRConfig } from 'swr'
 type Props = {
-  classId: string
+  busId: string
   name: string
 }
 
@@ -19,36 +19,24 @@ interface State {
   user: UserInfo
 }
 
-export default function DeleteClass({
-  classId,
-  name,
-}: Props) {
+export default function DeleteBus({ busId, name }: Props) {
   const { mutate } = useSWRConfig()
   const [isLoading, setIsLoading] = React.useState(false)
   const [opened, { open, close }] = useDisclosure(false)
-  const { encrypt } = useSelector(
-    (state: State) => state.user
-  )
+  const { encrypt } = useSelector((state: State) => state.user)
 
   const handleDelete = async () => {
-    notifyLoading('Delete processing...', 'deleteclass')
+    notifyLoading('Delete processing...', 'delete-bus')
     setIsLoading(true)
     try {
-      const { data } = await axios.post(
-        `/classes/delete/${classId}`,
-        {
-          encrypt: encrypt,
-        }
-      )
-      console.log(data)
-      notifySuccess(
-        'Delete class successful!',
-        'deleteclass'
-      )
-      mutate('/classes')
+      await axios.post(`/bus/delete/${busId}`, {
+        encrypt: encrypt,
+      })
+      notifySuccess('Delete bus successful!', 'delete-bus')
+      mutate('/bus')
     } catch (error) {
       console.log(error)
-      notifyError('Delete class failed!', 'deleteclass')
+      notifyError('Delete bus failed!', 'delete-bus')
     }
     setIsLoading(false)
   }
@@ -70,8 +58,8 @@ export default function DeleteClass({
         padding="xl">
         <div className="p-4 min-h-[80px]">
           <p className="text-sm">
-            You will remove the "<b>{name}</b>" class. Are
-            you sure ?
+            You will remove the "<b>{name}</b>" bus. Are you sure
+            ?
           </p>
         </div>
         <div className="flex justify-center gap-4 p-5">
@@ -91,11 +79,9 @@ export default function DeleteClass({
       </Modal>
 
       <Group>
-        <p
-          onClick={open}
-          className="text-[#FF0202] block hover:scale-105 transition-all cursor-pointer">
+        <Button onClick={open} variant="outline" color="red">
           Delete
-        </p>
+        </Button>
       </Group>
     </>
   )

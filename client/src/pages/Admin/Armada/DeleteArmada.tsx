@@ -10,8 +10,9 @@ import {
 import { useSelector } from 'react-redux'
 import { UserInfo } from '../../../redux/reducers/user'
 import { useSWRConfig } from 'swr'
+
 type Props = {
-  classId: string
+  armadaId: string
   name: string
 }
 
@@ -19,8 +20,8 @@ interface State {
   user: UserInfo
 }
 
-export default function DeleteClass({
-  classId,
+export default function DeleteArmada({
+  armadaId,
   name,
 }: Props) {
   const { mutate } = useSWRConfig()
@@ -31,24 +32,24 @@ export default function DeleteClass({
   )
 
   const handleDelete = async () => {
-    notifyLoading('Delete processing...', 'deleteclass')
+    notifyLoading('Delete processing...', 'delete-armada')
     setIsLoading(true)
     try {
       const { data } = await axios.post(
-        `/classes/delete/${classId}`,
+        `/busFleet/delete/${armadaId}`,
         {
           encrypt: encrypt,
         }
       )
       console.log(data)
       notifySuccess(
-        'Delete class successful!',
-        'deleteclass'
+        'Delete armada successful!',
+        'delete-armada'
       )
-      mutate('/classes')
+      mutate('/busFleet')
     } catch (error) {
       console.log(error)
-      notifyError('Delete class failed!', 'deleteclass')
+      notifyError('Delete armada failed!', 'delete-armada')
     }
     setIsLoading(false)
   }
@@ -61,7 +62,7 @@ export default function DeleteClass({
         title={
           <div className="flex flex-col gap-[10px]">
             <h1 className="text-[22px] text-[#095BA8] font-bold">
-              Delete Class
+              Delete Armada
             </h1>
             <span className="h-[1px] w-[200px] bg-[#095BA8]/30"></span>
           </div>
@@ -70,7 +71,7 @@ export default function DeleteClass({
         padding="xl">
         <div className="p-4 min-h-[80px]">
           <p className="text-sm">
-            You will remove the "<b>{name}</b>" class. Are
+            You will remove the "<b>{name}</b>" armada. Are
             you sure ?
           </p>
         </div>

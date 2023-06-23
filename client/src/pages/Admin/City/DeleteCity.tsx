@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux'
 import { UserInfo } from '../../../redux/reducers/user'
 import { useSWRConfig } from 'swr'
 type Props = {
-  classId: string
+  cityId: string
   name: string
 }
 
@@ -19,8 +19,8 @@ interface State {
   user: UserInfo
 }
 
-export default function DeleteClass({
-  classId,
+export default function DeleteCity({
+  cityId,
   name,
 }: Props) {
   const { mutate } = useSWRConfig()
@@ -31,11 +31,11 @@ export default function DeleteClass({
   )
 
   const handleDelete = async () => {
-    notifyLoading('Delete processing...', 'deleteclass')
+    notifyLoading('Delete processing...', 'delete-city')
     setIsLoading(true)
     try {
       const { data } = await axios.post(
-        `/classes/delete/${classId}`,
+        `/cities/delete/${cityId}`,
         {
           encrypt: encrypt,
         }
@@ -43,12 +43,12 @@ export default function DeleteClass({
       console.log(data)
       notifySuccess(
         'Delete class successful!',
-        'deleteclass'
+        'delete-city'
       )
-      mutate('/classes')
+      mutate('/city')
     } catch (error) {
       console.log(error)
-      notifyError('Delete class failed!', 'deleteclass')
+      notifyError('Delete class failed!', 'delete-city')
     }
     setIsLoading(false)
   }
@@ -61,7 +61,7 @@ export default function DeleteClass({
         title={
           <div className="flex flex-col gap-[10px]">
             <h1 className="text-[22px] text-[#095BA8] font-bold">
-              Delete Class
+              Delete City
             </h1>
             <span className="h-[1px] w-[200px] bg-[#095BA8]/30"></span>
           </div>
@@ -70,7 +70,7 @@ export default function DeleteClass({
         padding="xl">
         <div className="p-4 min-h-[80px]">
           <p className="text-sm">
-            You will remove the "<b>{name}</b>" class. Are
+            You will remove the "<b>{name}</b>" city. Are
             you sure ?
           </p>
         </div>

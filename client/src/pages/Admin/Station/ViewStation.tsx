@@ -3,67 +3,48 @@ import Search from '../../../components/Search'
 import { LuSearch } from 'react-icons/lu'
 import { useClickOutside } from '@mantine/hooks'
 import {
-  Armadas,
+  Stations,
   useSWRContext,
 } from '../../../contexts/swr-context'
 import { Table } from '@mantine/core'
-import AddArmada from './AddArmada'
-import EditArmada from './EditArmada'
-import DeleteArmada from './DeleteArmada'
+import AddStation from './AddStation'
+import EditStation from './EditStation'
 
-export default function ViewClass() {
+export default function ViewStation() {
   const swrContext = useSWRContext()
-  const armadas: Armadas[] | undefined = swrContext?.armadas
-  const [isSearch, setIsSearch] =
-    React.useState<boolean>(false)
+  const stations: Stations[] | undefined = swrContext?.stations
+  const [isSearch, setIsSearch] = React.useState<boolean>(false)
   const [search, setSearch] = React.useState<string>('')
   const [searchResult, setSearchResult] = React.useState<
-    Armadas[]
+    Stations[]
   >([])
   const ref = useClickOutside(() => setIsSearch(false))
 
   React.useEffect(() => {
-    if (armadas && search) {
-      setSearchResult(filterSearch(search, armadas))
+    if (stations && search) {
+      setSearchResult(filterSearch(search, stations))
     } else {
-      setSearchResult(armadas || [])
-      sortDataByUpdatedAt()
+      setSearchResult(stations || [])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [armadas, search])
+  }, [stations, search])
 
   function filterSearch(
     search: string,
-    armadas: Armadas[]
-  ): Armadas[] {
-    const filteredSearch = armadas.filter(item =>
-      item.name
-        .toString()
-        .toLowerCase()
-        .includes(search.toLowerCase())
+    stations: Stations[]
+  ): Stations[] {
+    const filteredSearch = stations.filter(
+      item =>
+        item.name
+          .toString()
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        item.city
+          .toString()
+          .toLowerCase()
+          .includes(search.toLowerCase())
     )
     return filteredSearch
-  }
-
-  // Fungsi untuk membandingkan dua objek berdasarkan updated_at
-  function compareByUpdatedAt(
-    a: Armadas,
-    b: Armadas
-  ): number {
-    if (a.updated_at > b.updated_at) {
-      return -1
-    }
-    if (a.updated_at < b.updated_at) {
-      return 1
-    }
-    return 0
-  }
-
-  // Mengurutkan data berdasarkan updated_at
-  function sortDataByUpdatedAt(): void {
-    setSearchResult(prevSearchResult =>
-      [...prevSearchResult].sort(compareByUpdatedAt)
-    )
   }
 
   return (
@@ -72,7 +53,7 @@ export default function ViewClass() {
         <div className="flex justify-between items-center">
           <div className="flex flex-col gap-[6px]">
             <h1 className="text-[22px] text-[#095BA8] font-bold">
-              List Class
+              List Station
             </h1>
             <span className="h-[1px] w-[200px] bg-[#095BA8]/20"></span>
           </div>
@@ -92,7 +73,7 @@ export default function ViewClass() {
                 <LuSearch />
               </div>
             )}
-            <AddArmada />
+            <AddStation />
           </div>
         </div>
       </div>
@@ -110,22 +91,22 @@ export default function ViewClass() {
         verticalSpacing="sm">
         <thead className="bg-[#F2F7FA]">
           <tr>
-            <th>Armada Name</th>
-            <th>Amount Bus</th>
+            <th>Stations Name</th>
+            <th>City Name</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {searchResult.map(item => (
-            <tr key={item.busFleetId}>
+            <tr key={item.stationId}>
               <td className="capitalize">{item.name}</td>
-              <td>{item.amount_bus}</td>
+              <td>{item.city}</td>
               <td className="flex gap-8">
-                <EditArmada armadaId={item.busFleetId} />
-                <DeleteArmada
-                  armadaId={item.busFleetId}
-                  name={item.name}
-                />
+                <EditStation stationId={item.stationId} />
+                {/* <DeleteClass
+                  classId={item.classId}
+                  name={item.className}
+                /> */}
               </td>
             </tr>
           ))}

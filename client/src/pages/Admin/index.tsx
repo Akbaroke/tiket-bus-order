@@ -1,6 +1,9 @@
 import { Link, Outlet } from 'react-router-dom'
 import { HiOutlineBuildingOffice2 } from 'react-icons/hi2'
 import { BsFillBusFrontFill } from 'react-icons/bs'
+import { SlLocationPin } from 'react-icons/sl'
+import { TbBusStop } from 'react-icons/tb'
+import { AiOutlineSchedule } from 'react-icons/ai'
 import Nav from '../../components/Nav'
 import { MdHotelClass } from 'react-icons/md'
 import { Image } from '@mantine/core'
@@ -28,6 +31,21 @@ function Dashboard() {
             text="Bus"
             icon={<BsFillBusFrontFill />}
             to="/admin/bus"
+          />
+          <Nav
+            text="City"
+            icon={<SlLocationPin />}
+            to="/admin/city"
+          />
+          <Nav
+            text="Bus Station"
+            icon={<TbBusStop />}
+            to="/admin/station"
+          />
+          <Nav
+            text="Schedule"
+            icon={<AiOutlineSchedule />}
+            to="/admin/schedule"
           />
         </div>
       </aside>

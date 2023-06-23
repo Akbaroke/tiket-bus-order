@@ -27,7 +27,9 @@ export default function ViewClass() {
       setSearchResult(filterSearch(search, classes))
     } else {
       setSearchResult(classes || [])
+      sortDataByUpdatedAt()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [classes, search])
 
   function filterSearch(
@@ -48,6 +50,27 @@ export default function ViewClass() {
           .includes(search.toLowerCase())
     )
     return filteredSearch
+  }
+
+  // Fungsi untuk membandingkan dua objek berdasarkan updated_at
+  function compareByUpdatedAt(
+    a: Classes,
+    b: Classes
+  ): number {
+    if (a.updated_at > b.updated_at) {
+      return -1
+    }
+    if (a.updated_at < b.updated_at) {
+      return 1
+    }
+    return 0
+  }
+
+  // Mengurutkan data berdasarkan updated_at
+  function sortDataByUpdatedAt(): void {
+    setSearchResult(prevSearchResult =>
+      [...prevSearchResult].sort(compareByUpdatedAt)
+    )
   }
 
   return (

@@ -1,103 +1,36 @@
-import * as React from 'react'
-import InputLabel from '../../../components/InputLabel'
-import { HiOutlineHashtag } from 'react-icons/hi'
-import Button from '../../../components/Button'
-import { env } from '../../../vite-env.d'
-import axios from '../../../api'
-import { useSelector } from 'react-redux'
-import { UserInfo } from '../../../redux/reducers/user'
-import {
-  notifyError,
-  notifyLoading,
-  notifySuccess,
-} from '../../../components/Toast'
-import { useNavigate } from 'react-router-dom'
-
-interface State {
-  user: UserInfo
-}
-
-type Form = {
-  name: string
-}
-
-const initialForm = {
-  name: '',
-}
+import { useDisclosure } from '@mantine/hooks'
+import { Group, Modal } from '@mantine/core'
+import { HiPlus } from 'react-icons/hi2'
+import FormArmada from './FormArmada'
 
 export default function AddArmada() {
-  const [form, setForm] = React.useState<Form>(initialForm)
-  const [isLoading, setIsLoading] =
-    React.useState<boolean>(false)
-  const { encrypt } = useSelector(
-    (state: State) => state.user
-  )
-  const navigate = useNavigate()
-
-  const handleOnChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { id, value } = e.target
-    setForm(prevForm => ({
-      ...prevForm,
-      [id]: value,
-    }))
-  }
-
-  const handleSubmit = async (
-    e: React.SyntheticEvent
-  ): Promise<void> => {
-    e.preventDefault()
-    notifyLoading('Send data...', 'addarmada')
-    setIsLoading(true)
-
-    try {
-      await axios.post(
-        `${env.VITE_APP_URL}/busFleet/create`,
-        {
-          name: form.name,
-          encrypt: encrypt,
-        }
-      )
-      notifySuccess(
-        'Add new armada successful!',
-        'addarmada'
-      )
-      setForm(initialForm)
-      navigate('/admin/armada')
-    } catch (error) {
-      console.log(error)
-      notifyError('Add new armada failed!', 'addarmada')
-    }
-
-    setIsLoading(false)
-  }
+  const [opened, { open, close }] = useDisclosure(false)
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div>
-        <h1 className="text-center font-semibold text-[20px] mb-6">
-          Add New Armada
-        </h1>
-        <form
-          className="flex flex-col gap-5 items-center w-full"
-          onSubmit={handleSubmit}>
-          <InputLabel
-            icon={<HiOutlineHashtag />}
-            label="name armada"
-            value={form.name}
-            onChange={handleOnChange}
-            autoFocus
-            required
-          />
-          <Button
-            className="h-[60px] w-full mt-2"
-            type="submit"
-            isLoading={isLoading}>
-            Save
-          </Button>
-        </form>
-      </div>
-    </div>
+    <>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title={
+          <div className="flex flex-col gap-[10px]">
+            <h1 className="text-[22px] text-[#095BA8] font-bold">
+              Add Armada
+            </h1>
+            <span className="h-[1px] w-[200px] bg-[#095BA8]/30"></span>
+          </div>
+        }
+        centered
+        padding="xl">
+        <FormArmada type="add" onClose={close} />
+      </Modal>
+
+      <Group>
+        <div
+          onClick={open}
+          className="grid place-items-center w-[37px] h-[37px] rounded-[10px] bg-[#095BA8] text-[22px] shadow-lg [&>svg]:text-[16px] [&>svg]:text-white cursor-pointer">
+          <HiPlus />
+        </div>
+      </Group>
+    </>
   )
 }

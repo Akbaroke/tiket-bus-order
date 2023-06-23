@@ -1,33 +1,30 @@
 import * as React from 'react'
-import axios from '../../../api'
-import { env } from '../../../vite-env.d'
-import { HiRectangleGroup } from 'react-icons/hi2'
-import {
-  MdOutlineAirlineSeatReclineExtra,
-  MdReduceCapacity,
-} from 'react-icons/md'
 import Search from '../../../components/Search'
-import { HiPlus } from 'react-icons/hi'
-import { Link } from 'react-router-dom'
-
-interface Bus {
-  id: string
-  class: string
-  seatingCapacity: string
-  format: string
-  armada: string
-}
+import { LuSearch } from 'react-icons/lu'
+import { useClickOutside } from '@mantine/hooks'
+import {
+  Buses,
+  useSWRContext,
+} from '../../../contexts/swr-context'
+import {
+  MdAirlineSeatReclineNormal,
+  MdEventSeat,
+  MdHotelClass,
+} from 'react-icons/md'
+import { BsFillBusFrontFill } from 'react-icons/bs'
+import AddBus from './AddBus'
+import EditBus from './EditBus'
 
 export default function ViewBus() {
-  const [buses, setBuses] = React.useState<Bus[]>([])
+  const swrContext = useSWRContext()
+  const buses: Buses[] | undefined = swrContext?.buses
+  const [isSearch, setIsSearch] =
+    React.useState<boolean>(false)
   const [search, setSearch] = React.useState<string>('')
   const [searchResult, setSearchResult] = React.useState<
-    Bus[]
+    Buses[]
   >([])
-
-  React.useEffect(() => {
-    getAllBuses()
-  }, [])
+  const ref = useClickOutside(() => setIsSearch(false))
 
   React.useEffect(() => {
     if (buses && search) {
@@ -35,14 +32,19 @@ export default function ViewBus() {
     } else {
       setSearchResult(buses || [])
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [buses, search])
 
   function filterSearch(
     search: string,
-    buses: Bus[]
-  ): Bus[] {
+    buses: Buses[]
+  ): Buses[] {
     const filteredSearch = buses.filter(
       item =>
+        item.code
+          .toString()
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
         item.class
           .toString()
           .toLowerCase()
@@ -63,54 +65,77 @@ export default function ViewBus() {
     return filteredSearch
   }
 
-  const getAllBuses = async (): Promise<void> => {
-    const { data } = await axios.get(
-      `${env.VITE_APP_URL}/bus`
-    )
-    setBuses(data.data)
-  }
-
   return (
     <div className="p-10">
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between gap-5">
-          <Search
-            setClearValue={() => setSearch('')}
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="flex-1"
-          />
-          <Link
-            to="/admin/bus/add"
-            className="grid place-items-center w-[48px] h-[48px] rounded-[10px] bg-[#0266FF] text-[22px] text-white shadow-lg">
-            <HiPlus />
-          </Link>
+      <div className="flex flex-col gap-2 mb-8">
+        <div className="flex justify-between items-center">
+          <div className="flex flex-col gap-[6px]">
+            <h1 className="text-[22px] text-[#095BA8] font-bold">
+              List Bus
+            </h1>
+            <span className="h-[1px] w-[200px] bg-[#095BA8]/20"></span>
+          </div>
+          <div className="flex justify-end gap-[10px]">
+            {isSearch ? (
+              <Search
+                ref={ref}
+                setClearValue={() => setSearch('')}
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="flex-1"
+              />
+            ) : (
+              <div
+                className="grid place-items-center w-[37px] h-[37px] rounded-[10px] bg-white text-[22px] text-[#262626] shadow-lg [&>svg]:text-[16px] cursor-pointer"
+                onClick={() => setIsSearch(!isSearch)}>
+                <LuSearch />
+              </div>
+            )}
+            <AddBus />
+          </div>
         </div>
       </div>
-      <div className="flex flex-wrap gap-4">
+      {search.length > 0 ? (
+        <h2 className="text-sm">
+          <i>Search result for :</i>
+          <b> {search}</b>
+        </h2>
+      ) : null}
+      <div className="flex flex-wrap gap-[20px] mt-4">
         {searchResult.map(item => (
-          <Link
-            to={`/admin/bus/${item.id}`}
-            key={item.id}
-            className="p-5 rounded-[10px] shadow-lg w-[216px] h-[157px] relative">
-            <HiRectangleGroup className="text-[71px] text-[#D2D2D2]" />
-            <h1 className="font-semibold text-[20px] capitalize">
-              {item.class}
-            </h1>
-            <div className="flex justify-start items-center gap-1 text-[#0266FF]">
-              <MdReduceCapacity className="text-[18px]" />
-              <p className="text-[18px] font-medium">
-                {item.seatingCapacity}
-              </p>
+          <EditBus busId={item.id} key={item.id}>
+            <div className="w-[199px] h-[110px] shadow-md hover:shadow-lg transition-shadow p-[15px] rounded-[5px] relative overflow-hidden flex flex-col justify-between cursor-pointer">
+              <div className="flex justify-between">
+                <div className="flex flex-col">
+                  <h1 className="text-[18px] text-[#262626] font-medium leading-none">
+                    {item.code}
+                  </h1>
+                  <p className="text-[#9F9F9F] text-[11px]">
+                    {item.armada}
+                  </p>
+                </div>
+                <div className="w-max h-max px-1 p border border-[#095BA8] flex gap-[2px] items-center rounded-[3px] bg-[#E3EEFF] text-[10px] text-[#095BA8] font-semibold [&>svg]:text-[12px]">
+                  <MdAirlineSeatReclineNormal />
+                  <p>{item.format}</p>
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <div className="text-[#FF7200] flex gap-1 items-center justify-start">
+                  <MdHotelClass className="text-[14px]" />
+                  <p className="text-[12px] capitalize">
+                    {item.class}
+                  </p>
+                </div>
+                <div className="text-[#095BA8] flex gap-1 items-center justify-start -mt-[2px]">
+                  <MdEventSeat className="text-[14px]" />
+                  <p className="text-[12px] capitalize">
+                    {item.seatingCapacity} Seats
+                  </p>
+                </div>
+              </div>
+              <BsFillBusFrontFill className="absolute block w-[132px] h-[125px] -top-[6px] -right-[10px] -z-10 text-[#095BA8]/5" />
             </div>
-            {item.armada}
-            <div className="px-1 border border-[#5799FF] bg-[#E3EEFF] rounded-[3px] w-max h-max flex justify-center items-center gap-1 text-[#5799FF] absolute top-7 right-4">
-              <MdOutlineAirlineSeatReclineExtra className="text-[12px] font-semibold" />
-              <p className="text-[12px] font-medium">
-                {item.format}
-              </p>
-            </div>
-          </Link>
+          </EditBus>
         ))}
       </div>
     </div>

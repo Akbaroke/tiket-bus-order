@@ -8,7 +8,6 @@ import {
   TextInput,
 } from '@mantine/core'
 import axios from '../../../api'
-import { env } from '../../../vite-env.d'
 import {
   notifyError,
   notifyLoading,
@@ -51,7 +50,7 @@ function FormClass({ type, classId, onClose }: Props) {
     classId: string
   ): Promise<void> => {
     const { data } = await axios.get(
-      `${env.VITE_APP_URL}/classes/getById/${classId}`
+      `/classes/getById/${classId}`
     )
     const { className, format, seatingCapacity } = data.data
     form.setValues({
@@ -69,7 +68,7 @@ function FormClass({ type, classId, onClose }: Props) {
   const handleAdd = async (
     value: FormValues
   ): Promise<void> => {
-    notifyLoading('Send data...', 'addclass')
+    notifyLoading('Send data...', 'add-class')
     setIsLoading(true)
 
     try {
@@ -80,11 +79,11 @@ function FormClass({ type, classId, onClose }: Props) {
         encrypt: encrypt,
       })
       mutate('/classes')
-      notifySuccess('Add class successful!', 'addclass')
+      notifySuccess('Add class successful!', 'add-class')
       onClose()
     } catch (error) {
       console.log(error)
-      notifyError('Add class failed!', 'addclass')
+      notifyError('Add class failed!', 'add-class')
     }
     setIsLoading(false)
   }
@@ -92,7 +91,7 @@ function FormClass({ type, classId, onClose }: Props) {
   const handleEdit = async (
     value: FormValues
   ): Promise<void> => {
-    notifyLoading('Send data...', 'editclass')
+    notifyLoading('Send data...', 'edit-class')
     setIsLoading(true)
 
     try {
@@ -104,11 +103,11 @@ function FormClass({ type, classId, onClose }: Props) {
       })
 
       mutate('/classes')
-      notifySuccess('Edit class successful!', 'editclass')
+      notifySuccess('Edit class successful!', 'edit-class')
       onClose()
     } catch (error) {
       console.log(error)
-      notifyError('Edit class failed!', 'editclass')
+      notifyError('Edit class failed!', 'edit-class')
     }
     setIsLoading(false)
   }

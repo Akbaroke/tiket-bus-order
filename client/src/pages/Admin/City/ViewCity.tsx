@@ -3,53 +3,54 @@ import Search from '../../../components/Search'
 import { LuSearch } from 'react-icons/lu'
 import { useClickOutside } from '@mantine/hooks'
 import {
-  Armadas,
+  Cities,
   useSWRContext,
 } from '../../../contexts/swr-context'
 import { Table } from '@mantine/core'
-import AddArmada from './AddArmada'
-import EditArmada from './EditArmada'
-import DeleteArmada from './DeleteArmada'
+import AddCity from './AddCity'
+import EditCity from './EditCity'
+import DeleteCity from './DeleteCity'
 
-export default function ViewClass() {
+export default function ViewCity() {
   const swrContext = useSWRContext()
-  const armadas: Armadas[] | undefined = swrContext?.armadas
-  const [isSearch, setIsSearch] =
-    React.useState<boolean>(false)
+  const cities: Cities[] | undefined = swrContext?.cities
+  const [isSearch, setIsSearch] = React.useState<boolean>(false)
   const [search, setSearch] = React.useState<string>('')
   const [searchResult, setSearchResult] = React.useState<
-    Armadas[]
+    Cities[]
   >([])
   const ref = useClickOutside(() => setIsSearch(false))
 
   React.useEffect(() => {
-    if (armadas && search) {
-      setSearchResult(filterSearch(search, armadas))
+    if (cities && search) {
+      setSearchResult(filterSearch(search, cities))
     } else {
-      setSearchResult(armadas || [])
+      setSearchResult(cities || [])
       sortDataByUpdatedAt()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [armadas, search])
+  }, [cities, search])
 
   function filterSearch(
     search: string,
-    armadas: Armadas[]
-  ): Armadas[] {
-    const filteredSearch = armadas.filter(item =>
-      item.name
-        .toString()
-        .toLowerCase()
-        .includes(search.toLowerCase())
+    cities: Cities[]
+  ): Cities[] {
+    const filteredSearch = cities.filter(
+      item =>
+        item.name
+          .toString()
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        item.amount_station
+          .toString()
+          .toLowerCase()
+          .includes(search.toLowerCase())
     )
     return filteredSearch
   }
 
   // Fungsi untuk membandingkan dua objek berdasarkan updated_at
-  function compareByUpdatedAt(
-    a: Armadas,
-    b: Armadas
-  ): number {
+  function compareByUpdatedAt(a: Cities, b: Cities): number {
     if (a.updated_at > b.updated_at) {
       return -1
     }
@@ -72,7 +73,7 @@ export default function ViewClass() {
         <div className="flex justify-between items-center">
           <div className="flex flex-col gap-[6px]">
             <h1 className="text-[22px] text-[#095BA8] font-bold">
-              List Class
+              List City
             </h1>
             <span className="h-[1px] w-[200px] bg-[#095BA8]/20"></span>
           </div>
@@ -92,7 +93,7 @@ export default function ViewClass() {
                 <LuSearch />
               </div>
             )}
-            <AddArmada />
+            <AddCity />
           </div>
         </div>
       </div>
@@ -110,20 +111,20 @@ export default function ViewClass() {
         verticalSpacing="sm">
         <thead className="bg-[#F2F7FA]">
           <tr>
-            <th>Armada Name</th>
-            <th>Amount Bus</th>
+            <th>City Name</th>
+            <th>Amount Station</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {searchResult.map(item => (
-            <tr key={item.busFleetId}>
+            <tr key={item.cityId}>
               <td className="capitalize">{item.name}</td>
-              <td>{item.amount_bus}</td>
+              <td>{item.amount_station}</td>
               <td className="flex gap-8">
-                <EditArmada armadaId={item.busFleetId} />
-                <DeleteArmada
-                  armadaId={item.busFleetId}
+                <EditCity cityId={item.cityId} />
+                <DeleteCity
+                  cityId={item.cityId}
                   name={item.name}
                 />
               </td>
