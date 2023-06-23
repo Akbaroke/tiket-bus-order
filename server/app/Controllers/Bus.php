@@ -26,7 +26,7 @@ class Bus extends ResourceController
     public function index()
     {
         try {
-            $data = $this->BusModel->select('bus.code, bus.busId as id, bus.classId as id_class, c.className as class, c.seatingCapacity, c.format, f.name as armada')
+            $data = $this->BusModel->select('bus.code, bus.busId as id, bus.busFleetId, bus.classId as id_class, c.className as class, c.seatingCapacity, c.format, f.name as armada')
                 ->join('classes as c', 'c.classId = bus.classId')
                 ->join('busFleet as f', 'f.busFleetId = bus.busFleetId')
                 ->findAll();
@@ -48,7 +48,7 @@ class Bus extends ResourceController
     public function getById($busId = null)
     {
         try {
-            $data = $this->BusModel->select('bus.code, bus.busId as id, bus.classId as id_class, c.className as class, c.seatingCapacity, c.format, f.name as fleetName')
+            $data = $this->BusModel->select('bus.code, bus.busId as id, bus.busFleetId, bus.classId as id_class, c.className as class, c.seatingCapacity, c.format, f.name as fleetName')
                 ->join('classes as c', 'c.classId = bus.classId')
                 ->join('busFleet as f', 'f.busFleetId = bus.busFleetId')
                 ->where("bus.busId", $busId)
