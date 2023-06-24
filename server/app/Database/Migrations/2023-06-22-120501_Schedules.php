@@ -35,6 +35,17 @@ class Schedules extends Migration
                 'required' => true,
                 'unsigned' => true
             ],
+            'busId' => [
+                'type' => 'VARCHAR',
+                'required' => true,
+                'constraint' => 36
+            ],
+            'price' => [
+                'type' => 'BIGINT',
+                'constraint' => 20,
+                'required' => true,
+                'unsigned' => true,
+            ],
             'created_at' => [
                 'type' => 'BIGINT',
                 'constraint' => 20,
@@ -50,6 +61,7 @@ class Schedules extends Migration
         $this->forge->addKey('scheduleId',  TRUE);
         $this->forge->addForeignKey('from', 'station', 'stationId', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('to', 'station', 'stationId', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('busId', 'bus', 'busId', 'CASCADE', 'CASCADE');
         $this->forge->createTable('schedules', TRUE);
     }
 
