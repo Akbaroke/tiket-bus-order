@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux'
 import { UserInfo } from '../../../redux/reducers/user'
 import { useSWRConfig } from 'swr'
 type Props = {
-  classId: string
+  scheduleId: string
   name: string
 }
 
@@ -19,33 +19,30 @@ interface State {
   user: UserInfo
 }
 
-export default function DeleteClass({
-  classId,
+export default function DeleteSchedule({
+  scheduleId,
   name,
 }: Props) {
   const { mutate } = useSWRConfig()
   const [isLoading, setIsLoading] = React.useState(false)
   const [opened, { open, close }] = useDisclosure(false)
-  const { encrypt } = useSelector(
-    (state: State) => state.user
-  )
+  const { encrypt } = useSelector((state: State) => state.user)
 
   const handleDelete = async () => {
-    notifyLoading('Delete processing...', 'delete-class')
+    notifyLoading('Delete processing...', 'delete-schedule')
     setIsLoading(true)
     try {
-      const { data } = await axios.post(
-        `/classes/delete/${classId}`,
-        {
-          encrypt: encrypt,
-        }
+      await axios.post(`/schedule/delete/${scheduleId}`, {
+        encrypt: encrypt,
+      })
+      notifySuccess(
+        'Delete schedule successful!',
+        'delete-schedule'
       )
-      console.log(data)
-      notifySuccess('Delete class successful!', 'delete-class')
-      mutate('/classes')
+      mutate('/schedule')
     } catch (error) {
       console.log(error)
-      notifyError('Delete class failed!', 'delete-class')
+      notifyError('Delete schedule failed!', 'delete-schedule')
     }
     setIsLoading(false)
   }
@@ -58,7 +55,7 @@ export default function DeleteClass({
         title={
           <div className="flex flex-col gap-[10px]">
             <h1 className="text-[22px] text-[#095BA8] font-bold">
-              Delete Class
+              Delete Schedule
             </h1>
             <span className="h-[1px] w-[200px] bg-[#095BA8]/30"></span>
           </div>
@@ -67,8 +64,8 @@ export default function DeleteClass({
         padding="xl">
         <div className="p-4 min-h-[80px]">
           <p className="text-sm">
-            You will remove the "<b>{name}</b>" class. Are
-            you sure ?
+            You will remove the "<b>{name}</b>" schedule. Are you
+            sure ?
           </p>
         </div>
         <div className="flex justify-center gap-4 p-5">
@@ -88,11 +85,9 @@ export default function DeleteClass({
       </Modal>
 
       <Group>
-        <p
-          onClick={open}
-          className="text-[#FF0202] block hover:scale-105 transition-all cursor-pointer">
+        <Button onClick={open} variant="outline" color="red">
           Delete
-        </p>
+        </Button>
       </Group>
     </>
   )

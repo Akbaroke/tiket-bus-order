@@ -41,6 +41,25 @@ export interface Stations {
   name: string
   city: string
 }
+export interface Schedules {
+  scheduleId: string
+  busId: string
+  code: string
+  price: string
+  station_from: string
+  name_station_from: string
+  city_station_from: string
+  station_to: string
+  name_station_to: string
+  name_city_to: string
+  date: string
+  time: string
+  format: string
+  className: string
+  seatingCapacity: string
+  name_bus_fleet: string
+  updated_at: string
+}
 
 interface SWRContextValue {
   classes: Classes[]
@@ -48,6 +67,7 @@ interface SWRContextValue {
   buses: Buses[]
   cities: Cities[]
   stations: Stations[]
+  schedules: Schedules[]
 }
 
 export const SWRContext = React.createContext<
@@ -75,16 +95,28 @@ export const SWRProvider = ({ children }: Props) => {
     const { data } = await axios.get('/station')
     return data.data
   }
+  const scheduleFetch = async () => {
+    const { data } = await axios.get('/schedule')
+    return data.data
+  }
 
   const { data: classes } = useSWR('/classes', classFetch)
   const { data: armadas } = useSWR('/armada', armadaFetch)
   const { data: buses } = useSWR('/bus', busFetch)
   const { data: cities } = useSWR('/city', cityFetch)
   const { data: stations } = useSWR('/station', stationFetch)
+  const { data: schedules } = useSWR('/schedule', scheduleFetch)
 
   return (
     <SWRContext.Provider
-      value={{ classes, armadas, buses, cities, stations }}>
+      value={{
+        classes,
+        armadas,
+        buses,
+        cities,
+        stations,
+        schedules,
+      }}>
       {children}
     </SWRContext.Provider>
   )

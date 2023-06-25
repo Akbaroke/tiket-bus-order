@@ -9,6 +9,7 @@ import {
 import { Table } from '@mantine/core'
 import AddStation from './AddStation'
 import EditStation from './EditStation'
+import DeleteStation from './DeleteStation'
 
 export default function ViewStation() {
   const swrContext = useSWRContext()
@@ -103,10 +104,10 @@ export default function ViewStation() {
               <td>{item.city}</td>
               <td className="flex gap-8">
                 <EditStation stationId={item.stationId} />
-                {/* <DeleteClass
-                  classId={item.classId}
-                  name={item.className}
-                /> */}
+                <DeleteStation
+                  stationId={item.stationId}
+                  name={item.name}
+                />
               </td>
             </tr>
           ))}

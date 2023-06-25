@@ -5,15 +5,17 @@ type Props = {
   text: string
   to: string
   icon: JSX.Element
+  onClose?: () => void
 }
 
-export default function Nav({ text, to, icon }: Props) {
+export default function Nav({ text, to, icon, onClose }: Props) {
   const location = useLocation()
   const route = location.pathname
 
   return (
     <Link
       to={to}
+      onClick={onClose}
       className={clsx(
         'flex gap-[18px] items-center px-9 py-6 w-full border border-x-0 hover:border-y-[#F0EFF2] transition-all cursor-pointer [&>svg]:text-[20px] ',
         route.includes(to)
