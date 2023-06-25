@@ -54,6 +54,8 @@ function FormCity({ type, cityId, onClose }: Props) {
         encrypt: encrypt,
       })
       mutate('/city')
+      mutate('/station')
+      mutate('/schedule')
       notifySuccess('Add city successful!', 'add-city')
       onClose()
     } catch (error) {
@@ -77,6 +79,7 @@ function FormCity({ type, cityId, onClose }: Props) {
 
       mutate('/city')
       mutate('/station')
+      mutate('/schedule')
       notifySuccess('Edit city successful!', 'edit-city')
       onClose()
     } catch (error) {

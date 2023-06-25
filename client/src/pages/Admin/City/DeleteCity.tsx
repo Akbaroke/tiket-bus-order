@@ -34,18 +34,14 @@ export default function DeleteCity({
     notifyLoading('Delete processing...', 'delete-city')
     setIsLoading(true)
     try {
-      const { data } = await axios.post(
-        `/cities/delete/${cityId}`,
-        {
-          encrypt: encrypt,
-        }
-      )
-      console.log(data)
-      notifySuccess(
-        'Delete class successful!',
-        'delete-city'
-      )
+      await axios.post(`/cities/delete/${cityId}`, {
+        encrypt: encrypt,
+      })
       mutate('/city')
+      mutate('/station')
+      mutate('/schedule')
+      notifySuccess('Delete class successful!', 'delete-city')
+      
     } catch (error) {
       console.log(error)
       notifyError('Delete class failed!', 'delete-city')

@@ -80,6 +80,7 @@ function FormBus({ type, busId, onClose }: Props) {
 
       mutate('/bus')
       mutate('/armada')
+      mutate('/schedule')
       notifySuccess('Edit bus successful!', 'edit-bus')
       onClose()
     } catch (error) {
@@ -101,6 +102,7 @@ function FormBus({ type, busId, onClose }: Props) {
       })
       mutate('/bus')
       mutate('/armada')
+      mutate('/schedule')
       notifySuccess('Add bus successful!', 'add-bus')
       onClose()
     } catch (error) {

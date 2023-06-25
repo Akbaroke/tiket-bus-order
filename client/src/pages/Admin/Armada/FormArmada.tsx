@@ -54,9 +54,7 @@ function FormArmada({ type, armadaId, onClose }: Props) {
     })
   }
 
-  const handleAdd = async (
-    value: FormValues
-  ): Promise<void> => {
+  const handleAdd = async (value: FormValues): Promise<void> => {
     notifyLoading('Send data...', 'add-armada')
     setIsLoading(true)
 
@@ -66,6 +64,8 @@ function FormArmada({ type, armadaId, onClose }: Props) {
         encrypt: encrypt,
       })
       mutate('/armada')
+      mutate('/bus')
+      mutate('/schedule')
       notifySuccess('Add armada successful!', 'add-armada')
       onClose()
     } catch (error) {
@@ -88,10 +88,9 @@ function FormArmada({ type, armadaId, onClose }: Props) {
       })
 
       mutate('/armada')
-      notifySuccess(
-        'Edit armada successful!',
-        'edit-armada'
-      )
+      mutate('/bus')
+      mutate('/schedule')
+      notifySuccess('Edit armada successful!', 'edit-armada')
       onClose()
     } catch (error) {
       console.log(error)

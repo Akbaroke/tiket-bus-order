@@ -34,15 +34,13 @@ export default function DeleteClass({
     notifyLoading('Delete processing...', 'delete-class')
     setIsLoading(true)
     try {
-      const { data } = await axios.post(
-        `/classes/delete/${classId}`,
-        {
-          encrypt: encrypt,
-        }
-      )
-      console.log(data)
-      notifySuccess('Delete class successful!', 'delete-class')
+      await axios.post(`/classes/delete/${classId}`, {
+        encrypt: encrypt,
+      })
       mutate('/classes')
+      mutate('/schedule')
+      mutate('/bus')
+      notifySuccess('Delete class successful!', 'delete-class')
     } catch (error) {
       console.log(error)
       notifyError('Delete class failed!', 'delete-class')

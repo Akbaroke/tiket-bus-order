@@ -35,11 +35,11 @@ export default function DeleteSchedule({
       await axios.post(`/schedule/delete/${scheduleId}`, {
         encrypt: encrypt,
       })
+      mutate('/schedule')
       notifySuccess(
         'Delete schedule successful!',
         'delete-schedule'
       )
-      mutate('/schedule')
     } catch (error) {
       console.log(error)
       notifyError('Delete schedule failed!', 'delete-schedule')

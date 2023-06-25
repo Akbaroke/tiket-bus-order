@@ -32,8 +32,10 @@ export default function DeleteBus({ busId, name }: Props) {
       await axios.post(`/bus/delete/${busId}`, {
         encrypt: encrypt,
       })
-      notifySuccess('Delete bus successful!', 'delete-bus')
       mutate('/bus')
+      mutate('/armada')
+      mutate('/schedule')
+      notifySuccess('Delete bus successful!', 'delete-bus')
     } catch (error) {
       console.log(error)
       notifyError('Delete bus failed!', 'delete-bus')

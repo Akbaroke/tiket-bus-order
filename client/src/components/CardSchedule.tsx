@@ -10,6 +10,7 @@ import { Schedules } from '../contexts/swr-context'
 import useIsTimestampPassed from '../hooks/useCurrentDate'
 import EditSchedule from '../pages/Admin/Schedule/EditSchedule'
 import rupiahFormat from '../utils/rupiahFormat'
+import clsx from 'clsx'
 
 export default function CardSchedule({
   data,
@@ -33,7 +34,7 @@ export default function CardSchedule({
         </div>
         <div className="relative mb-1">
           <Timeline
-            active={0}
+            active={hasPassed ? 1 : 0}
             mt="sm"
             bulletSize={10}
             lineWidth={2}>
@@ -88,7 +89,11 @@ export default function CardSchedule({
           </div>
         </div>
         <IoTicketOutline className="absolute block w-[250px] h-[250px] -top-[15px] -right-[15px] -z-10 text-[#095BA8]/5" />
-        <div className="bg-[#FFDD00] rounded-br-[5px] rounded-bl-[5px] w-[52px] h-[54px] text-[#095BA8] flex flex-col justify-center items-center absolute top-0 right-4">
+        <div
+          className={clsx(
+            ' rounded-br-[5px] rounded-bl-[5px] w-[52px] h-[54px] text-[#095BA8] flex flex-col justify-center items-center absolute top-0 right-4',
+            hasPassed ? 'bg-[#bcbcbc]' : 'bg-[#FFDD00]'
+          )}>
           <BiTimeFive className="text-[18px] -mb-[2px]" />
           <h1 className="text-[14px] font-semibold">
             {formatTime(Number(data.date))}
@@ -97,7 +102,6 @@ export default function CardSchedule({
             {formatDate(Number(data.date))}
           </p>
         </div>
-        {hasPassed ? 'habis' : 'belum'}
       </div>
     </EditSchedule>
   )

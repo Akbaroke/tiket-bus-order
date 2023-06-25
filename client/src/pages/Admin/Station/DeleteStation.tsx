@@ -32,18 +32,16 @@ export default function DeleteStation({
     notifyLoading('Delete processing...', 'delete-station')
     setIsLoading(true)
     try {
-      const { data } = await axios.post(
-        `/station/delete/${stationId}`,
-        {
-          encrypt: encrypt,
-        }
-      )
-      console.log(data)
+      await axios.post(`/station/delete/${stationId}`, {
+        encrypt: encrypt,
+      })
+      mutate('/city')
+      mutate('/station')
+      mutate('/schedule')
       notifySuccess(
         'Delete station successful!',
         'delete-station'
       )
-      mutate('/station')
     } catch (error) {
       console.log(error)
       notifyError('Delete station failed!', 'delete-station')
