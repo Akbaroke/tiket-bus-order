@@ -24,12 +24,14 @@ class Schedule extends ResourceController
     public function index()
     {
         try {
-            $data = $this->ScheduleModel->select('schedules.scheduleId, schedules.busId, b.code, schedules.price, s1.stationId as station_from, s1.name as name_station_from, c1.name as city_station_from, s2.stationId as station_to, s2.name as name_station_to, c2.name as name_city_to,schedules.date, schedules.time, schedules.created_at, schedules.updated_at')
+            $data = $this->ScheduleModel->select('schedules.scheduleId, schedules.busId, b.code, schedules.price, s1.stationId as station_from, s1.name as name_station_from, c1.name as city_station_from, s2.stationId as station_to, s2.name as name_station_to, c2.name as name_city_to,schedules.date, schedules.time, c.format, c.className, c.seatingCapacity, f.name as name_bus_fleet, schedules.created_at, schedules.updated_at')
                 ->join('station as s1', 's1.stationId = schedules.from')
                 ->join('station as s2', 's2.stationId = schedules.to')
-                ->join('cities as c1', 's2.cityId = c1.cityId')
+                ->join('cities as c1', 's1.cityId = c1.cityId')
                 ->join('cities as c2', 's2.cityId = c2.cityId')
                 ->join('bus as b', 'b.busId = schedules.busId')
+                ->join('classes as c', 'b.classId = c.classId')
+                ->join('busFleet as f', 'b.busFleetId = f.busFleetId')
                 ->findAll();
 
             $response = [
@@ -49,12 +51,14 @@ class Schedule extends ResourceController
     public function getById($scheduleId = null)
     {
         try {
-            $data = $this->ScheduleModel->select('schedules.scheduleId, schedules.busId, b.code, schedules.price, s1.stationId as station_from, s1.name as name_station_from, c1.name as city_station_from, s2.stationId as station_to, s2.name as name_station_to, c2.name as name_city_to,schedules.date, schedules.time, schedules.created_at, schedules.updated_at')
+            $data = $this->ScheduleModel->select('schedules.scheduleId, schedules.busId, b.code, schedules.price, s1.stationId as station_from, s1.name as name_station_from, c1.name as city_station_from, s2.stationId as station_to, s2.name as name_station_to, c2.name as name_city_to,schedules.date, schedules.time, c.format, c.className, c.seatingCapacity, f.name as name_bus_fleet, schedules.created_at, schedules.updated_at')
                 ->join('station as s1', 's1.stationId = schedules.from')
                 ->join('station as s2', 's2.stationId = schedules.to')
-                ->join('cities as c1', 's2.cityId = c1.cityId')
+                ->join('cities as c1', 's1.cityId = c1.cityId')
                 ->join('cities as c2', 's2.cityId = c2.cityId')
                 ->join('bus as b', 'b.busId = schedules.busId')
+                ->join('classes as c', 'b.classId = c.classId')
+                ->join('busFleet as f', 'b.busFleetId = f.busFleetId')
                 ->where("scheduleId", $scheduleId)
                 ->first();
 
