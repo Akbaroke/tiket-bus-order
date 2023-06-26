@@ -12,6 +12,7 @@ import {
   notifySuccess,
 } from '../../components/Toast'
 import AuthLayout from '../../components/Layouts/AuthLayout'
+import { useNavigate } from 'react-router-dom'
 
 const initialForm = {
   email: '',
@@ -20,10 +21,10 @@ const initialForm = {
 }
 
 function Signup(): JSX.Element {
-  const [form, setForm] =
-    React.useState<FormValues>(initialForm)
+  const [form, setForm] = React.useState<FormValues>(initialForm)
   const [isLoading, setIsLoading] =
     React.useState<boolean>(false)
+  const navigate = useNavigate()
 
   const handleOnChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -35,9 +36,7 @@ function Signup(): JSX.Element {
     }))
   }
 
-  const handleOnSubmit = async (
-    e: React.SyntheticEvent
-  ) => {
+  const handleOnSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
     setIsLoading(true)
     notifyLoading('Signup verify...', 'signup')
@@ -53,7 +52,7 @@ function Signup(): JSX.Element {
       )
       switch (data.status) {
         case 200:
-          console.log(data)
+          navigate('/signin')
           notifySuccess('Signup successful!', 'signup')
           break
         default:
