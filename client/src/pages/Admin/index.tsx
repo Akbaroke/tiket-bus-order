@@ -55,28 +55,47 @@ function Dashboard() {
     ))
   }
 
+  const Logo = ({
+    width,
+    className,
+  }: {
+    width: number
+    className?: string
+  }) => (
+    <Link to="/admin" className={className}>
+      <Image src={LOGO} width={width} />
+    </Link>
+  )
+
   const drawerContent = (
     <>
-      <Link to="/admin" className="block mb-10 px-8">
-        <Image src={LOGO} width={180} />
-      </Link>
-      <div className="flex flex-col">{renderNavLinks()}</div>
+      <div>
+        <Logo className="block mb-10 px-8" width={150} />
+        <div className="flex flex-col">{renderNavLinks()}</div>
+      </div>
       <Logout />
     </>
   )
 
   return (
-    <main className="flex">
-      <aside className="w-[300px] rounded-tr-[40px] shadow-xl h-screen py-10 hidden sm:block">
+    <main className="sm:flex">
+      <aside className="w-[300px] rounded-tr-[40px] shadow-xl min-h-screen h-full py-10 hidden sm:flex sm:justify-between sm:flex-col">
         {drawerContent}
       </aside>
-      <div className="sm:hidden">
-        <Drawer opened={opened} onClose={close}>
-          {drawerContent}
-        </Drawer>
-        <Group position="center">
-          <Burger opened={opened} onClick={open} />
-        </Group>
+      <div className="sm:hidden flex justify-between py-4 px-5 shadow-md">
+        <Logo width={120} />
+        <div>
+          <Drawer opened={opened} onClose={close}>
+            {drawerContent}
+          </Drawer>
+          <Group position="center">
+            <Burger
+              opened={opened}
+              onClick={open}
+              className="[&>*]:bg-[#262626] [&>*]:before:bg-[#262626] [&>*]:after:bg-[#262626]"
+            />
+          </Group>
+        </div>
       </div>
 
       <div className="flex-1">

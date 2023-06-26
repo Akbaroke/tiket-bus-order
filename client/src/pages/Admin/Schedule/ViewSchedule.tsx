@@ -8,6 +8,7 @@ import {
 } from '../../../contexts/swr-context'
 import CardSchedule from '../../../components/CardSchedule'
 import AddSchedule from './AddSchedule'
+import HeaderAdmin from '../../../components/Layouts/HeaderAdmin'
 
 export default function ViewSchedule() {
   const swrContext = useSWRContext()
@@ -25,6 +26,7 @@ export default function ViewSchedule() {
       setSearchResult(filterSearch(search, schedules))
     } else {
       setSearchResult(schedules || [])
+      sortDataByUpdatedAt()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [schedules, search])
@@ -63,36 +65,45 @@ export default function ViewSchedule() {
     return filteredSearch
   }
 
+  function compareByUpdatedAt(
+    a: Schedules,
+    b: Schedules
+  ): number {
+    if (a.updated_at > b.updated_at) {
+      return -1
+    }
+    if (a.updated_at < b.updated_at) {
+      return 1
+    }
+    return 0
+  }
+
+  function sortDataByUpdatedAt(): void {
+    setSearchResult(prevSearchResult =>
+      [...prevSearchResult].sort(compareByUpdatedAt)
+    )
+  }
+
   return (
     <div className="p-10">
-      <div className="flex flex-col gap-2 mb-8">
-        <div className="flex justify-between items-center">
-          <div className="flex flex-col gap-[6px]">
-            <h1 className="text-[22px] text-[#095BA8] font-bold">
-              List Schedule
-            </h1>
-            <span className="h-[1px] w-[200px] bg-[#095BA8]/20"></span>
+      <HeaderAdmin title="list schedule">
+        {isSearch ? (
+          <Search
+            ref={ref}
+            setClearValue={() => setSearch('')}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="flex-1"
+          />
+        ) : (
+          <div
+            className="grid place-items-center w-[37px] h-[37px] rounded-[10px] bg-white text-[22px] text-[#262626] shadow-lg [&>svg]:text-[16px] cursor-pointer"
+            onClick={() => setIsSearch(!isSearch)}>
+            <LuSearch />
           </div>
-          <div className="flex justify-end gap-[10px]">
-            {isSearch ? (
-              <Search
-                ref={ref}
-                setClearValue={() => setSearch('')}
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="flex-1"
-              />
-            ) : (
-              <div
-                className="grid place-items-center w-[37px] h-[37px] rounded-[10px] bg-white text-[22px] text-[#262626] shadow-lg [&>svg]:text-[16px] cursor-pointer"
-                onClick={() => setIsSearch(!isSearch)}>
-                <LuSearch />
-              </div>
-            )}
-            <AddSchedule />
-          </div>
-        </div>
-      </div>
+        )}
+        <AddSchedule />
+      </HeaderAdmin>
       {search.length > 0 ? (
         <h2 className="text-sm">
           <i>Search result for :</i>

@@ -10,12 +10,12 @@ import { Table } from '@mantine/core'
 import AddArmada from './AddArmada'
 import EditArmada from './EditArmada'
 import DeleteArmada from './DeleteArmada'
+import HeaderAdmin from '../../../components/Layouts/HeaderAdmin'
 
 export default function ViewClass() {
   const swrContext = useSWRContext()
   const armadas: Armadas[] | undefined = swrContext?.armadas
-  const [isSearch, setIsSearch] =
-    React.useState<boolean>(false)
+  const [isSearch, setIsSearch] = React.useState<boolean>(false)
   const [search, setSearch] = React.useState<string>('')
   const [searchResult, setSearchResult] = React.useState<
     Armadas[]
@@ -46,10 +46,7 @@ export default function ViewClass() {
   }
 
   // Fungsi untuk membandingkan dua objek berdasarkan updated_at
-  function compareByUpdatedAt(
-    a: Armadas,
-    b: Armadas
-  ): number {
+  function compareByUpdatedAt(a: Armadas, b: Armadas): number {
     if (a.updated_at > b.updated_at) {
       return -1
     }
@@ -68,34 +65,24 @@ export default function ViewClass() {
 
   return (
     <div className="p-10">
-      <div className="flex flex-col gap-2 mb-8">
-        <div className="flex justify-between items-center">
-          <div className="flex flex-col gap-[6px]">
-            <h1 className="text-[22px] text-[#095BA8] font-bold">
-              List Class
-            </h1>
-            <span className="h-[1px] w-[200px] bg-[#095BA8]/20"></span>
+      <HeaderAdmin title="list armada">
+        {isSearch ? (
+          <Search
+            ref={ref}
+            setClearValue={() => setSearch('')}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="flex-1"
+          />
+        ) : (
+          <div
+            className="grid place-items-center w-[37px] h-[37px] rounded-[10px] bg-white text-[22px] text-[#262626] shadow-lg [&>svg]:text-[16px] cursor-pointer"
+            onClick={() => setIsSearch(!isSearch)}>
+            <LuSearch />
           </div>
-          <div className="flex justify-end gap-[10px]">
-            {isSearch ? (
-              <Search
-                ref={ref}
-                setClearValue={() => setSearch('')}
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="flex-1"
-              />
-            ) : (
-              <div
-                className="grid place-items-center w-[37px] h-[37px] rounded-[10px] bg-white text-[22px] text-[#262626] shadow-lg [&>svg]:text-[16px] cursor-pointer"
-                onClick={() => setIsSearch(!isSearch)}>
-                <LuSearch />
-              </div>
-            )}
-            <AddArmada />
-          </div>
-        </div>
-      </div>
+        )}
+        <AddArmada />
+      </HeaderAdmin>
       {search.length > 0 ? (
         <h2 className="text-sm">
           <i>Search result for :</i>

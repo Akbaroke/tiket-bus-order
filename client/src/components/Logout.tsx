@@ -7,16 +7,25 @@ import {
   notifySuccess,
 } from './Toast'
 import { RiLogoutCircleLine } from 'react-icons/ri'
+import clsx from 'clsx'
+import { useDispatch } from 'react-redux'
+import { resetUser } from '../redux/actions/user'
 
 export default function Logout() {
   const [isLoading, setIsLoading] = React.useState(false)
   const [opened, { open, close }] = useDisclosure(false)
+  const dispatch = useDispatch()
 
   const handleLogout = async () => {
     notifyLoading('Logout processing...', 'logout')
     setIsLoading(true)
-    notifySuccess('Logout successful!', 'logout')
-    notifyError('Logout failed!', 'logout')
+    try {
+      dispatch(resetUser())
+      notifySuccess('Logout successful!', 'logout')
+    } catch (error) {
+      console.log(error)
+      notifyError('Logout failed!', 'logout')
+    }
     setIsLoading(false)
   }
 
@@ -57,10 +66,15 @@ export default function Logout() {
       <Group>
         <div
           onClick={open}
-          className="flex gap-[18px] items-center px-9 py-6 w-full border border-x-0 hover:border-y-[#F0EFF2] transition-all cursor-pointer [&>svg]:text-[20px]">
-          {<RiLogoutCircleLine />}
+          className={clsx(
+            'flex gap-[18px] items-center px-9 py-6 w-full border border-x-0 border-y-white hover:border-y-[#F0EFF2] transition-all cursor-pointer [&>svg]:text-[20px] hover:text-[#262626]  [&>svg]:hover:text-[#FF0202] ',
+            opened
+              ? 'text-[#262626] [&>svg]:text-[#FF0202]'
+              : 'text-[#9F9F9F] [&>svg]:text-[#FF0202]/50'
+          )}>
+          <RiLogoutCircleLine />
           <div className="flex w-full justify-between items-center">
-            <p className="text-[14px] font-medium capitalize text-[#FF0202]">
+            <p className="text-[14px] font-medium capitalize">
               Logout
             </p>
           </div>

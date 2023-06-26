@@ -14,12 +14,12 @@ import {
 import { BsFillBusFrontFill } from 'react-icons/bs'
 import AddBus from './AddBus'
 import EditBus from './EditBus'
+import HeaderAdmin from '../../../components/Layouts/HeaderAdmin'
 
 export default function ViewBus() {
   const swrContext = useSWRContext()
   const buses: Buses[] | undefined = swrContext?.buses
-  const [isSearch, setIsSearch] =
-    React.useState<boolean>(false)
+  const [isSearch, setIsSearch] = React.useState<boolean>(false)
   const [search, setSearch] = React.useState<string>('')
   const [searchResult, setSearchResult] = React.useState<
     Buses[]
@@ -67,34 +67,24 @@ export default function ViewBus() {
 
   return (
     <div className="p-10">
-      <div className="flex flex-col gap-2 mb-8">
-        <div className="flex justify-between items-center">
-          <div className="flex flex-col gap-[6px]">
-            <h1 className="text-[22px] text-[#095BA8] font-bold">
-              List Bus
-            </h1>
-            <span className="h-[1px] w-[200px] bg-[#095BA8]/20"></span>
+      <HeaderAdmin title="list bus">
+        {isSearch ? (
+          <Search
+            ref={ref}
+            setClearValue={() => setSearch('')}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="flex-1"
+          />
+        ) : (
+          <div
+            className="grid place-items-center w-[37px] h-[37px] rounded-[10px] bg-white text-[22px] text-[#262626] shadow-lg [&>svg]:text-[16px] cursor-pointer"
+            onClick={() => setIsSearch(!isSearch)}>
+            <LuSearch />
           </div>
-          <div className="flex justify-end gap-[10px]">
-            {isSearch ? (
-              <Search
-                ref={ref}
-                setClearValue={() => setSearch('')}
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="flex-1"
-              />
-            ) : (
-              <div
-                className="grid place-items-center w-[37px] h-[37px] rounded-[10px] bg-white text-[22px] text-[#262626] shadow-lg [&>svg]:text-[16px] cursor-pointer"
-                onClick={() => setIsSearch(!isSearch)}>
-                <LuSearch />
-              </div>
-            )}
-            <AddBus />
-          </div>
-        </div>
-      </div>
+        )}
+        <AddBus />
+      </HeaderAdmin>
       {search.length > 0 ? (
         <h2 className="text-sm">
           <i>Search result for :</i>

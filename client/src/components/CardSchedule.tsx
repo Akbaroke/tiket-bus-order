@@ -92,7 +92,7 @@ export default function CardSchedule({
         <div
           className={clsx(
             ' rounded-br-[5px] rounded-bl-[5px] w-[52px] h-[54px] text-[#095BA8] flex flex-col justify-center items-center absolute top-0 right-4',
-            hasPassed ? 'bg-[#bcbcbc]' : 'bg-[#FFDD00]'
+            hasPassed ? 'bg-[#d4d4d4]' : 'bg-[#FFDD00]'
           )}>
           <BiTimeFive className="text-[18px] -mb-[2px]" />
           <h1 className="text-[14px] font-semibold">
