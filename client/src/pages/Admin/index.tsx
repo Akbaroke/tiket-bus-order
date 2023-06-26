@@ -9,6 +9,7 @@ import { MdHotelClass } from 'react-icons/md'
 import { Burger, Drawer, Group, Image } from '@mantine/core'
 import LOGO from '../../assets/Logo.svg'
 import { useDisclosure } from '@mantine/hooks'
+import Logout from '../../components/Logout'
 
 function Dashboard() {
   const [opened, { open, close }] = useDisclosure(false)
@@ -60,6 +61,7 @@ function Dashboard() {
         <Image src={LOGO} width={180} />
       </Link>
       <div className="flex flex-col">{renderNavLinks()}</div>
+      <Logout />
     </>
   )
 
