@@ -35,6 +35,11 @@ class Schedules extends Migration
                 'required' => true,
                 'unsigned' => true
             ],
+            'remainingSeatCapacity' => [
+                'type' => 'INT',
+                'constraint' => 11,
+                'unsigned' => true,
+            ],
             'busId' => [
                 'type' => 'VARCHAR',
                 'required' => true,
