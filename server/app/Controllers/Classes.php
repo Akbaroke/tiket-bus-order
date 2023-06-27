@@ -6,6 +6,7 @@ use CodeIgniter\RESTful\ResourceController;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\ClassModel;
 use App\Models\UserModel;
+use App\Models\OrderModel;
 
 class Classes extends ResourceController
 {
@@ -13,11 +14,13 @@ class Classes extends ResourceController
 
     protected $classModel;
     protected $userModel;
+    protected $orderModel;
 
     public function __construct()
     {
         $this->classModel = new ClassModel();
         $this->userModel = new UserModel();
+        $this->orderModel = new OrderModel();
     }
 
     public function index()
@@ -113,7 +116,12 @@ class Classes extends ResourceController
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
             $findClass = $this->classModel->where('classId', $classId)->first();
             if ($findClass == null) throw new \Exception('Class not found', 404);
-
+            $findOrder = $this->orderModel->select('c.className')
+                ->join('schedules as s', 's.scheduleId = order.scheduleId')
+                ->join('bus as b', 'b.busId = s.busId')
+                ->join('classes as c', 'c.classId = b.classId')
+                ->where("c.className", $this->request->getVar('className'))->first();
+            if ($findOrder != null) throw new \Exception("nggak bisa diubah karena dah ada yang order");
             $data = [
                 'className' => $this->request->getVar('className'),
                 'seatingCapacity' => $this->request->getVar('seatingCapacity'),
