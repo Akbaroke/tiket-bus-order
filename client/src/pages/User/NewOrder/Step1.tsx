@@ -23,7 +23,12 @@ interface FormValues {
   seatCount: number
 }
 
-export default function Step1() {
+type Props = {
+  nextStep: () => void
+  // setData: (data: ) => void
+}
+
+export default function Step1({ nextStep, setData }: Props) {
   const swrContext = useSWRContext()
   const stations: Stations[] | undefined = swrContext?.stations
   const [isLoading, setIsLoading] =
@@ -45,11 +50,17 @@ export default function Step1() {
           seat: value.seatCount,
         }
       )
-      notifySuccess(
-        'Search schedule successful!',
-        'search-schedule'
-      )
-      console.log(data)
+
+      if (data.data.length === 0) {
+        notifyError('Schedule not available!', 'search-schedule')
+      } else {
+        notifySuccess(
+          'Search schedule successful!',
+          'search-schedule'
+        )
+        nextStep()
+        setData(data.data)
+      }
     } catch (error) {
       console.log(error)
       notifyError('Search schedule failed!', 'search-schedule')
@@ -135,7 +146,7 @@ export default function Step1() {
         />
         <DateInput
           icon={<MdOutlineDateRange />}
-          // minDate={new Date()}
+          minDate={new Date()}
           valueFormat="DD/MM/YYYY"
           placeholder="-pick date-"
           error={form.errors.date}

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Stepper } from '@mantine/core'
 import Step1 from './Step1'
+import Step2 from './Step2'
 
 const dataStepper = [
   {
@@ -13,6 +14,26 @@ const dataStepper = [
   },
 ]
 
+interface ResultFindBus {
+  scheduleId: string
+  busId: string
+  code: string
+  price: string
+  station_from: string
+  name_station_from: string
+  city_station_from: string
+  station_to: string
+  name_station_to: string
+  name_city_to: string
+  date: string
+  time: string
+  format: string
+  className: string
+  seatingCapacity: string
+  name_bus_fleet: string
+  updated_at: string
+}
+
 export default function Layout() {
   const [active, setActive] = React.useState(0)
   const nextStep = () =>
@@ -21,13 +42,25 @@ export default function Layout() {
     )
   const prevStep = () =>
     setActive(current => (current > 0 ? current - 1 : current))
+  const [resultFindBus, setResultFindBus] = React.useState<
+    ResultFindBus[]
+  >([])
+
+  // const setData = (data: ResultFindBus[]) => {
+  //   setResultFindBus(data)
+  // }
 
   const RenderChildren = () => {
     switch (active) {
       case 0:
-        return <Step1 />
+        return (
+          <Step1
+            nextStep={nextStep}
+            //  setData={setData}
+          />
+        )
       case 1:
-        return <Step1 />
+        return <Step2 />
       default:
         break
     }
