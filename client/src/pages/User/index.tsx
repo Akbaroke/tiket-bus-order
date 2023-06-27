@@ -1,45 +1,25 @@
 import { Link, Outlet } from 'react-router-dom'
-import { HiOutlineBuildingOffice2 } from 'react-icons/hi2'
-import { BsFillBusFrontFill } from 'react-icons/bs'
-import { SlLocationPin } from 'react-icons/sl'
-import { TbBusStop } from 'react-icons/tb'
-import { AiOutlineSchedule } from 'react-icons/ai'
 import Nav from '../../components/Nav'
-import { MdHotelClass } from 'react-icons/md'
 import { Burger, Drawer, Group, Image } from '@mantine/core'
 import LOGO from '../../assets/Logo.svg'
 import { useDisclosure } from '@mantine/hooks'
 import Logout from '../../components/Logout'
+import { BsFillBusFrontFill } from 'react-icons/bs'
+import { RiHistoryLine } from 'react-icons/ri'
 
-function Dashboard() {
+function Home() {
   const [opened, { open, close }] = useDisclosure(false)
 
   const navLinks = [
     {
-      text: 'class',
-      icon: <MdHotelClass />,
-      to: '/admin/class',
-    },
-    {
-      text: 'Armada',
-      icon: <HiOutlineBuildingOffice2 />,
-      to: '/admin/armada',
-    },
-    {
-      text: 'Bus',
+      text: 'new order',
       icon: <BsFillBusFrontFill />,
-      to: '/admin/bus',
-    },
-    { text: 'City', icon: <SlLocationPin />, to: '/admin/city' },
-    {
-      text: 'Bus Station',
-      icon: <TbBusStop />,
-      to: '/admin/station',
+      to: '/',
     },
     {
-      text: 'Schedule',
-      icon: <AiOutlineSchedule />,
-      to: '/admin/schedule',
+      text: 'order history',
+      icon: <RiHistoryLine />,
+      to: '/history',
     },
   ]
 
@@ -62,7 +42,7 @@ function Dashboard() {
     width: number
     className?: string
   }) => (
-    <Link to="/admin" className={className}>
+    <Link to="/" className={className}>
       <Image src={LOGO} width={width} />
     </Link>
   )
@@ -105,4 +85,4 @@ function Dashboard() {
   )
 }
 
-export default Dashboard
+export default Home

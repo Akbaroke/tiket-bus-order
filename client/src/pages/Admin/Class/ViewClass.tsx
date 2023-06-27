@@ -10,12 +10,12 @@ import {
 import AddClass from './AddClass'
 import DeleteClass from './DeleteClass'
 import { Table } from '@mantine/core'
+import HeaderAdmin from '../../../components/Layouts/HeaderAdmin'
 
 export default function ViewClass() {
   const swrContext = useSWRContext()
   const classes: Classes[] | undefined = swrContext?.classes
-  const [isSearch, setIsSearch] =
-    React.useState<boolean>(false)
+  const [isSearch, setIsSearch] = React.useState<boolean>(false)
   const [search, setSearch] = React.useState<string>('')
   const [searchResult, setSearchResult] = React.useState<
     Classes[]
@@ -42,9 +42,7 @@ export default function ViewClass() {
           .toString()
           .toLowerCase()
           .includes(search.toLowerCase()) ||
-        item.format
-          .toString()
-          .includes(search.toLowerCase()) ||
+        item.format.toString().includes(search.toLowerCase()) ||
         item.seatingCapacity
           .toString()
           .includes(search.toLowerCase())
@@ -53,10 +51,7 @@ export default function ViewClass() {
   }
 
   // Fungsi untuk membandingkan dua objek berdasarkan updated_at
-  function compareByUpdatedAt(
-    a: Classes,
-    b: Classes
-  ): number {
+  function compareByUpdatedAt(a: Classes, b: Classes): number {
     if (a.updated_at > b.updated_at) {
       return -1
     }
@@ -75,34 +70,24 @@ export default function ViewClass() {
 
   return (
     <div className="p-10">
-      <div className="flex flex-col gap-2 mb-8">
-        <div className="flex justify-between items-center">
-          <div className="flex flex-col gap-[6px]">
-            <h1 className="text-[22px] text-[#095BA8] font-bold">
-              List Class
-            </h1>
-            <span className="h-[1px] w-[200px] bg-[#095BA8]/20"></span>
+      <HeaderAdmin title="list class">
+        {isSearch ? (
+          <Search
+            ref={ref}
+            setClearValue={() => setSearch('')}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="flex-1"
+          />
+        ) : (
+          <div
+            className="grid place-items-center w-[37px] h-[37px] rounded-[10px] bg-white text-[22px] text-[#262626] shadow-lg [&>svg]:text-[16px] cursor-pointer"
+            onClick={() => setIsSearch(!isSearch)}>
+            <LuSearch />
           </div>
-          <div className="flex justify-end gap-[10px]">
-            {isSearch ? (
-              <Search
-                ref={ref}
-                setClearValue={() => setSearch('')}
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="flex-1"
-              />
-            ) : (
-              <div
-                className="grid place-items-center w-[37px] h-[37px] rounded-[10px] bg-white text-[22px] text-[#262626] shadow-lg [&>svg]:text-[16px] cursor-pointer"
-                onClick={() => setIsSearch(!isSearch)}>
-                <LuSearch />
-              </div>
-            )}
-            <AddClass />
-          </div>
-        </div>
-      </div>
+        )}
+        <AddClass />
+      </HeaderAdmin>
       {search.length > 0 ? (
         <h2 className="text-sm">
           <i>Search result for :</i>
@@ -126,9 +111,7 @@ export default function ViewClass() {
         <tbody>
           {searchResult.map(item => (
             <tr key={item.classId}>
-              <td className="capitalize">
-                {item.className}
-              </td>
+              <td className="capitalize">{item.className}</td>
               <td>{item.format}</td>
               <td>{item.seatingCapacity}</td>
               <td className="flex gap-8">

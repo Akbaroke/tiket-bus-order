@@ -71,8 +71,9 @@ function FormStation({ type, stationId, onClose }: Props) {
         encrypt: encrypt,
       })
 
-      mutate('/station')
       mutate('/city')
+      mutate('/station')
+      mutate('/schedule')
       notifySuccess('Edit station successful!', 'edit-station')
       onClose()
     } catch (error) {
@@ -92,8 +93,9 @@ function FormStation({ type, stationId, onClose }: Props) {
         cityId: value.cityId,
         encrypt: encrypt,
       })
-      mutate('/station')
       mutate('/city')
+      mutate('/station')
+      mutate('/schedule')
       notifySuccess('Add station successful!', 'add-station')
       onClose()
     } catch (error) {

@@ -54,7 +54,6 @@ function Signin(): JSX.Element {
       )
       switch (data.status) {
         case 200:
-          console.log(data)
           dispatch(setUser(data.data))
           notifySuccess('Signin successful!', 'signin')
           setForm(initialForm)

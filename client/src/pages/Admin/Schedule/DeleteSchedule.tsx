@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux'
 import { UserInfo } from '../../../redux/reducers/user'
 import { useSWRConfig } from 'swr'
 type Props = {
-  busId: string
+  scheduleId: string
   name: string
 }
 
@@ -19,26 +19,30 @@ interface State {
   user: UserInfo
 }
 
-export default function DeleteBus({ busId, name }: Props) {
+export default function DeleteSchedule({
+  scheduleId,
+  name,
+}: Props) {
   const { mutate } = useSWRConfig()
   const [isLoading, setIsLoading] = React.useState(false)
   const [opened, { open, close }] = useDisclosure(false)
   const { encrypt } = useSelector((state: State) => state.user)
 
   const handleDelete = async () => {
-    notifyLoading('Delete processing...', 'delete-bus')
+    notifyLoading('Delete processing...', 'delete-schedule')
     setIsLoading(true)
     try {
-      await axios.post(`/bus/delete/${busId}`, {
+      await axios.post(`/schedule/delete/${scheduleId}`, {
         encrypt: encrypt,
       })
-      mutate('/bus')
-      mutate('/armada')
       mutate('/schedule')
-      notifySuccess('Delete bus successful!', 'delete-bus')
+      notifySuccess(
+        'Delete schedule successful!',
+        'delete-schedule'
+      )
     } catch (error) {
       console.log(error)
-      notifyError('Delete bus failed!', 'delete-bus')
+      notifyError('Delete schedule failed!', 'delete-schedule')
     }
     setIsLoading(false)
   }
@@ -51,7 +55,7 @@ export default function DeleteBus({ busId, name }: Props) {
         title={
           <div className="flex flex-col gap-[10px]">
             <h1 className="text-[22px] text-[#095BA8] font-bold">
-              Delete Class
+              Delete Schedule
             </h1>
             <span className="h-[1px] w-[200px] bg-[#095BA8]/30"></span>
           </div>
@@ -60,8 +64,8 @@ export default function DeleteBus({ busId, name }: Props) {
         padding="xl">
         <div className="p-4 min-h-[80px]">
           <p className="text-sm">
-            You will remove the "<b>{name}</b>" bus. Are you sure
-            ?
+            You will remove the "<b>{name}</b>" schedule. Are you
+            sure ?
           </p>
         </div>
         <div className="flex justify-center gap-4 p-5">

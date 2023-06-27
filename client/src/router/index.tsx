@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router'
-import Home from '../pages/User/Home'
+import Home from '../pages/User'
 import Dashboard from '../pages/Admin'
 import Admin from '../middlewares/Admin'
 import User from '../middlewares/User'
@@ -13,6 +13,7 @@ import { SWRProvider } from '../contexts/swr-context'
 import ViewCity from '../pages/Admin/City/ViewCity'
 import ViewStation from '../pages/Admin/Station/ViewStation'
 import ViewSchedule from '../pages/Admin/Schedule/ViewSchedule'
+import NewOrder from '../pages/User/NewOrder/Layout'
 
 export default function root() {
   return (
@@ -38,10 +39,13 @@ export default function root() {
         path="/"
         element={
           <User>
-            <Home />
+            <SWRProvider>
+              <Home />
+            </SWRProvider>
           </User>
-        }
-      />
+        }>
+        <Route index element={<NewOrder />} />
+      </Route>
 
       <Route
         path="/admin"
@@ -60,20 +64,11 @@ export default function root() {
             </div>
           }
         />
-        <Route
-          path="/admin/class"
-          element={<ViewClass />}
-        />
-        <Route
-          path="/admin/armada"
-          element={<ViewArmada />}
-        />
+        <Route path="/admin/class" element={<ViewClass />} />
+        <Route path="/admin/armada" element={<ViewArmada />} />
         <Route path="/admin/bus" element={<ViewBus />} />
         <Route path="/admin/city" element={<ViewCity />} />
-        <Route
-          path="/admin/station"
-          element={<ViewStation />}
-        />
+        <Route path="/admin/station" element={<ViewStation />} />
         <Route
           path="/admin/schedule"
           element={<ViewSchedule />}

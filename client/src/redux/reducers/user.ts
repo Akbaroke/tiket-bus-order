@@ -35,6 +35,7 @@ const reducerUser = (
         encrypt: action.payload.encrypt,
       }
     case ActionType.RESET_USER:
+      localStorage.removeItem('token')
       return initialState
     default:
       return state

@@ -1,50 +1,30 @@
 import * as React from 'react'
 import { useDisclosure } from '@mantine/hooks'
 import { Button, Group, Modal } from '@mantine/core'
-import axios from '../../../api'
 import {
   notifyError,
   notifyLoading,
   notifySuccess,
-} from '../../../components/Toast'
-import { useSelector } from 'react-redux'
-import { UserInfo } from '../../../redux/reducers/user'
-import { useSWRConfig } from 'swr'
-type Props = {
-  cityId: string
-  name: string
-}
+} from './Toast'
+import { RiLogoutCircleLine } from 'react-icons/ri'
+import clsx from 'clsx'
+import { useDispatch } from 'react-redux'
+import { resetUser } from '../redux/actions/user'
 
-interface State {
-  user: UserInfo
-}
-
-export default function DeleteCity({
-  cityId,
-  name,
-}: Props) {
-  const { mutate } = useSWRConfig()
+export default function Logout() {
   const [isLoading, setIsLoading] = React.useState(false)
   const [opened, { open, close }] = useDisclosure(false)
-  const { encrypt } = useSelector(
-    (state: State) => state.user
-  )
+  const dispatch = useDispatch()
 
-  const handleDelete = async () => {
-    notifyLoading('Delete processing...', 'delete-city')
+  const handleLogout = async () => {
+    notifyLoading('Logout processing...', 'logout')
     setIsLoading(true)
     try {
-      await axios.post(`/cities/delete/${cityId}`, {
-        encrypt: encrypt,
-      })
-      mutate('/city')
-      mutate('/station')
-      mutate('/schedule')
-      notifySuccess('Delete class successful!', 'delete-city')
-      
+      dispatch(resetUser())
+      notifySuccess('Logout successful!', 'logout')
     } catch (error) {
       console.log(error)
-      notifyError('Delete class failed!', 'delete-city')
+      notifyError('Logout failed!', 'logout')
     }
     setIsLoading(false)
   }
@@ -57,7 +37,7 @@ export default function DeleteCity({
         title={
           <div className="flex flex-col gap-[10px]">
             <h1 className="text-[22px] text-[#095BA8] font-bold">
-              Delete City
+              Logout Confirmation
             </h1>
             <span className="h-[1px] w-[200px] bg-[#095BA8]/30"></span>
           </div>
@@ -65,10 +45,7 @@ export default function DeleteCity({
         centered
         padding="xl">
         <div className="p-4 min-h-[80px]">
-          <p className="text-sm">
-            You will remove the "<b>{name}</b>" city. Are
-            you sure ?
-          </p>
+          <p className="text-sm">Do you want to logout ?</p>
         </div>
         <div className="flex justify-center gap-4 p-5">
           <Button
@@ -80,18 +57,28 @@ export default function DeleteCity({
           <Button
             className="bg-[#FF0202] hover:bg-[#FF0202]/80"
             loading={isLoading}
-            onClick={handleDelete}>
-            Yes, delete
+            onClick={handleLogout}>
+            Yes, logout
           </Button>
         </div>
       </Modal>
 
       <Group>
-        <p
+        <div
           onClick={open}
-          className="text-[#FF0202] block hover:scale-105 transition-all cursor-pointer">
-          Delete
-        </p>
+          className={clsx(
+            'flex gap-[18px] items-center px-9 py-6 w-full border border-x-0 border-y-white hover:border-y-[#F0EFF2] transition-all cursor-pointer [&>svg]:text-[20px] hover:text-[#262626]  [&>svg]:hover:text-[#FF0202] ',
+            opened
+              ? 'text-[#262626] [&>svg]:text-[#FF0202]'
+              : 'text-[#9F9F9F] [&>svg]:text-[#FF0202]/50'
+          )}>
+          <RiLogoutCircleLine />
+          <div className="flex w-full justify-between items-center">
+            <p className="text-[14px] font-medium capitalize">
+              Logout
+            </p>
+          </div>
+        </div>
       </Group>
     </>
   )

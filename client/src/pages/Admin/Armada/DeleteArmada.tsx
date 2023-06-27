@@ -35,18 +35,13 @@ export default function DeleteArmada({
     notifyLoading('Delete processing...', 'delete-armada')
     setIsLoading(true)
     try {
-      const { data } = await axios.post(
-        `/busFleet/delete/${armadaId}`,
-        {
-          encrypt: encrypt,
-        }
-      )
-      console.log(data)
-      notifySuccess(
-        'Delete armada successful!',
-        'delete-armada'
-      )
-      mutate('/busFleet')
+      await axios.post(`/busFleet/delete/${armadaId}`, {
+        encrypt: encrypt,
+      })
+      mutate('/armada')
+      mutate('/bus')
+      mutate('/schedule')
+      notifySuccess('Delete armada successful!', 'delete-armada')
     } catch (error) {
       console.log(error)
       notifyError('Delete armada failed!', 'delete-armada')

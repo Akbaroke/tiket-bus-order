@@ -9,6 +9,8 @@ import {
 import { Table } from '@mantine/core'
 import AddStation from './AddStation'
 import EditStation from './EditStation'
+import DeleteStation from './DeleteStation'
+import HeaderAdmin from '../../../components/Layouts/HeaderAdmin'
 
 export default function ViewStation() {
   const swrContext = useSWRContext()
@@ -49,34 +51,24 @@ export default function ViewStation() {
 
   return (
     <div className="p-10">
-      <div className="flex flex-col gap-2 mb-8">
-        <div className="flex justify-between items-center">
-          <div className="flex flex-col gap-[6px]">
-            <h1 className="text-[22px] text-[#095BA8] font-bold">
-              List Station
-            </h1>
-            <span className="h-[1px] w-[200px] bg-[#095BA8]/20"></span>
+      <HeaderAdmin title="list station">
+        {isSearch ? (
+          <Search
+            ref={ref}
+            setClearValue={() => setSearch('')}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="flex-1"
+          />
+        ) : (
+          <div
+            className="grid place-items-center w-[37px] h-[37px] rounded-[10px] bg-white text-[22px] text-[#262626] shadow-lg [&>svg]:text-[16px] cursor-pointer"
+            onClick={() => setIsSearch(!isSearch)}>
+            <LuSearch />
           </div>
-          <div className="flex justify-end gap-[10px]">
-            {isSearch ? (
-              <Search
-                ref={ref}
-                setClearValue={() => setSearch('')}
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="flex-1"
-              />
-            ) : (
-              <div
-                className="grid place-items-center w-[37px] h-[37px] rounded-[10px] bg-white text-[22px] text-[#262626] shadow-lg [&>svg]:text-[16px] cursor-pointer"
-                onClick={() => setIsSearch(!isSearch)}>
-                <LuSearch />
-              </div>
-            )}
-            <AddStation />
-          </div>
-        </div>
-      </div>
+        )}
+        <AddStation />
+      </HeaderAdmin>
       {search.length > 0 ? (
         <h2 className="text-sm">
           <i>Search result for :</i>
@@ -103,10 +95,10 @@ export default function ViewStation() {
               <td>{item.city}</td>
               <td className="flex gap-8">
                 <EditStation stationId={item.stationId} />
-                {/* <DeleteClass
-                  classId={item.classId}
-                  name={item.className}
-                /> */}
+                <DeleteStation
+                  stationId={item.stationId}
+                  name={item.name}
+                />
               </td>
             </tr>
           ))}

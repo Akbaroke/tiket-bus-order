@@ -65,9 +65,7 @@ function FormClass({ type, classId, onClose }: Props) {
     })
   }
 
-  const handleAdd = async (
-    value: FormValues
-  ): Promise<void> => {
+  const handleAdd = async (value: FormValues): Promise<void> => {
     notifyLoading('Send data...', 'add-class')
     setIsLoading(true)
 
@@ -79,6 +77,8 @@ function FormClass({ type, classId, onClose }: Props) {
         encrypt: encrypt,
       })
       mutate('/classes')
+      mutate('/schedule')
+      mutate('/bus')
       notifySuccess('Add class successful!', 'add-class')
       onClose()
     } catch (error) {
@@ -103,6 +103,8 @@ function FormClass({ type, classId, onClose }: Props) {
       })
 
       mutate('/classes')
+      mutate('/schedule')
+      mutate('/bus')
       notifySuccess('Edit class successful!', 'edit-class')
       onClose()
     } catch (error) {
