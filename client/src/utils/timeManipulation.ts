@@ -41,4 +41,13 @@ function combineDateTimeToEpochMillis(
   return date.getTime() / 1000
 }
 
-export { formatDate, formatTime, combineDateTimeToEpochMillis }
+function dateToEpochMillis(date: Date): number {
+  return date.getTime()
+}
+
+export {
+  formatDate,
+  formatTime,
+  combineDateTimeToEpochMillis,
+  dateToEpochMillis,
+}

@@ -36,8 +36,9 @@ export default function Layout() {
   return (
     <div className="p-10 flex flex-col gap-10">
       <Stepper iconSize={42} active={active} breakpoint="sm">
-        {dataStepper.map(data => (
+        {dataStepper.map((data, index) => (
           <Stepper.Step
+            key={index}
             label={data.label}
             description={data.description}
           />

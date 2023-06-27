@@ -74,7 +74,7 @@ class Schedule extends ResourceController
                 ->join('bus as b', 'b.busId = schedules.busId')
                 ->join('classes as c', 'b.classId = c.classId')
                 ->join('busFleet as f', 'b.busFleetId = f.busFleetId')
-                ->where(["schedules.date >=" => $date, "s1.cityId" => $from, "s2.cityId" => $to, "schedules.remainingSeatCapacity >=" => 0, "schedules.remainingSeatCapacity <=" => $seat])->orderBy("schedules.date", "DESC")
+                ->where(["schedules.date >=" => $date, "s1.cityId" => $from, "s2.cityId" => $to, "schedules.remainingSeatCapacity >=" => $seat])->orderBy("schedules.date", "DESC")
                 ->findAll();
             $response = [
                 "status" => 200,
