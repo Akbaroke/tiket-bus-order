@@ -42,7 +42,7 @@ class Cities extends ResourceController
     {
         try {
             $data = $this->CityModel->where("cityId", $cityId)->first();
-            if ($data == null) throw new \Exception("data not found", 404);
+            if ($data == null) throw new \Exception("kota tidak ditemukan", 404);
             $response = [
                 "status" => 200,
                 "message" => "Berhasil",
@@ -92,7 +92,7 @@ class Cities extends ResourceController
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
             $findCity = $this->CityModel->where("cityId", $cityId)->first();
-            if ($findCity == null) throw new \Exception("City not found", 404);
+            if ($findCity == null) throw new \Exception("kota tidak ditemukan", 404);
             $this->CityModel->update($cityId, [
                 "name" => $this->request->getVar("name"),
             ]);

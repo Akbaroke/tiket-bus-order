@@ -42,7 +42,7 @@ class BusFleet extends ResourceController
     {
         try {
             $data = $this->BusFleetModel->where("busFleetId", $busFleetId)->first();
-            if ($data == null) throw new \Exception("data not found", 404);
+            if ($data == null) throw new \Exception("armada bus tidak ditemukan", 404);
             $response = [
                 "status" => 200,
                 "message" => "Berhasil",
@@ -93,7 +93,7 @@ class BusFleet extends ResourceController
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
             $findFleetBus = $this->BusFleetModel->where("busFleetId", $busFleetId)->first();
-            if ($findFleetBus == null) throw new \Exception("Bus not found", 404);
+            if ($findFleetBus == null) throw new \Exception("armada bus tidak ditemukan", 404);
             $this->BusFleetModel->update($busFleetId, [
                 "name" => $this->request->getVar("name"),
             ]);
@@ -119,7 +119,7 @@ class BusFleet extends ResourceController
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
             $findFleetBus = $this->BusFleetModel->where('busFleetId', $busFleetId)->first();
-            if ($findFleetBus == null) throw new \Exception('fleet bus not found', 404);
+            if ($findFleetBus == null) throw new \Exception('armada bus tidak ditemukan', 404);
 
             $this->BusFleetModel->delete($busFleetId);
 

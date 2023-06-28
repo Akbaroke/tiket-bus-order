@@ -39,12 +39,27 @@ class Order extends Migration
                 'constraint' => 11,
                 'unique' => true
             ],
+            'isPaid' => [
+                'type' => 'BOOLEAN',
+                'null' => true,
+                'default' => false
+            ],
+            'code' => [
+                'type' => 'VARCHAR',
+                'required' => true,
+                'constraint' => 8
+            ],
             'created_at' => [
                 'type' => 'BIGINT',
                 'constraint' => 20,
                 'null' => true
             ],
             'updated_at' => [
+                'type' => 'BIGINT',
+                'constraint' => 20,
+                'null' => true
+            ],
+            'expired_at' => [
                 'type' => 'BIGINT',
                 'constraint' => 20,
                 'null' => true

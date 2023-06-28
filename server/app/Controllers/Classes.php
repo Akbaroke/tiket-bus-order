@@ -115,13 +115,13 @@ class Classes extends ResourceController
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
             $findClass = $this->classModel->where('classId', $classId)->first();
-            if ($findClass == null) throw new \Exception('Class not found', 404);
+            if ($findClass == null) throw new \Exception('kelas tidak ditemukan', 404);
             $findOrder = $this->orderModel->select('c.className')
                 ->join('schedules as s', 's.scheduleId = order.scheduleId')
                 ->join('bus as b', 'b.busId = s.busId')
                 ->join('classes as c', 'c.classId = b.classId')
                 ->where("c.className", $this->request->getVar('className'))->first();
-            if ($findOrder != null) throw new \Exception("nggak bisa diubah karena dah ada yang order");
+            if ($findOrder != null) throw new \Exception("tidak bisa diubah karena sudah ada yang order");
             $data = [
                 'className' => $this->request->getVar('className'),
                 'seatingCapacity' => $this->request->getVar('seatingCapacity'),
@@ -152,7 +152,7 @@ class Classes extends ResourceController
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
             $findClass = $this->classModel->where('classId', $classId)->first();
-            if ($findClass == null) throw new \Exception('Class not found', 404);
+            if ($findClass == null) throw new \Exception('kelas tidak ditemukan', 404);
 
             $this->classModel->delete($classId);
 

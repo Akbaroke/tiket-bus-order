@@ -54,7 +54,7 @@ class Bus extends ResourceController
                 ->where("bus.busId", $busId)
                 ->first();
 
-            if ($data == null) throw new \Exception("data not found", 404);
+            if ($data == null) throw new \Exception("bus tidak ditemukan", 404);
             $response = [
                 "status" => 200,
                 "message" => "Berhasil",
@@ -84,7 +84,7 @@ class Bus extends ResourceController
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
             $findBusFleet = $this->BusFleetModel->query("SELECT * FROM busFleet WHERE busFleetId = ? FOR UPDATE", [$busFleetId])->getRow();
             $findBusLatest = $this->BusModel->query("SELECT * FROM bus WHERE busFleetId = ? ORDER BY created_at DESC FOR UPDATE", [$busFleetId])->getRow();
-            if ($findBusFleet == null) throw new \Exception("Armada tidak ditemukan", 404);
+            if ($findBusFleet == null) throw new \Exception("Armada bus tidak ditemukan", 404);
             $name =  explode(" ", $findBusFleet->name);
             $code = "";
             foreach ($name as $x) {
@@ -136,7 +136,7 @@ class Bus extends ResourceController
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
             $findBus = $this->BusModel->where("busId", $busId)->first();
-            if ($findBus == null) throw new \Exception("Bus not found", 404);
+            if ($findBus == null) throw new \Exception("bus tidak ditemukan", 404);
             $this->BusModel->update($busId, [
                 "classId" => $this->request->getVar("classId"),
                 "busFleetId" => $this->request->getVar("busFleetId")
@@ -167,7 +167,7 @@ class Bus extends ResourceController
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
             $findBus = $this->BusModel->query("SELECT * FROM bus AS b JOIN busfleet AS f ON f.busFleetId = b.busFleetId WHERE b.busId = ? FOR UPDATE", [$busId])->getRow();
-            if ($findBus == null) throw new \Exception('Bus not found', 404);
+            if ($findBus == null) throw new \Exception('bus tidak ditemukan', 404);
             $this->BusModel->delete($busId);
             $this->BusFleetModel->update($findBus->busFleetId, ["name" => $findBus->name, "amount_bus" => $findBus->amount_bus - 1]);
             $this->BusModel->transCommit();

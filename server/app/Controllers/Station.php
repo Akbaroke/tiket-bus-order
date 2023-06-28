@@ -52,7 +52,7 @@ class Station extends ResourceController
                 ->where("stationId", $stationId)
                 ->first();
 
-            if ($data == null) throw new \Exception("data not found", 404);
+            if ($data == null) throw new \Exception("terminal bus tidak ditemukan", 404);
             $response = [
                 "status" => 200,
                 "message" => "Berhasil",

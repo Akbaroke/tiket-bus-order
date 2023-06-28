@@ -27,7 +27,7 @@ class Auth extends ResourceController
 
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             $findUser = $this->userModel->where('email', $this->request->getVar("email"))->first();
-            if ($findUser == null) throw new \Exception('User not found', 404);
+            if ($findUser == null) throw new \Exception('user tidak ditemukan', 404);
             if (!(password_verify($this->request->getVar("password"), $findUser["password"]))) throw new \Exception('Password invalid', 400);
 
             $encrypter = \Config\Services::encrypter();
@@ -93,7 +93,7 @@ class Auth extends ResourceController
             $encrypter = \Config\Services::encrypter();
             $user = unserialize($encrypter->decrypt(base64_decode($this->request->getVar("encrypt"))));
             $data = $this->userModel->where('userId', $user["userId"])->first();
-            if ($data == null) throw new \Exception("User not found");
+            if ($data == null) throw new \Exception("user tidak ditemukan");
             $response = [
                 'status' => 200,
                 'message' => 'berhasil',

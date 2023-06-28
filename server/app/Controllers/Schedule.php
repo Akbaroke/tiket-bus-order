@@ -27,7 +27,7 @@ class Schedule extends ResourceController
     public function index()
     {
         try {
-            $data = $this->ScheduleModel->select('schedules.scheduleId, schedules.busId, b.code, schedules.price, s1.stationId as station_from, s1.name as name_station_from, c1.name as city_station_from, s2.stationId as station_to, s2.name as name_station_to, c2.name as name_city_to, schedules.date, schedules.time, c.format, c.className, c.seatingCapacity, f.name as name_bus_fleet, schedules.created_at, schedules.updated_at')
+            $data = $this->ScheduleModel->select('schedules.scheduleId, schedules.remainingSeatCapacity, schedules.busId, b.code, schedules.price, s1.stationId as station_from, s1.name as name_station_from, c1.name as city_station_from, s2.stationId as station_to, s2.name as name_station_to, c2.name as name_city_to, schedules.date, schedules.time, c.format, c.className, c.seatingCapacity, f.name as name_bus_fleet, schedules.created_at, schedules.updated_at')
                 ->join('station as s1', 's1.stationId = schedules.from')
                 ->join('station as s2', 's2.stationId = schedules.to')
                 ->join('cities as c1', 's1.cityId = c1.cityId')
@@ -66,7 +66,7 @@ class Schedule extends ResourceController
             ];
 
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
-            $data = $this->ScheduleModel->select('schedules.scheduleId, schedules.busId, b.code, schedules.price, s1.stationId as station_from, s1.name as name_station_from, c1.name as city_station_from, s2.stationId as station_to, s2.name as name_station_to, c2.name as name_city_to,schedules.date, schedules.time, c.format, c.className, c.seatingCapacity, f.name as name_bus_fleet, schedules.created_at, schedules.updated_at')
+            $data = $this->ScheduleModel->select('schedules.scheduleId, schedules.remainingSeatCapacity, schedules.busId, b.code, schedules.price, s1.stationId as station_from, s1.name as name_station_from, c1.name as city_station_from, s2.stationId as station_to, s2.name as name_station_to, c2.name as name_city_to,schedules.date, schedules.time, c.format, c.className, c.seatingCapacity, f.name as name_bus_fleet, schedules.created_at, schedules.updated_at')
                 ->join('station as s1', 's1.stationId = schedules.from')
                 ->join('station as s2', 's2.stationId = schedules.to')
                 ->join('cities as c1', 's1.cityId = c1.cityId')
@@ -93,7 +93,7 @@ class Schedule extends ResourceController
     public function getById($scheduleId = null)
     {
         try {
-            $data = $this->ScheduleModel->select('schedules.scheduleId, schedules.busId, b.code, schedules.price, s1.stationId as station_from, s1.name as name_station_from, c1.name as city_station_from, s2.stationId as station_to, s2.name as name_station_to, c2.name as name_city_to,schedules.date, schedules.time, c.format, c.className, c.seatingCapacity, f.name as name_bus_fleet, schedules.created_at, schedules.updated_at')
+            $data = $this->ScheduleModel->select('schedules.scheduleId, schedules.remainingSeatCapacity, schedules.busId, b.code, schedules.price, s1.stationId as station_from, s1.name as name_station_from, c1.name as city_station_from, s2.stationId as station_to, s2.name as name_station_to, c2.name as name_city_to,schedules.date, schedules.time, c.format, c.className, c.seatingCapacity, f.name as name_bus_fleet, schedules.created_at, schedules.updated_at')
                 ->join('station as s1', 's1.stationId = schedules.from')
                 ->join('station as s2', 's2.stationId = schedules.to')
                 ->join('cities as c1', 's1.cityId = c1.cityId')
@@ -186,7 +186,7 @@ class Schedule extends ResourceController
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$enc) throw new \Exception("Akses ditolak", 403);
             $findSchedule = $this->ScheduleModel->where("scheduleId", $scheduleId)->first();
-            if ($findSchedule == null) throw new \Exception("Bus not found", 404);
+            if ($findSchedule == null) throw new \Exception("bus tidak ditemukan", 404);
             $data = ['time' => $time, 'date' => $date, 'from' => $from, 'to' => $to, 'busId' => $busId, 'price' => $price];
             $this->ScheduleModel->update($scheduleId, $data);
             $response = [
