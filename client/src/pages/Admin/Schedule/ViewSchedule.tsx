@@ -9,6 +9,7 @@ import {
 import CardSchedule from '../../../components/CardSchedule'
 import AddSchedule from './AddSchedule'
 import HeaderAdmin from '../../../components/Layouts/HeaderAdmin'
+import EditSchedule from './EditSchedule'
 
 export default function ViewSchedule() {
   const swrContext = useSWRContext()
@@ -112,7 +113,11 @@ export default function ViewSchedule() {
       ) : null}
       <div className="flex flex-wrap gap-[20px] mt-4">
         {searchResult.map(item => (
-          <CardSchedule key={item.busId} data={item} />
+          <EditSchedule
+            scheduleId={item.scheduleId}
+            key={item.scheduleId}>
+            <CardSchedule data={item} />
+          </EditSchedule>
         ))}
       </div>
     </div>

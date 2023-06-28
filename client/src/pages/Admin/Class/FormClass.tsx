@@ -146,9 +146,7 @@ function FormClass({ type, classId, onClose }: Props) {
   return (
     <form
       onSubmit={form.onSubmit(values => {
-        type === 'edit'
-          ? handleEdit(values)
-          : handleAdd(values)
+        type === 'edit' ? handleEdit(values) : handleAdd(values)
       })}>
       <div className="flex flex-col gap-2">
         <TextInput
@@ -163,9 +161,8 @@ function FormClass({ type, classId, onClose }: Props) {
           label="Format Seat"
           placeholder="-pick one-"
           data={[
-            { value: '1-3', label: '1-3' },
+            { value: '2-3', label: '2-3' },
             { value: '2-2', label: '2-2' },
-            { value: '3-1', label: '3-1' },
           ]}
           error={form.errors.formatSeat}
           {...form.getInputProps('formatSeat')}

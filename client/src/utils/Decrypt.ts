@@ -1,17 +1,17 @@
-// import crypto from 'crypto-js'
+import crypto from 'crypto-js'
 import { env } from '../vite-env.d'
 import axios from '../api'
 import { DataUser } from '../interfaces/store'
 
-// const Decrypt = (encrypt: string) => {
-//   return JSON.parse(
-//     crypto.AES.decrypt(encrypt, env.SALT).toString(
-//       crypto.enc.Utf8
-//     )
-//   )
-// }
+const Decrypt = (encrypt: string) => {
+  return JSON.parse(
+    crypto.AES.decrypt(encrypt, env.VITE_APP_SALT).toString(
+      crypto.enc.Utf8
+    )
+  )
+}
 
-export const DecryptFromServer = async (
+const DecryptFromServer = async (
   encrypt: string
 ): Promise<DataUser> => {
   const { data } = await axios.post(
@@ -23,4 +23,4 @@ export const DecryptFromServer = async (
   return data.data
 }
 
-// export { Decrypt, DecryptFromServer }
+export { Decrypt, DecryptFromServer }

@@ -3,7 +3,7 @@ import { Button, NumberInput, Select } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { TbBus, TbBusStop } from 'react-icons/tb'
 import {
-  Stations,
+  Cities,
   useSWRContext,
 } from '../../../contexts/swr-context'
 import { DateInput } from '@mantine/dates'
@@ -15,22 +15,27 @@ import {
 } from '../../../components/Toast'
 import { dateToEpochMillis } from '../../../utils/timeManipulation'
 import axios from '../../../api'
+import { ResultFindBus } from './Layout'
+import { setFormSearch } from '../../../redux/actions/order'
+import { useDispatch } from 'react-redux'
+import { resetSeat } from '../../../redux/actions/seat'
 
-interface FormValues {
+export interface FormValues {
   from: string
   to: string
-  date: string | Date
+  date: string | Date | number
   seatCount: number
 }
 
 type Props = {
   nextStep: () => void
-  // setData: (data: ) => void
+  setData: (data: ResultFindBus[]) => void
 }
 
 export default function Step1({ nextStep, setData }: Props) {
+  const dispatch = useDispatch()
   const swrContext = useSWRContext()
-  const stations: Stations[] | undefined = swrContext?.stations
+  const cities: Cities[] | undefined = swrContext?.cities
   const [isLoading, setIsLoading] =
     React.useState<boolean>(false)
 
@@ -60,6 +65,15 @@ export default function Step1({ nextStep, setData }: Props) {
         )
         nextStep()
         setData(data.data)
+        dispatch(
+          setFormSearch({
+            from: value.from,
+            to: value.to,
+            date: dateToEpochMillis(value.date as Date),
+            seatCount: value.seatCount,
+          })
+        )
+        dispatch(resetSeat())
       }
     } catch (error) {
       console.log(error)
@@ -106,7 +120,7 @@ export default function Step1({ nextStep, setData }: Props) {
   return (
     <div className="p-5 shadow-md">
       <h1 className="text-center text-[#095BA8] text-[22px] font-semibold block w-max pb-2 px-10 border-b border-b-[#095BA8]/20 capitalize m-auto mb-5">
-        Find bus schedule
+        Find schedule
       </h1>
       <form
         action=""
@@ -120,10 +134,12 @@ export default function Step1({ nextStep, setData }: Props) {
           dropdownPosition="flip"
           placeholder="From"
           data={
-            stations?.map(obj => ({
-              value: obj.id_city,
-              label: `${obj.name} (${obj.city})`,
-            })) || []
+            cities
+              ?.sort((a, b) => a.name.localeCompare(b.name))
+              .map(obj => ({
+                value: obj.cityId,
+                label: `${obj.name} (${obj.amount_station} Station)`,
+              })) || []
           }
           error={form.errors.from}
           {...form.getInputProps('from')}
@@ -136,9 +152,9 @@ export default function Step1({ nextStep, setData }: Props) {
           dropdownPosition="flip"
           placeholder="To"
           data={
-            stations?.map(obj => ({
-              value: obj.id_city,
-              label: `${obj.name} (${obj.city})`,
+            cities?.map(obj => ({
+              value: obj.cityId,
+              label: `${obj.name} (${obj.amount_station} Station)`,
             })) || []
           }
           error={form.errors.to}

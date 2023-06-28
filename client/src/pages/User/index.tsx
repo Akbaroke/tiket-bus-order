@@ -62,7 +62,7 @@ function Home() {
       <aside className="w-[300px] rounded-tr-[40px] shadow-xl min-h-screen h-full py-10 hidden sm:flex sm:justify-between sm:flex-col">
         {drawerContent}
       </aside>
-      <div className="sm:hidden flex justify-between py-4 px-5 shadow-md">
+      <div className="sm:hidden flex justify-between py-4 px-5 shadow-md sticky top-0 bg-white z-20">
         <Logo width={120} />
         <div>
           <Drawer opened={opened} onClose={close}>
