@@ -68,7 +68,7 @@ class Order extends ResourceController
 
             $encrypter = \Config\Services::encrypter();
             $result = unserialize($encrypter->decrypt(base64_decode($enc)));
-            if ($this->OrderModel->where(['userId' => $result["userId"], 'isPaid' => false])->countAllResults() > 5) throw new \Exception("User sudah melakukan 5 pembelian.", 400);
+            if (!5 > $this->OrderModel->where(['userId' => $result["userId"], "scheduleId" => $scheduleId])->countAllResults()) throw new \Exception("User sudah melakukan 5 pembelian.", 400);
             $code = $this->code(8);
             $expired = strtotime("+30 minutes", (new Time("now"))->getTimestamp());
             for ($i = 0; $i < $length; $i++) {
@@ -82,11 +82,11 @@ class Order extends ResourceController
                     "expired_at" => $expired
                 ];
 
-                if (strlen($customers[$i]) <= 3 || $customers[$i] == "" || trim($customers[$i]) === "") {
+                if (strlen($customers[$i]) < 3 || $customers[$i] == "" || trim($customers[$i]) === "") {
                     throw new \Exception("nama customer harus lebih dari 3 karakter", 400);
                 }
 
-                if ($seats[$i] > $findSchedule->seatingCapacity) throw new \Exception("tempat duduk " . $seats[$i] . " tidak ada karena tempat duduk cuma ada " . $findSchedule->seatingCapacity, 400);
+                if ($seats[$i] > $findSchedule->seatingCapacity || $seats[$i] <= 0) throw new \Exception("tempat duduk " . $seats[$i] . " tidak ada karena tempat duduk cuma ada 1 sampai " . $findSchedule->seatingCapacity, 400);
                 $existingOrder = $this->OrderModel->where('seat', $seats[$i])->first();
                 if ($existingOrder !== null) {
                     throw new \Exception("tempat duduk '" . $seats[$i] . "' sudah ada yang menempati", 400);
@@ -131,7 +131,7 @@ class Order extends ResourceController
 
             $data = $this->OrderModel->where("scheduleId", $scheduleId)->findAll();
             foreach ($data as $row) {
-                if ($row["expired_at"] != null && (new Time("now"))->getTimestamp() > $row["expired_at"]) {
+                if ($row["expired_at"] != null && (new Time("now"))->getTimestamp() > $row["expired_at"] && $row['isPaid'] == false) {
                     $this->OrderModel->delete($row["orderId"]);
                     $findSchedule->remainingSeatCapacity += 1;
                     // $this->ScheduleModel->update($scheduleId, ['data' => $findSchedule->date, 'time' => $findSchedule->time, 'from' => $findSchedule->from, 'to' => $findSchedule->to, 'remainingSeatCapacity' => $findSchedule->remainingSeatCapacity, 'busId' => $findSchedule->busId, 'price' => $findSchedule->price]);
@@ -184,6 +184,23 @@ class Order extends ResourceController
                 'message' => $e->getMessage()
             ]);
         };
+    }
+
+    public function getByCode($code = null)
+    {
+        try {
+            $findOrders = $this->OrderModel->select("order.orderId, order.scheduleId, order.customer, order.contact, u.email, order.seat, order.isPaid, order.code, s.price")->join("users as u", "u.userId = order.userId")->join("schedules as s", "s.scheduleId = order.scheduleId")->where("code", $code)->findAll();
+            return $this->respond([
+                'status' => 200,
+                'message' => 'berhasil',
+                'data' => $findOrders
+            ]);
+        } catch (\Exception $e) {
+            return $this->respond([
+                'status' => $e->getCode() ?? 500,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
     public function getById($orderId = null)
