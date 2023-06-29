@@ -1,4 +1,5 @@
 export interface DataUser {
+  userId: string
   email: string
   role: 'user' | 'admin'
   encrypt: string

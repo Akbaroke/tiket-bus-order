@@ -1,13 +1,14 @@
+import { DataUser } from '../../interfaces/store'
 import ActionType from '../actionType'
-import { UserInfo } from '../reducers/user'
 
 export const setUser = ({
+  userId,
   email,
   role,
   encrypt,
-}: UserInfo) => ({
+}: DataUser) => ({
   type: ActionType.SET_USER,
-  payload: { email, role, encrypt },
+  payload: { userId, email, role, encrypt },
 })
 
 export const resetUser = () => ({

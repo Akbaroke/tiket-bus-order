@@ -53,16 +53,16 @@ function Home() {
         <Logo className="block mb-10 px-8" width={150} />
         <div className="flex flex-col">{renderNavLinks()}</div>
       </div>
-      <Logout />
+      <Logout className="fixed bottom-10 w-[300px]" />
     </>
   )
 
   return (
-    <main className="sm:flex">
-      <aside className="w-[300px] rounded-tr-[40px] shadow-xl min-h-screen h-full py-10 hidden sm:flex sm:justify-between sm:flex-col">
+    <main className="lg:flex">
+      <aside className="w-[300px] rounded-tr-[40px] shadow-xl py-10 hidden lg:flex lg:justify-between lg:flex-col relative min-h-screen bg-white overflow-hidden">
         {drawerContent}
       </aside>
-      <div className="sm:hidden flex justify-between py-4 px-5 shadow-md sticky top-0 bg-white z-20">
+      <div className="lg:hidden flex justify-between py-4 px-5 shadow-md sticky top-0 bg-white z-20">
         <Logo width={120} />
         <div>
           <Drawer opened={opened} onClose={close}>
@@ -78,7 +78,7 @@ function Home() {
         </div>
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 bg-[#F4F7FE] min-h-screen">
         <Outlet />
       </div>
     </main>

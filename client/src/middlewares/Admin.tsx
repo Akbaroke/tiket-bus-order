@@ -3,14 +3,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import { DecryptFromServer } from '../utils/Decrypt'
 import { useNavigate } from 'react-router-dom'
 import { setUser } from '../redux/actions/user'
-import { UserInfo } from '../redux/reducers/user'
+import { DataUser } from '../interfaces/store'
 
 type Props = {
   children: React.ReactNode
 }
 
 interface State {
-  user: UserInfo
+  user: DataUser
 }
 
 export default function Admin({ children }: Props) {
@@ -25,15 +25,13 @@ export default function Admin({ children }: Props) {
   React.useEffect(() => {
     const setState = async () => {
       try {
-        const result = await DecryptFromServer(
-          to_stores || ''
-        )
+        const result = await DecryptFromServer(to_stores || '')
         const newResult = Object.assign({
+          userId: result.userId,
           email: result.email,
           role: result.role,
           encrypt: to_stores,
         })
-        console.log(newResult)
         dispatch(setUser(newResult))
       } catch (error) {
         console.error('Error decrypting data:', error)

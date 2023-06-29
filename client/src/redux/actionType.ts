@@ -8,6 +8,8 @@ const ActionType = {
   SET_SEAT: 'SET_SEAT',
   RESET_SEAT: 'RESET_SEAT',
   UPDATE_SEAT: 'UPDATE_SEAT',
+  SET_FORM_ORDER: 'SET_FORM_ORDER',
+  RESET_FORM_ORDER: 'RESET_FORM_ORDER',
 }
 
 export default ActionType

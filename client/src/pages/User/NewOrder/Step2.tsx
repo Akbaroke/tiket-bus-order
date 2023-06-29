@@ -1,15 +1,16 @@
 import * as React from 'react'
 import { useDispatch } from 'react-redux'
 import CardSchedule from '../../../components/CardSchedule'
-import { ResultFindBus } from './Layout'
 import {
+  resetFormOrder,
   resetScheduleSelected,
   setScheduleSelected,
 } from '../../../redux/actions/order'
 import { resetSeat } from '../../../redux/actions/seat'
+import { Schedules } from '../../../contexts/swr-context'
 
 type Props = {
-  resultFindBus: ResultFindBus[]
+  resultFindBus: Schedules[]
   nextStep: () => void
 }
 
@@ -22,6 +23,7 @@ export default function Step2({
   React.useEffect(() => {
     dispatch(resetScheduleSelected())
     dispatch(resetSeat())
+    dispatch(resetFormOrder())
   }, [dispatch])
 
   return (

@@ -11,7 +11,7 @@ import {
   MdVideoLibrary,
 } from 'react-icons/md'
 import { FaChargingStation } from 'react-icons/fa'
-import { Timeline } from '@mantine/core'
+import { Button, Timeline, Tooltip } from '@mantine/core'
 import useIsTimestampPassed from '../../../hooks/useCurrentDate'
 import {
   formatDate,
@@ -20,8 +20,8 @@ import {
 import { BiTimeFive } from 'react-icons/bi'
 import clsx from 'clsx'
 import rupiahFormat from '../../../utils/rupiahFormat'
-import Button from '../../../components/Button'
 import { resetSeat } from '../../../redux/actions/seat'
+import { resetFormOrder } from '../../../redux/actions/order'
 
 type Props = {
   nextStep: () => void
@@ -36,7 +36,9 @@ export default function Step3({ nextStep, prevStep }: Props) {
     (state: State) => state.order
   )
   const [schedule, setSchedule] = React.useState<Schedules>()
-  const hasPassed = useIsTimestampPassed(Number(schedule?.date))
+  const hasPassed = useIsTimestampPassed(
+    Number(schedule?.date) || 0
+  )
 
   React.useEffect(() => {
     const getDetailSchedule = async () => {
@@ -47,6 +49,7 @@ export default function Step3({ nextStep, prevStep }: Props) {
     }
     getDetailSchedule()
     dispatch(resetSeat())
+    dispatch(resetFormOrder())
   }, [dispatch, schedulIdSelected])
 
   return (
@@ -55,7 +58,7 @@ export default function Step3({ nextStep, prevStep }: Props) {
         Detail schedule
       </h1>
       <div className="flex flex-col gap-5">
-        <div className="w-full rounded-[10px] shadow-lg p-5 flex flex-col gap-4 overflow-hidden relative pb-14">
+        <div className="w-full rounded-[10px] shadow-lg p-5 flex flex-col gap-4 overflow-hidden relative pb-14 bg-white">
           <div>
             <h1 className="font-semibold text-[18px] text-[#262626]">
               {schedule?.name_bus_fleet}
@@ -107,7 +110,7 @@ export default function Step3({ nextStep, prevStep }: Props) {
             </div>
           </div>
         </div>
-        <div className="w-full rounded-[10px] shadow-lg p-5 flex flex-col gap-4 overflow-hidden relative">
+        <div className="w-full rounded-[10px] shadow-lg p-5 flex flex-col gap-4 overflow-hidden relative bg-white">
           <div className="flex justify-between items-center ">
             <h2 className="text-[16px] font-medium text-[#9F9F9F]">
               Travel Route
@@ -119,10 +122,10 @@ export default function Step3({ nextStep, prevStep }: Props) {
               )}>
               <BiTimeFive className="text-[18px] -mb-[2px]" />
               <h1 className="text-[14px] font-semibold">
-                {formatTime(Number(schedule?.date) | 0)}
+                {formatTime(Number(schedule?.date) || 0)}
               </h1>
               <p className="text-[9px] font-medium -mt-[2px]">
-                {formatDate(Number(schedule?.date) | 0)}
+                {formatDate(Number(schedule?.date) || 0)}
               </p>
             </div>
           </div>
@@ -161,7 +164,7 @@ export default function Step3({ nextStep, prevStep }: Props) {
             </Timeline>
           </div>
         </div>
-        <div className="w-full rounded-[10px] shadow-lg p-5 flex flex-col gap-4 overflow-hidden relative">
+        <div className="w-full rounded-[10px] shadow-lg p-5 flex flex-col gap-4 overflow-hidden relative bg-white">
           <div className="flex justify-between items-center mb-2">
             <h1 className="font-semibold text-[18px] text-[#262626]">
               Price
@@ -178,9 +181,16 @@ export default function Step3({ nextStep, prevStep }: Props) {
               Continue
             </Button>
           ) : (
-            <Button className="bg-gray-400" onClick={prevStep}>
-              Sorry you can't order, Back
-            </Button>
+            <Tooltip label="Sorry the bus has left!!">
+              <Button
+                sx={{
+                  '&[data-disabled]': { pointerEvents: 'all' },
+                }}
+                className="bg-gray-400 hover:bg-gray-400"
+                onClick={prevStep}>
+                Find another bus ?
+              </Button>
+            </Tooltip>
           )}
         </div>
       </div>

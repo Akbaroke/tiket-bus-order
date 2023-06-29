@@ -1,19 +1,22 @@
 import { FormValues } from '../../pages/User/NewOrder/Step1'
 import ActionType from '../actionType'
 
-export interface DataPayload extends FormValues {
+export interface FormSearch extends FormValues {
   schedulIdSelected?: string
 }
 
+interface Payload extends FormSearch, FormOrder {}
+
 type Action = {
   type: string
-  payload: DataPayload
+  payload: Payload
 }
 
-interface FormOrder {
+export interface FormOrder {
+  passenger: number
   name: string
   contact: string
-  seats: number
+  isValid: boolean
 }
 export interface StateOrder {
   formSearch: FormValues
@@ -57,6 +60,26 @@ const reducerOrder = (
         ...state,
         schedulIdSelected: action.payload
           .schedulIdSelected as string,
+      }
+    case ActionType.SET_FORM_ORDER:
+      return {
+        ...state,
+        formOrder: [
+          ...state.formOrder.filter(
+            order => order.passenger !== action.payload.passenger
+          ),
+          {
+            passenger: action.payload.passenger,
+            name: action.payload.name,
+            contact: action.payload.contact,
+            isValid: action.payload.isValid,
+          },
+        ],
+      }
+    case ActionType.RESET_FORM_ORDER:
+      return {
+        ...state,
+        formOrder: initialState.formOrder,
       }
     default:
       return state

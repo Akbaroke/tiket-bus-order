@@ -14,6 +14,8 @@ import ViewCity from '../pages/Admin/City/ViewCity'
 import ViewStation from '../pages/Admin/Station/ViewStation'
 import ViewSchedule from '../pages/Admin/Schedule/ViewSchedule'
 import NewOrder from '../pages/User/NewOrder/Layout'
+import ListOrder from '../pages/User/HistoryOrder/ListOrder'
+import DetailOrder from '../pages/User/HistoryOrder/DetailOrder'
 
 export default function root() {
   return (
@@ -45,6 +47,8 @@ export default function root() {
           </User>
         }>
         <Route index element={<NewOrder />} />
+        <Route path="/history" element={<ListOrder />} />
+        <Route path="/history/:id" element={<DetailOrder />} />
       </Route>
 
       <Route

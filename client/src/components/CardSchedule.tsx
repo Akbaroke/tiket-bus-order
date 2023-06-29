@@ -19,7 +19,7 @@ export default function CardSchedule({
   const hasPassed = useIsTimestampPassed(Number(data.date))
 
   return (
-    <div className="w-[250px] h-max shadow-md hover:shadow-lg transition-shadow p-[15px] rounded-[5px] relative overflow-hidden flex flex-col justify-between cursor-pointer gap-2">
+    <div className="w-[250px] h-max shadow-md hover:shadow-lg transition-shadow p-[15px] rounded-[5px] relative overflow-hidden flex flex-col justify-between cursor-pointer gap-2 bg-white">
       <div className="flex flex-col">
         <h1 className="text-[18px] text-[#262626] font-medium leading-none">
           {data.name_bus_fleet}
