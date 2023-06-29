@@ -1,19 +1,15 @@
+import { DataUser } from '../../interfaces/store'
 import ActionType from '../actionType'
-
-export interface UserInfo {
-  email: string
-  role: 'admin' | 'user'
-  encrypt: string
-}
 
 type UserAction = {
   type: string
-  payload: UserInfo
+  payload: DataUser
 }
 
-const initialState = {
+const initialState: DataUser = {
+  userId: '',
   email: '',
-  role: '',
+  role: 'user',
   encrypt: '',
 }
 
@@ -24,12 +20,10 @@ const reducerUser = (
   switch (action.type) {
     case ActionType.SET_USER:
       if (action.payload.encrypt) {
-        localStorage.setItem(
-          'token',
-          action.payload.encrypt
-        )
+        localStorage.setItem('token', action.payload.encrypt)
       }
       return {
+        userId: action.payload.userId,
         email: action.payload.email,
         role: action.payload.role,
         encrypt: action.payload.encrypt,

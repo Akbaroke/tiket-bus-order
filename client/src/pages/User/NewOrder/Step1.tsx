@@ -4,6 +4,7 @@ import { useForm } from '@mantine/form'
 import { TbBus, TbBusStop } from 'react-icons/tb'
 import {
   Cities,
+  Schedules,
   useSWRContext,
 } from '../../../contexts/swr-context'
 import { DateInput } from '@mantine/dates'
@@ -15,8 +16,10 @@ import {
 } from '../../../components/Toast'
 import { dateToEpochMillis } from '../../../utils/timeManipulation'
 import axios from '../../../api'
-import { ResultFindBus } from './Layout'
-import { setFormSearch } from '../../../redux/actions/order'
+import {
+  resetFormOrder,
+  setFormSearch,
+} from '../../../redux/actions/order'
 import { useDispatch } from 'react-redux'
 import { resetSeat } from '../../../redux/actions/seat'
 
@@ -29,7 +32,7 @@ export interface FormValues {
 
 type Props = {
   nextStep: () => void
-  setData: (data: ResultFindBus[]) => void
+  setData: (data: Schedules[]) => void
 }
 
 export default function Step1({ nextStep, setData }: Props) {
@@ -74,6 +77,7 @@ export default function Step1({ nextStep, setData }: Props) {
           })
         )
         dispatch(resetSeat())
+        dispatch(resetFormOrder())
       }
     } catch (error) {
       console.log(error)
@@ -118,12 +122,11 @@ export default function Step1({ nextStep, setData }: Props) {
     },
   })
   return (
-    <div className="p-5 shadow-md">
+    <div className="p-5 shadow-md rounded-[10px] bg-white">
       <h1 className="text-center text-[#095BA8] text-[22px] font-semibold block w-max pb-2 px-10 border-b border-b-[#095BA8]/20 capitalize m-auto mb-5">
         Find schedule
       </h1>
       <form
-        action=""
         className="flex flex-col gap-3"
         onSubmit={form.onSubmit(values => handleSubmit(values))}>
         <Select

@@ -1,17 +1,17 @@
 import ActionType from '../actionType'
 
-export interface SeatPayload {
+export interface DataSeat {
   passenger: number
   seat: number
 }
 
 interface Action {
   type: string
-  payload: SeatPayload
+  payload: DataSeat
 }
 
 export interface StateSeat {
-  dataSeats: SeatPayload[]
+  dataSeats: DataSeat[]
 }
 
 const initialState: StateSeat = {

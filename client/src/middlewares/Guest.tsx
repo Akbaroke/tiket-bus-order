@@ -3,14 +3,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import { DecryptFromServer } from '../utils/Decrypt'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { setUser } from '../redux/actions/user'
-import { UserInfo } from '../redux/reducers/user'
+import { DataUser } from '../interfaces/store'
 
 type Props = {
   children: React.ReactNode
 }
 
 interface State {
-  user: UserInfo
+  user: DataUser
 }
 
 export default function Guest({ children }: Props) {
@@ -29,10 +29,7 @@ export default function Guest({ children }: Props) {
   React.useEffect(() => {
     const setState = async () => {
       try {
-        const result = await DecryptFromServer(
-          to_stores || ''
-        )
-        console.log(result)
+        const result = await DecryptFromServer(to_stores || '')
         dispatch(setUser(result))
       } catch (error) {
         console.error('Error decrypting data:', error)
@@ -63,14 +60,7 @@ export default function Guest({ children }: Props) {
     } else {
       navigate(AuthLocation)
     }
-  }, [
-    dispatch,
-    navigate,
-    to_stores,
-    email,
-    role,
-    AuthLocation,
-  ])
+  }, [dispatch, navigate, to_stores, email, role, AuthLocation])
 
   return children
 }

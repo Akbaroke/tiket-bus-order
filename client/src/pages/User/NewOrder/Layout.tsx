@@ -2,13 +2,15 @@ import * as React from 'react'
 import { Accordion, Stepper } from '@mantine/core'
 import Step1 from './Step1'
 import Step2 from './Step2'
-import { BsSearch } from 'react-icons/bs'
+import { BsBarChartSteps, BsSearch } from 'react-icons/bs'
 import { BiSelectMultiple } from 'react-icons/bi'
 import { CgDetailsMore } from 'react-icons/cg'
 import { FaWpforms } from 'react-icons/fa'
 import { MdEventSeat } from 'react-icons/md'
 import Step3 from './Step3'
 import Step4 from './Step4'
+import { Schedules } from '../../../contexts/swr-context'
+import Step5 from './Step5'
 
 const dataStepper = [
   {
@@ -38,35 +40,11 @@ const dataStepper = [
   },
 ]
 
-export interface ResultFindBus {
-  scheduleId: string
-  busId: string
-  code: string
-  price: string
-  station_from: string
-  name_station_from: string
-  city_station_from: string
-  station_to: string
-  name_station_to: string
-  name_city_to: string
-  date: string
-  time: string
-  format: string
-  className: string
-  seatingCapacity: string
-  name_bus_fleet: string
-  updated_at: string
-}
-
 export default function Layout() {
   const [active, setActive] = React.useState(0)
   const [resultFindBus, setResultFindBus] = React.useState<
-    ResultFindBus[]
+    Schedules[]
   >([])
-
-  React.useEffect(() => {
-    console.log(resultFindBus)
-  }, [resultFindBus])
 
   const nextStep = () =>
     setActive(current =>
@@ -75,7 +53,7 @@ export default function Layout() {
   const prevStep = () =>
     setActive(current => (current > 0 ? current - 1 : current))
 
-  const setData = (data: ResultFindBus[]) => {
+  const setData = (data: Schedules[]) => {
     setResultFindBus(data)
   }
 
@@ -94,53 +72,59 @@ export default function Layout() {
         return <Step3 nextStep={nextStep} prevStep={prevStep} />
       case 3:
         return <Step4 nextStep={nextStep} />
+      case 4:
+        return <Step5 prevStep={prevStep} />
       default:
         break
     }
   }
 
+  const RenderStepper = ({
+    breakpoint,
+    className,
+  }: {
+    breakpoint: 'sm' | 'lg'
+    className?: string
+  }) => (
+    <Stepper
+      className={className}
+      iconSize={42}
+      active={active}
+      breakpoint={breakpoint}
+      onStepClick={setActive}
+      allowNextStepsSelect={false}>
+      {dataStepper.map((data, index) => (
+        <Stepper.Step
+          key={index}
+          icon={data.icon}
+          description={data.description}
+        />
+      ))}
+    </Stepper>
+  )
   return (
-    <div className="sm:p-10 p-5 flex flex-col sm:gap-10 gap-3">
-      <Accordion variant="separated" className="sm:hidden">
-        <Accordion.Item value="customization">
+    <div className="lg:p-10 p-5 flex flex-col lg:gap-10 gap-3">
+      <Accordion
+        variant="contained"
+        className="lg:hidden bg-white">
+        <Accordion.Item value="steps">
           <Accordion.Control>
-            <p className="text-sm font-semibold">Steps Order</p>
+            <div className="flex gap-2 items-center text-gray-500">
+              <BsBarChartSteps />
+              <p className="text-sm font-semibold">
+                Steps Order
+              </p>
+            </div>
           </Accordion.Control>
           <Accordion.Panel>
-            <Stepper
-              iconSize={42}
-              active={active}
-              breakpoint="sm"
-              onStepClick={setActive}
-              allowNextStepsSelect={false}>
-              {dataStepper.map((data, index) => (
-                <Stepper.Step
-                  key={index}
-                  label={data.label}
-                  icon={data.icon}
-                  description={data.description}
-                />
-              ))}
-            </Stepper>
+            <RenderStepper breakpoint="lg" />
           </Accordion.Panel>
         </Accordion.Item>
       </Accordion>
-      <Stepper
-        className="hidden sm:block"
-        iconSize={42}
-        active={active}
+      <RenderStepper
         breakpoint="sm"
-        onStepClick={setActive}
-        allowNextStepsSelect={false}>
-        {dataStepper.map((data, index) => (
-          <Stepper.Step
-            key={index}
-            label={data.label}
-            icon={data.icon}
-            description={data.description}
-          />
-        ))}
-      </Stepper>
+        className="hidden lg:block bg-white p-5 rounded-[10px] shadow-md"
+      />
       <div>
         <RenderChildren />
       </div>

@@ -1,7 +1,7 @@
 import ActionType from '../actionType'
-import { SeatPayload } from '../reducers/seat'
+import { DataSeat } from '../reducers/seat'
 
-export const setSeat = ({ passenger, seat }: SeatPayload) => ({
+export const setSeat = ({ passenger, seat }: DataSeat) => ({
   type: ActionType.SET_SEAT,
   payload: { passenger, seat },
 })

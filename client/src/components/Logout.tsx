@@ -11,7 +11,11 @@ import clsx from 'clsx'
 import { useDispatch } from 'react-redux'
 import { resetUser } from '../redux/actions/user'
 
-export default function Logout() {
+export default function Logout({
+  className,
+}: {
+  className?: string
+}) {
   const [isLoading, setIsLoading] = React.useState(false)
   const [opened, { open, close }] = useDisclosure(false)
   const dispatch = useDispatch()
@@ -67,13 +71,14 @@ export default function Logout() {
         <div
           onClick={open}
           className={clsx(
-            'flex gap-[18px] items-center px-9 py-6 w-full border border-x-0 border-y-white hover:border-y-[#F0EFF2] transition-all cursor-pointer [&>svg]:text-[20px] hover:text-[#262626]  [&>svg]:hover:text-[#FF0202] ',
+            'flex gap-[18px] items-center px-9 py-6 border border-x-0 border-y-white hover:border-y-[#F0EFF2] transition-all cursor-pointer [&>svg]:text-[20px] hover:text-[#262626]  [&>svg]:hover:text-[#FF0202] ',
+            className,
             opened
               ? 'text-[#262626] [&>svg]:text-[#FF0202]'
               : 'text-[#9F9F9F] [&>svg]:text-[#FF0202]/50'
           )}>
           <RiLogoutCircleLine />
-          <div className="flex w-full justify-between items-center">
+          <div className="flex justify-between items-center">
             <p className="text-[14px] font-medium capitalize">
               Logout
             </p>

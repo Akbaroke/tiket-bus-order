@@ -43,6 +43,7 @@ export interface Stations {
 }
 export interface Schedules {
   scheduleId: string
+  remainingSeatCapacity: number
   busId: string
   code: string
   price: string
