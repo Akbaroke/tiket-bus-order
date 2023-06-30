@@ -68,7 +68,8 @@ class Order extends ResourceController
 
             $encrypter = \Config\Services::encrypter();
             $result = unserialize($encrypter->decrypt(base64_decode($enc)));
-            if (!5 > $this->OrderModel->where(['userId' => $result["userId"], "scheduleId" => $scheduleId])->countAllResults()) throw new \Exception("User sudah melakukan 5 pembelian.", 400);
+            $count = $this->OrderModel->where(['userId' => $result["userId"], "scheduleId" => $scheduleId])->countAllResults();
+            if ($count > 5 || $count == 5) throw new \Exception("User sudah melakukan 5 pembelian.", 400);
             $code = $this->code(8);
             $expired = strtotime("+30 minutes", (new Time("now"))->getTimestamp());
             for ($i = 0; $i < $length; $i++) {
