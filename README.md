@@ -18,7 +18,7 @@ Dosen           : Agung Nugroho,S.Kom.,M.Kom
 
 ## **LOGO**
 
-![logo3_2 0](https://github.com/Akbaroke/ticket-order/assets/115305578/bdac052f-ba7e-47b9-940b-7268d4d825f3)
+[![logo3_2 0](https://github.com/Akbaroke/ticket-order/assets/115305578/bdac052f-ba7e-47b9-940b-7268d4d825f3)](https://cdn.discordapp.com/attachments/1015028360759492710/1124299780022083715/Frame_37.png)
 </br></br>
 
 ## **USE-CASE**
