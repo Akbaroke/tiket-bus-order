@@ -8,8 +8,8 @@ import {
   notifySuccess,
 } from '../../../components/Toast'
 import { useSelector } from 'react-redux'
-import { UserInfo } from '../../../redux/reducers/user'
 import { useSWRConfig } from 'swr'
+import { DataUser } from '../../../interfaces/store'
 
 type Props = {
   type: 'add' | 'edit'
@@ -22,7 +22,7 @@ interface FormValues {
 }
 
 interface State {
-  user: UserInfo
+  user: DataUser
 }
 
 function FormArmada({ type, armadaId, onClose }: Props) {

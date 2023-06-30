@@ -69,8 +69,11 @@ function Dashboard() {
 
   const drawerContent = (
     <>
-      <div>
-        <Logo className="block mb-10 px-8" width={150} />
+      <div className="h-screen overflow-auto">
+        <div className="sticky top-0 bg-white pb-10 px-8">
+          <Logo width={150} />
+        </div>
+
         <div className="flex flex-col">{renderNavLinks()}</div>
       </div>
       <Logout />
@@ -78,11 +81,11 @@ function Dashboard() {
   )
 
   return (
-    <main className="sm:flex">
-      <aside className="w-[300px] rounded-tr-[40px] shadow-xl min-h-screen h-full py-10 hidden sm:flex sm:justify-between sm:flex-col">
+    <main className="lg:flex h-screen lg:overflow-hidden overflow-auto">
+      <aside className="w-[300px] rounded-tr-[40px] shadow-xl py-10 hidden lg:flex lg:justify-between lg:flex-col sticky top-0 bg-white overflow-hidden z-20">
         {drawerContent}
       </aside>
-      <div className="sm:hidden flex justify-between py-4 px-5 shadow-md">
+      <div className="lg:hidden flex justify-between py-4 px-5 shadow-md sticky top-0 bg-white z-20">
         <Logo width={120} />
         <div>
           <Drawer opened={opened} onClose={close}>
@@ -98,7 +101,7 @@ function Dashboard() {
         </div>
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 bg-[#F4F7FE] min-h-screen overflow-auto">
         <Outlet />
       </div>
     </main>

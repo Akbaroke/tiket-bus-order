@@ -26,6 +26,7 @@ import {
   notifySuccess,
 } from '../../../components/Toast'
 import { DataUser } from '../../../interfaces/store'
+import { useNavigate } from 'react-router-dom'
 
 interface State {
   order: StateOrder
@@ -38,6 +39,7 @@ type Props = {
 }
 
 export default function Step5({ prevStep }: Props) {
+  const navigate = useNavigate()
   const { encrypt } = useSelector((state: State) => state.user)
   const { formSearch, schedulIdSelected, formOrder } =
     useSelector((state: State) => state.order)
@@ -75,8 +77,17 @@ export default function Step5({ prevStep }: Props) {
         encrypt: encrypt,
       })
       console.log(data)
-      mutate('/schedule')
-      notifySuccess('Order successful!', 'new-order')
+      if (data.status === 400) {
+        notifyError(
+          `Order failed!, ${data.message}`,
+          'new-order'
+        )
+      } else {
+        mutate('/order')
+        mutate('/schedule')
+        notifySuccess('Order successful!', 'new-order')
+        navigate(`/history/${data.data.order[0].orderId}`)
+      }
     } catch (error) {
       console.log(error)
       notifyError('Order failed!', 'new-order')

@@ -103,7 +103,7 @@ export default function Layout() {
     </Stepper>
   )
   return (
-    <div className="lg:p-10 p-5 flex flex-col lg:gap-10 gap-3">
+    <div className="p-5 flex flex-col lg:gap-10 gap-3">
       <Accordion
         variant="contained"
         className="lg:hidden bg-white">

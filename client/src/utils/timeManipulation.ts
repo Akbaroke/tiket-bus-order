@@ -46,9 +46,73 @@ function dateToEpochMillis(date: Date): number {
   return date.getTime() / 1000
 }
 
+
+const isToday = (
+  currentTimestamp: number,
+  targetTimestamp: number
+): boolean => {
+  const currentDate = new Date(currentTimestamp)
+  const targetDate = new Date(targetTimestamp)
+  return (
+    currentDate.getFullYear() === targetDate.getFullYear() &&
+    currentDate.getMonth() === targetDate.getMonth() &&
+    currentDate.getDate() === targetDate.getDate()
+  )
+}
+
+const isYesterday = (
+  currentTimestamp: number,
+  targetTimestamp: number
+): boolean => {
+  const currentDate = new Date(currentTimestamp)
+  const targetDate = new Date(targetTimestamp)
+  currentDate.setHours(12, 0, 0, 0)
+  targetDate.setHours(12, 0, 0, 0)
+  currentDate.setDate(currentDate.getDate() - 1)
+  return targetDate.getTime() === currentDate.getTime()
+}
+
+const isLastWeek = (
+  currentTimestamp: number,
+  targetTimestamp: number
+): boolean => {
+  const currentDate = new Date(currentTimestamp)
+  const targetDate = new Date(targetTimestamp)
+  currentDate.setHours(12, 0, 0, 0)
+  targetDate.setHours(12, 0, 0, 0)
+  currentDate.setDate(currentDate.getDate() - 7)
+  return (
+    targetDate.getTime() >= currentDate.getTime() &&
+    targetDate.getTime() <
+      currentDate.setDate(currentDate.getDate() + 7)
+  )
+}
+
+const formatDateText = (epochTime: number): string => {
+  const date = new Date(epochTime * 1000)
+
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }
+
+  const formattedDate = new Intl.DateTimeFormat(
+    'en-US',
+    options
+  ).format(date)
+
+  return formattedDate
+}
+
 export {
   formatDate,
   formatTime,
   combineDateTimeToEpochMillis,
   dateToEpochMillis,
+  isToday,
+  isLastWeek,
+  isYesterday,
+  formatDateText,
 }

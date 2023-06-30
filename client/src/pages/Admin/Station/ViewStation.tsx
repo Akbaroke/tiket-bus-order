@@ -76,7 +76,7 @@ export default function ViewStation() {
         </h2>
       ) : null}
       <Table
-        className="mt-3"
+        className="mt-3 bg-white"
         highlightOnHover
         withBorder
         withColumnBorders

@@ -58,8 +58,8 @@ function Home() {
   )
 
   return (
-    <main className="lg:flex">
-      <aside className="w-[300px] rounded-tr-[40px] shadow-xl py-10 hidden lg:flex lg:justify-between lg:flex-col relative min-h-screen bg-white overflow-hidden">
+    <main className="lg:flex h-screen lg:overflow-hidden overflow-auto">
+      <aside className="w-[300px] rounded-tr-[40px] shadow-xl py-10 hidden lg:flex lg:justify-between lg:flex-col sticky top-0 bg-white overflow-hidden z-20">
         {drawerContent}
       </aside>
       <div className="lg:hidden flex justify-between py-4 px-5 shadow-md sticky top-0 bg-white z-20">
@@ -78,7 +78,7 @@ function Home() {
         </div>
       </div>
 
-      <div className="flex-1 bg-[#F4F7FE] min-h-screen">
+      <div className="flex-1 bg-[#F4F7FE] min-h-screen overflow-auto">
         <Outlet />
       </div>
     </main>

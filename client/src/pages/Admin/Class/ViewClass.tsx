@@ -95,7 +95,7 @@ export default function ViewClass() {
         </h2>
       ) : null}
       <Table
-        className="mt-3"
+        className="mt-3 bg-white"
         highlightOnHover
         withBorder
         withColumnBorders

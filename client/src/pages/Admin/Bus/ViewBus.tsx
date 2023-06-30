@@ -94,7 +94,7 @@ export default function ViewBus() {
       <div className="flex flex-wrap gap-[20px] mt-4">
         {searchResult.map(item => (
           <EditBus busId={item.id} key={item.id}>
-            <div className="w-[199px] h-[110px] shadow-md hover:shadow-lg transition-shadow p-[15px] rounded-[5px] relative overflow-hidden flex flex-col justify-between cursor-pointer">
+            <div className="w-[199px] h-[110px] shadow-md hover:shadow-lg transition-shadow p-[15px] rounded-[5px] relative overflow-hidden flex flex-col justify-between cursor-pointer bg-white">
               <div className="flex justify-between">
                 <div className="flex flex-col">
                   <h1 className="text-[18px] text-[#262626] font-medium leading-none">
