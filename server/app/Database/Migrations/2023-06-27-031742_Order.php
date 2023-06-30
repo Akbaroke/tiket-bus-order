@@ -23,31 +23,16 @@ class Order extends Migration
                 'constraint' => 36,
                 'required' => true,
             ],
-            'customer' => [
-                'type' => 'VARCHAR',
-                'required' => true,
-                'constraint' => 100
-            ],
-            'contact' => [
-                'type' => 'BIGINT',
-                'required' => true,
-                'constraint' => 13
-            ],
-            'seat' => [
-                'type' => 'INT',
-                'required' => true,
-                'constraint' => 11,
-                'unique' => true
-            ],
             'isPaid' => [
                 'type' => 'BOOLEAN',
                 'null' => true,
                 'default' => false
             ],
-            'code' => [
-                'type' => 'VARCHAR',
+            'amountSeats' => [
+                'type' => 'INT',
+                'constraint' => 5,
+                'unsigned' => true,
                 'required' => true,
-                'constraint' => 8
             ],
             'created_at' => [
                 'type' => 'BIGINT',

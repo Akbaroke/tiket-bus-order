@@ -7,6 +7,9 @@ use CodeIgniter\API\ResponseTrait;
 use App\Models\OrderModel;
 use App\Models\UserModel;
 use App\Models\ScheduleModel;
+use App\Models\TicketModel;
+use App\Models\IncomeModel;
+use CodeIgniter\I18n\Time;
 
 class Payment extends ResourceController
 {
@@ -15,21 +18,26 @@ class Payment extends ResourceController
     protected $OrderModel;
     protected $UserModel;
     protected $ScheduleModel;
+    protected $TicketModel;
+    protected $IncomeModel;
 
     public function __construct()
     {
         $this->OrderModel = new OrderModel();
         $this->UserModel = new UserModel();
         $this->ScheduleModel = new ScheduleModel();
+        $this->TicketModel = new TicketModel();
+        $this->IncomeModel = new IncomeModel();
     }
-
     // khusus admin
     public function index()
     {
         $code = $this->request->getVar("code");
         $pay = $this->request->getVar("pay");
         $enc = $this->request->getVar("encrypt");
+        $time = (new Time("now"))->setTime(0, 0, 0)->getTimestamp();
         try {
+            $this->IncomeModel->transBegin();
             $rules = [
                 'code' => 'required|min_length[8]|max_length[8]',
                 'pay' => 'required|integer|greater_than_equal_to[0]',
@@ -37,10 +45,12 @@ class Payment extends ResourceController
             ];
 
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
-            if (!$this->adminOnly($this->request->getVar('encrypt'))) throw new \Exception("Akses ditolak", 403);
-            $findOrders = $this->OrderModel->select("order.orderId, order.scheduleId, f.name as armada, b.code as code_bus, order.customer, order.contact, u.email, order.seat, order.isPaid, order.code as code_order, s.price")->join("users as u", "u.userId = order.userId")->join("schedules as s", "s.scheduleId = order.scheduleId")->join("bus as b", "b.busId = s.busId")->join("busFleet as f", "f.busFleetId = b.busFleetId")->where(["order.code" => $code, "order.isPaid" => false])->findAll();
+            if (!$this->adminOnly($enc)) throw new \Exception("Akses ditolak", 403);
+            $findOrders = $this->TicketModel->select("ticket.orderId, o.scheduleId, f.name as armada, f.busFleetId,b.code as code_bus, ticket.customer, ticket.contact, u.email, ticket.seat, o.isPaid, ticket.code as code_order, s.price")->join("order as o", "o.orderId = ticket.orderId")->join("users as u", "u.userId = o.userId")->join("schedules as s", "s.scheduleId = o.scheduleId")->join("bus as b", "b.busId = s.busId")->join("busFleet as f", "f.busFleetId = b.busFleetId")->where(["ticket.code" => $code, "o.isPaid" => false])->findAll();
+
 
             $total_price = 0;
+            $totalPassengers = count($findOrders);
             foreach ($findOrders as $order) {
                 $total_price += $order["price"];
             }
@@ -52,6 +62,20 @@ class Payment extends ResourceController
                 $this->OrderModel->update($order["orderId"], ['expired_at' => null, 'isPaid' => true]);
             }
 
+            $findIncome = $this->IncomeModel->where(["busFleetId" => $findOrders[0]["busFleetId"], "created_at" => $time])->first();
+
+            if ($findIncome == null) {
+                $newIncome = ["busFleetId" => $findOrders[0]["busFleetId"], "income" => $total_price, "totalPassengers" => $totalPassengers];
+                $this->IncomeModel->save($newIncome);
+            }
+
+            if ($findIncome != null) {
+                $findIncome["income"] += $total_price;
+                $findIncome["totalPassengers"] += $totalPassengers;
+                $this->IncomeModel->save($findIncome);
+            }
+
+            $this->IncomeModel->transCommit();
             return $this->respond([
                 'status' => 200,
                 'message' => "berhasil",
@@ -62,6 +86,7 @@ class Payment extends ResourceController
                 ]
             ]);
         } catch (\Exception $e) {
+            $this->IncomeModel->transRollback();
             return $this->respond([
                 'status' => $e->getCode() ?? 500,
                 'message' => $e->getMessage() ?? "Server Internal Error"

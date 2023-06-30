@@ -20,28 +20,33 @@ class Income extends Migration
             ],
             'income' => [
                 'type' => 'BIGINT',
-                'constraint' => 20,
                 'required' => true,
+                'constraint' => 20
             ],
-            'created_at' => [
-                'type' => 'BIGINT',
-                'constraint' => 20,
-                'null' => true
+            'totalPassengers' => [
+                'type' => 'INT',
+                'required' => true,
+                'constraint' => 11
             ],
             'updated_at' => [
                 'type' => 'BIGINT',
                 'constraint' => 20,
                 'null' => true
             ],
+            'created_at' => [
+                'type' => 'BIGINT',
+                'constraint' => 20,
+                'null' => true
+            ]
         ]);
 
         $this->forge->addKey('incomeId',  TRUE);
-        $this->forge->addForeignKey('busFleet', 'busFleetId', 'busFleetId', 'CASCADE', 'CASCADE');
-        $this->forge->createTable('Income', TRUE);
+        $this->forge->addForeignKey('busFleetId', 'busFleet', 'busFleetId', 'CASCADE', 'CASCADE');
+        $this->forge->createTable('income', TRUE);
     }
 
     public function down()
     {
-        $this->forge->dropTable('order');
+        $this->forge->dropTable('income');
     }
 }

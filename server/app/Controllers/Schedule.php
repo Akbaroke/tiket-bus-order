@@ -7,7 +7,7 @@ use CodeIgniter\RESTful\ResourceController;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\ScheduleModel;
 use App\Models\UserModel;
-// use CodeIgniter\I18n\Time;
+use CodeIgniter\I18n\Time;
 
 class Schedule extends ResourceController
 {
@@ -53,7 +53,7 @@ class Schedule extends ResourceController
 
     public function getSchedules()
     {
-        $date = $this->request->getVar("date");
+        $date = Time::createFromTimestamp($this->request->getVar("date"))->setTime(0, 0, 0)->getTimestamp();
         $from = $this->request->getVar("from");
         $to = $this->request->getVar("to");
         $seat = $this->request->getVar("seat");

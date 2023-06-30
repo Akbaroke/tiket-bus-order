@@ -6,17 +6,17 @@ use CodeIgniter\Model;
 use Ramsey\Uuid\Uuid;
 use CodeIgniter\I18n\Time;
 
-class OrderModel extends Model
+class IncomeModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'order';
-    protected $primaryKey       = 'orderId';
-    protected $casts = ['orderId' => 'string'];
+    protected $table            = 'income';
+    protected $primaryKey       = 'incomeId';
+    protected $casts = ['incomeId' => 'string'];
     protected $useAutoIncrement  = false;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['orderId', 'scheduleId', 'userId', 'amountSeats', 'isPaid', 'created_at', 'updated_at', 'expired_at'];
+    protected $allowedFields    = ['busFleetId', 'income', 'totalPassengers', 'created_at', 'updated_at'];
 
     // Dates
     protected $useTimestamps = false;
@@ -43,14 +43,14 @@ class OrderModel extends Model
 
     protected function generateUUID(array $data)
     {
-        $data['data']['orderId'] = Uuid::uuid4()->toString();
+        $data['data']['incomeId'] = Uuid::uuid4()->toString();
         return $data;
     }
 
     protected function beforeInsert(array $data)
     {
         $time = new Time("now");
-        $data['data']['created_at'] = $time->getTimestamp();
+        $data['data']['created_at'] = $time->setTime(0, 0, 0)->getTimestamp();
         $data['data']['updated_at'] = $time->getTimestamp();
         return $data;
     }
