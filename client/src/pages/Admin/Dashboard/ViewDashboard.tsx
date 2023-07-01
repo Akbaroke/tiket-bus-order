@@ -74,7 +74,7 @@ export default function ViewDashboard() {
       {
         label: 'Income',
         data: incomeData,
-        backgroundColor: 'rgba(255, 237, 99, 0.5)',
+        backgroundColor: '#ffdd009d',
       },
     ],
   }
@@ -85,7 +85,7 @@ export default function ViewDashboard() {
       {
         label: 'Passengers',
         data: passengersData,
-        backgroundColor: 'rgba(99, 148, 255, 0.5)',
+        backgroundColor: '#095BA89d',
       },
     ],
   }
