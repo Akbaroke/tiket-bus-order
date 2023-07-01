@@ -39,13 +39,13 @@ class Income extends ResourceController
             $income = [];
             foreach ($data as $d) {
                 if (count($income) == 0) {
-                    array_push($income, ["busFleetId" => $d["busFleetId"], "aramada" => $d["name"], "income" => 0, "totalPassengers" => 0]);
+                    array_push($income, ["busFleetId" => $d["busFleetId"], "aramada" => $d["name"], "income" => $d["income"], "totalPassengers" => $d["totalPassengers"]]);
                     continue;
                 }
 
                 $index = array_search($d["busFleetId"], array_column($income, "busFleetId"));
                 if ($index === false) {
-                    array_push($income, ["busFleetId" => $d["busFleetId"], "aramada" => $d["name"], "income" => 0, "totalPassengers" => 0]);
+                    array_push($income, ["busFleetId" => $d["busFleetId"], "aramada" => $d["name"], "income" => $d["income"], "totalPassengers" => $d["totalPassengers"]]);
                     continue;
                 }
 
