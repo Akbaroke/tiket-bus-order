@@ -37,6 +37,7 @@ class Income extends ResourceController
             $data = $this->IncomeModel->join("busFleet as b", "b.busFleetId = income.busFleetId")->where(["income.created_at >=" => $date1, "income.created_at <=" => $date2, "income.busFleetId" => $busFleetId])
                 ->findAll();
 
+            if ($data == null) throw new \Exception("armada tidak ditemukan");
             $income = ["aramada" => $data[0]["name"], "income" => 0, "totalPassengers" => 0];
             foreach ($data as $d) {
                 $income["income"] += $d["income"];
