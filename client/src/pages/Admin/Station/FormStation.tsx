@@ -8,12 +8,12 @@ import {
   notifySuccess,
 } from '../../../components/Toast'
 import { useSelector } from 'react-redux'
-import { UserInfo } from '../../../redux/reducers/user'
 import { useSWRConfig } from 'swr'
 import {
   Cities,
   useSWRContext,
 } from '../../../contexts/swr-context'
+import { DataUser } from '../../../interfaces/store'
 
 type Props = {
   type: 'add' | 'edit'
@@ -27,7 +27,7 @@ interface FormValues {
 }
 
 interface State {
-  user: UserInfo
+  user: DataUser
 }
 
 function FormStation({ type, stationId, onClose }: Props) {
