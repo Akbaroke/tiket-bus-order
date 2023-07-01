@@ -46,16 +46,27 @@ class Payment extends ResourceController
 
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
             if (!$this->adminOnly($enc)) throw new \Exception("Akses ditolak", 403);
-            $findOrders = $this->TicketModel->select("ticket.orderId, o.scheduleId, f.name as armada, f.busFleetId,b.code as code_bus, ticket.customer, ticket.contact, u.email, ticket.seat, o.isPaid, ticket.code as code_order, s.price")->join("order as o", "o.orderId = ticket.orderId")->join("users as u", "u.userId = o.userId")->join("schedules as s", "s.scheduleId = o.scheduleId")->join("bus as b", "b.busId = s.busId")->join("busFleet as f", "f.busFleetId = b.busFleetId")->where(["ticket.code" => $code, "o.isPaid" => false])->findAll();
-
+            $findOrders = $this->TicketModel->select("ticket.orderId, o.scheduleId, o.expired_at, f.name as armada, f.busFleetId,b.code as code_bus, ticket.customer, ticket.contact, u.email, ticket.seat, o.isPaid, ticket.code as code_order, s.price, s.remainingSeatCapacity, s.time")->join("order as o", "o.orderId = ticket.orderId")->join("users as u", "u.userId = o.userId")->join("schedules as s", "s.scheduleId = o.scheduleId")->join("bus as b", "b.busId = s.busId")->join("busFleet as f", "f.busFleetId = b.busFleetId")->where(["ticket.code" => $code, "o.isPaid" => false, "expired_at <>" => null])->findAll();
 
             $total_price = 0;
             $totalPassengers = count($findOrders);
+            $remainingSeatCapacity = $findOrders[0]["remainingSeatCapacity"] ?? 0;
+            $waktu = (new Time("now"))->getTimestamp();
             foreach ($findOrders as $order) {
-                $total_price += $order["price"];
+                if ($order["expired_at"] != null && $waktu > $order["expired_at"] && $order['isPaid'] == false || $waktu > $order["time"]) {
+                    $this->OrderModel->delete($order["orderId"]);
+                    $remainingSeatCapacity += 1;
+                    $this->ScheduleModel->update($order["scheduleId"], ['remainingSeatCapacity' => $remainingSeatCapacity]);
+                    $this->IncomeModel->transCommit();
+                } else {
+                    $total_price += $order["price"];
+                }
             }
 
-            if ($total_price == 0) throw new \Exception("order tidak ditemukan");
+            if ($total_price == 0) return $this->respond([
+                'status' => 400,
+                'message' => "order tidak ditemukan",
+            ]);
             if ($pay < $total_price) throw new \Exception("pembayaran gagal karena total pembayaran sebesar $total_price", 400);
 
             foreach ($findOrders as $order) {

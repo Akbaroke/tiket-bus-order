@@ -66,8 +66,8 @@ class Order extends ResourceController
             ];
 
             if (!$this->validate($rules)) return $this->fail($this->validator->getErrors());
-            $findSchedule =  $this->ScheduleModel->query("SELECT scheduleId, price, remainingSeatCapacity, seatingCapacity FROM schedules JOIN bus as b ON b.busId = schedules.busId JOIN classes as c ON c.classId = b.classId WHERE scheduleId = ? AND remainingSeatCapacity > 0 FOR UPDATE", [$scheduleId])->getRow();
-            if ($findSchedule == null) throw new \Exception('Jadwal tidak ditemukan', 400);
+            $findSchedule =  $this->ScheduleModel->query("SELECT scheduleId, schedules.time, price, remainingSeatCapacity, seatingCapacity FROM schedules JOIN bus as b ON b.busId = schedules.busId JOIN classes as c ON c.classId = b.classId WHERE scheduleId = ? AND remainingSeatCapacity > 0 FOR UPDATE", [$scheduleId])->getRow();
+            if ($findSchedule == null || (new Time("now"))->getTimestamp() > $findSchedule->time) throw new \Exception('Jadwal tidak ditemukan', 400);
             if (!is_array($customers) || !is_array($contact) || !is_array($seats)) throw new \Exception("'name'|'contact'|'seats' harus berupa array", 400);
             if (($lengthArrayCustomer != $lengthArrayContact) || ($lengthArrayCustomer != $lengthArraySeats)) throw new \Exception("Invalid", 400);
             if (($lengthArrayCustomer > 5) || ($lengthArrayContact > 5) || ($lengthArraySeats > 5)) throw new \Exception("pembelian tidak boleh lebih dari 5", 400);
@@ -152,7 +152,7 @@ class Order extends ResourceController
                 throw new \Exception('Jadwal tidak ditemukan', 400);
             }
 
-            $data = $this->TicketModel->join("order as o", "o.orderId = ticket.orderId")->where("scheduleId", $scheduleId)->findAll();
+            $data = $this->TicketModel->join("order as o", "o.orderId = ticket.orderId")->where("scheduleId", $scheduleId)->orderBy("ticket.seat", "ASC")->findAll();
             foreach ($data as $row) {
                 if ($row["expired_at"] != null && (new Time("now"))->getTimestamp() > $row["expired_at"] && $row['isPaid'] == false) {
                     $this->OrderModel->delete($row["orderId"]);
