@@ -1,7 +1,5 @@
 import * as React from 'react'
 import { BiLockAlt } from 'react-icons/bi'
-import Button from '../../components/Button'
-import InputLabel from '../../components/InputLabel'
 import { HiOutlineMail } from 'react-icons/hi'
 import {
   notifyError,
@@ -9,102 +7,108 @@ import {
   notifySuccess,
 } from '../../components/Toast'
 import axios from '../../api'
-import { FormValues } from './Auth.d'
-import { env } from '../../vite-env.d'
 import { useDispatch } from 'react-redux/es/exports'
 import { setUser } from '../../redux/actions/user'
-import AuthLayout from '../../components/Layouts/AuthLayout'
+import { useForm } from '@mantine/form'
+import { Button, PasswordInput, TextInput } from '@mantine/core'
 
-const initialForm = {
-  email: '',
-  password: '',
+interface FormValues {
+  email: string
+  password: string
 }
 
 function Signin(): JSX.Element {
   const dispatch = useDispatch()
-  const [form, setForm] =
-    React.useState<FormValues>(initialForm)
   const [isLoading, setIsLoading] =
     React.useState<boolean>(false)
 
-  const handleOnChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { id, value } = e.target
-    setForm(prevForm => ({
-      ...prevForm,
-      [id]: value,
-    }))
-  }
+  const form = useForm<FormValues>({
+    initialValues: {
+      email: '',
+      password: '',
+    },
 
-  const handleOnSubmit = async (
-    e: React.SyntheticEvent
-  ) => {
-    e.preventDefault()
+    validate: {
+      email: value => {
+        if (
+          !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
+            value
+          )
+        ) {
+          return 'Invalid Email'
+        }
+        return null
+      },
+      password: value => {
+        if (value.length < 8) {
+          return 'Password should be at least 8 characters long'
+        }
+        return null
+      },
+    },
+  })
+
+  const handleOnSubmit = async (value: FormValues) => {
     setIsLoading(true)
     notifyLoading('Signin verify...', 'signin')
 
     try {
-      const { data } = await axios.post(
-        `${env.VITE_APP_URL}/auth/login`,
-        {
-          email: form.email,
-          password: form.password,
-        }
-      )
-      switch (data.status) {
-        case 200:
-          dispatch(setUser(data.data))
-          notifySuccess('Signin successful!', 'signin')
-          setForm(initialForm)
-          break
-        default:
-          console.log(data)
-          notifyError(
-            `Signin failed! ${data?.message} `,
-            'signin'
-          )
-          break
+      const { data } = await axios.post('/auth/login', {
+        email: value.email,
+        password: value.password,
+      })
+      if (data.status) {
+        dispatch(setUser(data.data))
+        notifySuccess('Signin successful!', 'signin')
+        form.setValues({
+          email: '',
+          password: '',
+        })
+      } else {
+        notifyError(`Signin failed! ${data.message} `, 'signin')
       }
     } catch (error) {
+      console.log(error)
       notifyError('Signin failed!', 'signin')
-      setForm(initialForm)
+      form.setValues({
+        email: '',
+        password: '',
+      })
     }
 
     setIsLoading(false)
   }
 
   return (
-    <AuthLayout>
+    <>
+      <h1 className="mb-5 text-lg font-semibold">Signin</h1>
       <form
         className="flex flex-col gap-5"
-        onSubmit={handleOnSubmit}>
-        <InputLabel
+        onSubmit={form.onSubmit(values => {
+          handleOnSubmit(values)
+        })}>
+        <TextInput
+          withAsterisk
           icon={<HiOutlineMail />}
-          label="email Address"
-          type="email"
-          autoFocus
-          required
-          value={form.email}
-          onChange={handleOnChange}
+          placeholder="Email"
+          error={form.errors.email}
+          {...form.getInputProps('email')}
         />
-        <InputLabel
+        <PasswordInput
+          withAsterisk
           icon={<BiLockAlt />}
-          label="password"
-          type="password"
-          minLength={8}
-          required
-          value={form.password}
-          onChange={handleOnChange}
+          placeholder="Password"
+          error={form.errors.password}
+          {...form.getInputProps('password')}
         />
         <Button
           type="submit"
-          text="Continue"
-          className="sm:h-[60px] h-[50px]"
-          isLoading={isLoading}
-        />
+          className="bg-[#095BA8]"
+          loading={isLoading}>
+          Signin
+        </Button>
       </form>
-    </AuthLayout>
+    </>
   )
 }
 

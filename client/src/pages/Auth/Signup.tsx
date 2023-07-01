@@ -1,114 +1,138 @@
 import * as React from 'react'
-import axios from '../../api'
-import { FormValues } from './Auth.d'
-import InputLabel from '../../components/InputLabel'
-import { HiOutlineMail } from 'react-icons/hi'
 import { BiLockAlt } from 'react-icons/bi'
-import Button from '../../components/Button'
-import { env } from '../../vite-env.d'
+import { HiOutlineMail } from 'react-icons/hi'
 import {
   notifyError,
   notifyLoading,
   notifySuccess,
 } from '../../components/Toast'
-import AuthLayout from '../../components/Layouts/AuthLayout'
-import { useNavigate } from 'react-router-dom'
+import axios from '../../api'
+import { useDispatch } from 'react-redux/es/exports'
+import { setUser } from '../../redux/actions/user'
+import { useForm } from '@mantine/form'
+import { Button, PasswordInput, TextInput } from '@mantine/core'
 
-const initialForm = {
-  email: '',
-  password: '',
-  confirm: '',
+interface FormValues {
+  email: string
+  password: string
+  confirmPassword: string
 }
 
-function Signup(): JSX.Element {
-  const [form, setForm] = React.useState<FormValues>(initialForm)
+function Signup({
+  setValue,
+}: {
+  setValue: (value: string) => void
+}): JSX.Element {
   const [isLoading, setIsLoading] =
     React.useState<boolean>(false)
-  const navigate = useNavigate()
 
-  const handleOnChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { id, value } = e.target
-    setForm(prevForm => ({
-      ...prevForm,
-      [id]: value,
-    }))
-  }
+  const form = useForm<FormValues>({
+    initialValues: {
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
 
-  const handleOnSubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault()
+    validate: {
+      email: value => {
+        if (
+          !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
+            value
+          )
+        ) {
+          return 'Invalid Email'
+        }
+        return null
+      },
+      password: value => {
+        if (value.length < 8) {
+          return 'Password should be at least 8 characters long'
+        }
+        return null
+      },
+      confirmPassword: value => {
+        if (value.length < 8) {
+          return 'Password should be at least 8 characters long'
+        }
+        if (value !== form.values.password) {
+          return 'Passwords do not match'
+        }
+        return null
+      },
+    },
+  })
+
+  const handleOnSubmit = async (value: FormValues) => {
     setIsLoading(true)
     notifyLoading('Signup verify...', 'signup')
 
     try {
-      const { data } = await axios.post(
-        `${env.VITE_APP_URL}/auth/register`,
-        {
-          email: form.email,
-          password: form.password,
-          confirmPassword: form.confirm,
-        }
-      )
-      switch (data.status) {
-        case 200:
-          navigate('/signin')
-          notifySuccess('Signup successful!', 'signup')
-          break
-        default:
-          notifyError(
-            `Signup failed! ${data?.message} `,
-            'signup'
-          )
-          break
+      const { data } = await axios.post('/auth/register', {
+        email: value.email,
+        password: value.password,
+        confirmPassword: value.confirmPassword,
+      })
+      if (data.status) {
+        notifySuccess('Signup successful!', 'signup')
+        form.setValues({
+          email: '',
+          password: '',
+          confirmPassword: '',
+        })
+        setValue('signin')
+      } else {
+        notifyError(`Signup failed! ${data.message} `, 'signup')
       }
     } catch (error) {
+      console.log(error)
       notifyError('Signup failed!', 'signup')
+      form.setValues({
+        email: '',
+        password: '',
+        confirmPassword: '',
+      })
     }
 
     setIsLoading(false)
-    setForm(initialForm)
   }
 
   return (
-    <AuthLayout>
+    <>
+      <h1 className="mb-5 text-lg font-semibold">Signup</h1>
       <form
         className="flex flex-col gap-5"
-        onSubmit={handleOnSubmit}>
-        <InputLabel
+        onSubmit={form.onSubmit(values => {
+          handleOnSubmit(values)
+        })}>
+        <TextInput
+          withAsterisk
           icon={<HiOutlineMail />}
-          label="email Address"
-          type="email"
-          autoFocus
-          required
-          value={form.email}
-          onChange={handleOnChange}
+          placeholder="Email"
+          error={form.errors.email}
+          {...form.getInputProps('email')}
         />
-        <InputLabel
+        <PasswordInput
+          withAsterisk
           icon={<BiLockAlt />}
-          label="password"
-          type="password"
-          minLength={8}
-          required
-          value={form.password}
-          onChange={handleOnChange}
+          placeholder="Password"
+          error={form.errors.password}
+          {...form.getInputProps('password')}
         />
-        <InputLabel
+        <PasswordInput
+          withAsterisk
           icon={<BiLockAlt />}
-          label="confirm password"
-          type="password"
-          required
-          value={form.confirm}
-          onChange={handleOnChange}
+          placeholder="Confirm Password"
+          error={form.errors.confirmPassword}
+          {...form.getInputProps('confirmPassword')}
         />
         <Button
           type="submit"
-          text="Continue"
-          className="sm:h-[60px] h-[50px]"
-          isLoading={isLoading}
-        />
+          className="bg-[#095BA8]"
+          loading={isLoading}>
+          Signup
+        </Button>
       </form>
-    </AuthLayout>
+    </>
   )
 }
 

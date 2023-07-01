@@ -18,18 +18,37 @@ import { Link } from 'react-router-dom'
 import { scheduleById } from '../../../utils/getDataFromSwr'
 import useIsTimestampPassed from '../../../hooks/useCurrentDate'
 import { useSWRConfig } from 'swr'
+import { useSelector } from 'react-redux'
+import { DataUser } from '../../../interfaces/store'
+
+interface State {
+  user: DataUser
+}
 
 export default function ListOrder() {
   const swrContext = useSWRContext()
   const { mutate } = useSWRConfig()
+  const { userId } = useSelector((state: State) => state.user)
   const orders: Orders[] | undefined = swrContext?.orders
+  const [order, setOrder] = React.useState<Orders[]>()
+
+  const ordersByUserId = (
+    userId: string,
+    orders?: Orders[]
+  ): Orders[] | undefined => {
+    return orders?.filter(item => item.userId === userId) || []
+  }
+
+  React.useEffect(() => {
+    setOrder(ordersByUserId(userId, orders))
+  }, [orders, userId])
 
   const today = new Date()
   today.setHours(0, 0, 0, 0)
   const todayTimestamp = today.getTime()
 
   const sortedOrders =
-    orders?.sort((a, b) => b.createdAt - a.createdAt) || []
+    order?.sort((a, b) => b.createdAt - a.createdAt) || []
 
   const orderByDay: Record<number, typeof sortedOrders> = {}
   sortedOrders.forEach(order => {
@@ -90,7 +109,10 @@ export default function ListOrder() {
               </h1>
               <div className="flex flex-col gap-2">
                 {order?.map(data => (
-                  <CardListOrder data={data} />
+                  <CardListOrder
+                    data={data}
+                    key={data.orderId}
+                  />
                 ))}
               </div>
             </div>

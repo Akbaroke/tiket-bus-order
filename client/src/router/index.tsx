@@ -7,8 +7,6 @@ import Guest from '../middlewares/Guest'
 import ViewClass from '../pages/Admin/Class/ViewClass'
 import ViewArmada from '../pages/Admin/Armada/ViewArmada'
 import ViewBus from '../pages/Admin/Bus/ViewBus'
-import Signin from '../pages/Auth/Signin'
-import Signup from '../pages/Auth/Signup'
 import { SWRProvider } from '../contexts/swr-context'
 import ViewCity from '../pages/Admin/City/ViewCity'
 import ViewStation from '../pages/Admin/Station/ViewStation'
@@ -18,23 +16,17 @@ import ListOrder from '../pages/User/HistoryOrder/ListOrder'
 import DetailOrder from '../pages/User/HistoryOrder/DetailOrder'
 import ViewPayment from '../pages/Admin/Payment/ViewPayment'
 import ViewDashboard from '../pages/Admin/Dashboard/ViewDashboard'
+import Auth from '../pages/Auth/Auth'
+import { PageNotFound } from '../pages/PageNotFound'
 
 export default function root() {
   return (
     <Routes>
       <Route
-        path="/signin"
+        path="/auth"
         element={
           <Guest>
-            <Signin />
-          </Guest>
-        }
-      />
-      <Route
-        path="/signup"
-        element={
-          <Guest>
-            <Signup />
+            <Auth />
           </Guest>
         }
       />
@@ -74,6 +66,7 @@ export default function root() {
         />
         <Route path="/admin/payment" element={<ViewPayment />} />
       </Route>
+      <Route path="/*" element={<PageNotFound />} />
     </Routes>
   )
 }

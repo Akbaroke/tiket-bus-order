@@ -35,13 +35,13 @@ export default function User({ children }: Props) {
         dispatch(setUser(newResult))
       } catch (error) {
         console.error('Error decrypting data:', error)
-        navigate('/signin')
+        navigate('/auth')
       }
     }
 
     const protectedAdminOnly = (): void => {
       if (role && role !== 'user') {
-        navigate('/signin')
+        navigate('/auth')
       }
     }
 
@@ -50,7 +50,7 @@ export default function User({ children }: Props) {
       setState()
       protectedAdminOnly()
     } else {
-      navigate('/signin')
+      navigate('/auth')
     }
   }, [dispatch, navigate, to_stores, email, role])
 

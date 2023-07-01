@@ -35,7 +35,7 @@ export default function Admin({ children }: Props) {
         dispatch(setUser(newResult))
       } catch (error) {
         console.error('Error decrypting data:', error)
-        navigate('/signin')
+        navigate('/auth')
       }
     }
 
@@ -50,7 +50,7 @@ export default function Admin({ children }: Props) {
       setState()
       protectedAdminOnly()
     } else {
-      navigate('/signin')
+      navigate('/auth')
     }
   }, [dispatch, navigate, to_stores, email, role])
 
