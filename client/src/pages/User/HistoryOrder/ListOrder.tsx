@@ -108,7 +108,9 @@ const CardListOrder = ({ data }: { data: Orders }) => {
 
   const hasPassed = useIsTimestampPassed(data.expiredAt || 0)
 
-  if (!hasPassed) {
+  if (hasPassed && data.expiredAt !== null) {
+    return null
+  } else {
     return (
       <Link
         to={`/history/${data.orderId}`}
@@ -138,7 +140,7 @@ const CardListOrder = ({ data }: { data: Orders }) => {
           </div>
         </div>
         <div className="flex items-center gap-2 text-sm text-gray-500 px-4 py-3">
-          {data?.isPaid === 1 ? (
+          {Number(data?.isPaid) === 1 ? (
             <p className="text-green-600 font-semibold">
               Order Success
             </p>
@@ -150,7 +152,5 @@ const CardListOrder = ({ data }: { data: Orders }) => {
         </div>
       </Link>
     )
-  } else {
-    return null
   }
 }

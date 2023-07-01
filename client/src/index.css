@@ -19,3 +19,26 @@ html,
 body {
   overflow-x: hidden;
 }
+
+#html5qr-code-full-region {
+  border: none !important;
+}
+
+#html5qr-code-full-region__scan_region {
+  width: max-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#html5-qrcode-button-camera-permission,
+#html5-qrcode-button-camera-stop,
+#html5-qrcode-button-camera-start {
+  background-color: #095BA8;
+  border-radius: 10px;
+  padding: 10px 20px;
+  color: white;
+  box-shadow: 2px 2px 10px #00000045;
+  margin: 15px 0;
+}

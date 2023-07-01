@@ -14,7 +14,7 @@ const useCurrentDate = () => {
   return dateNow
 }
 
-const useIsTimestampPassed = (timestamp: number) => {
+const useIsTimestampPassed = (timestamp: number): boolean => {
   const currentTimestamp = Math.floor(
     useCurrentDate().getTime() / 1000
   )

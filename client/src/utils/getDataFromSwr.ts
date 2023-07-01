@@ -16,4 +16,9 @@ const ordersById = (
   return orders?.filter(item => item.orderId === orderId)[0]
 }
 
-export { scheduleById, ordersById }
+
+const ordersByCode = (code: string, orders?: Orders[]) => {
+  return orders?.filter(item => item.data[0].code === code)[0]
+}
+
+export { scheduleById, ordersById, ordersByCode }

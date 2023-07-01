@@ -10,6 +10,7 @@ import { Burger, Drawer, Group, Image } from '@mantine/core'
 import LOGO from '../../assets/Logo.svg'
 import { useDisclosure } from '@mantine/hooks'
 import Logout from '../../components/Logout'
+import { GiReceiveMoney } from 'react-icons/gi'
 
 function Dashboard() {
   const [opened, { open, close }] = useDisclosure(false)
@@ -41,6 +42,11 @@ function Dashboard() {
       icon: <AiOutlineSchedule />,
       to: '/admin/schedule',
     },
+    {
+      text: 'Payment',
+      icon: <GiReceiveMoney />,
+      to: '/admin/payment',
+    },
   ]
 
   const renderNavLinks = () => {
@@ -69,14 +75,16 @@ function Dashboard() {
 
   const drawerContent = (
     <>
-      <div className="h-screen overflow-auto">
+      <div className="lg:h-screen lg:overflow-auto overflow-hidden h-max">
         <div className="sticky top-0 bg-white pb-10 px-8">
           <Logo width={150} />
         </div>
 
-        <div className="flex flex-col">{renderNavLinks()}</div>
+        <div className="flex flex-col lg:h-max h-[320px] overflow-auto">
+          {renderNavLinks()}
+        </div>
       </div>
-      <Logout />
+      <Logout className="absolute bottom-5 lg:relative lg:bottom-0 lg:w-full w-[300px]" />
     </>
   )
 
@@ -88,7 +96,10 @@ function Dashboard() {
       <div className="lg:hidden flex justify-between py-4 px-5 shadow-md sticky top-0 bg-white z-20">
         <Logo width={120} />
         <div>
-          <Drawer opened={opened} onClose={close}>
+          <Drawer
+            opened={opened}
+            onClose={close}
+            className="relative">
             {drawerContent}
           </Drawer>
           <Group position="center">

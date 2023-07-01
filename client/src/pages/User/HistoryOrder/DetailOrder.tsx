@@ -42,9 +42,7 @@ export default function DetailOrder() {
   const [expiredTime, setExpiredTime] = React.useState<number>(0)
   const countDown = useCountdownTimer(expiredTime)
 
-  const hasPassed = useIsTimestampPassed(
-    Number(scheduleById(order?.scheduleId || '', schedules)) || 0
-  )
+  const hasPassed = useIsTimestampPassed(Number(schedule?.date))
 
   React.useEffect(() => {
     if (id) {
@@ -69,18 +67,19 @@ export default function DetailOrder() {
           <div
             className={clsx(
               'rounded-full w-max p-2',
-              order?.isPaid === 1
+              Number(order?.isPaid) === 1
                 ? 'bg-green-600 '
                 : 'bg-yellow-400 '
             )}>
-            {order?.isPaid === 1 ? (
+            {Number(order?.isPaid) === 1 ? (
               <AiFillCheckCircle className="text-white text-[25px]" />
             ) : (
               <AiFillInfoCircle className="text-white text-[25px]" />
             )}
           </div>
           <h1 className="font-semibold text-[#262626] text-[15px]">
-            Order {order?.isPaid === 1 ? 'Success' : 'Pending'}
+            Order{' '}
+            {Number(order?.isPaid) === 1 ? 'Success' : 'Pending'}
           </h1>
         </div>
         <div className="flex justify-between [&>ul]:flex [&>ul]:flex-col [&>ul]:gap-3 mt-10">
@@ -98,7 +97,7 @@ export default function DetailOrder() {
           </ul>
         </div>
       </div>
-      {order?.isPaid !== 1 ? (
+      {Number(order?.isPaid) !== 1 ? (
         <div className="p-5 rounded-[10px] bg-white shadow-md text-center flex flex-col gap-2">
           <h1 className="uppercase font-semibold text-[#095BA8]">
             make payment in time

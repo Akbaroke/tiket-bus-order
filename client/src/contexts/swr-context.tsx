@@ -76,7 +76,7 @@ export interface Orders {
   isPaid: 0 | 1
   totalPrice: number
   data: OrdersData[]
-  expiredAt: number
+  expiredAt: number | null
   updatedAt: number
   createdAt: number
 }

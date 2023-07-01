@@ -16,6 +16,8 @@ import ViewSchedule from '../pages/Admin/Schedule/ViewSchedule'
 import NewOrder from '../pages/User/NewOrder/Layout'
 import ListOrder from '../pages/User/HistoryOrder/ListOrder'
 import DetailOrder from '../pages/User/HistoryOrder/DetailOrder'
+import ViewPayment from '../pages/Admin/Payment/ViewPayment'
+import ViewDashboard from '../pages/Admin/Dashboard/ViewDashboard'
 
 export default function root() {
   return (
@@ -60,14 +62,7 @@ export default function root() {
             </SWRProvider>
           </Admin>
         }>
-        <Route
-          index
-          element={
-            <div className="grid place-items-center h-screen">
-              Dashboard Admin
-            </div>
-          }
-        />
+        <Route index element={<ViewDashboard />} />
         <Route path="/admin/class" element={<ViewClass />} />
         <Route path="/admin/armada" element={<ViewArmada />} />
         <Route path="/admin/bus" element={<ViewBus />} />
@@ -77,6 +72,7 @@ export default function root() {
           path="/admin/schedule"
           element={<ViewSchedule />}
         />
+        <Route path="/admin/payment" element={<ViewPayment />} />
       </Route>
     </Routes>
   )

@@ -36,9 +36,7 @@ export default function Step3({ nextStep, prevStep }: Props) {
     (state: State) => state.order
   )
   const [schedule, setSchedule] = React.useState<Schedules>()
-  const hasPassed = useIsTimestampPassed(
-    Number(schedule?.date) || 0
-  )
+  const hasPassed = useIsTimestampPassed(Number(schedule?.date))
 
   React.useEffect(() => {
     const getDetailSchedule = async () => {

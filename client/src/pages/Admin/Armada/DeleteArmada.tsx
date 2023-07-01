@@ -8,8 +8,8 @@ import {
   notifySuccess,
 } from '../../../components/Toast'
 import { useSelector } from 'react-redux'
-import { UserInfo } from '../../../redux/reducers/user'
 import { useSWRConfig } from 'swr'
+import { DataUser } from '../../../interfaces/store'
 
 type Props = {
   armadaId: string
@@ -17,7 +17,7 @@ type Props = {
 }
 
 interface State {
-  user: UserInfo
+  user: DataUser
 }
 
 export default function DeleteArmada({
