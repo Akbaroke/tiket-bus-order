@@ -152,7 +152,7 @@ class Order extends ResourceController
                 throw new \Exception('Jadwal tidak ditemukan', 400);
             }
 
-            $data = $this->TicketModel->join("order as o", "o.orderId = ticket.orderId")->where("scheduleId", $scheduleId)->orderBy("order.seat", "DESC")->findAll();
+            $data = $this->TicketModel->join("order as o", "o.orderId = ticket.orderId")->where("scheduleId", $scheduleId)->orderBy("ticket.seat", "DESC")->findAll();
             foreach ($data as $row) {
                 if ($row["expired_at"] != null && (new Time("now"))->getTimestamp() > $row["expired_at"] && $row['isPaid'] == false) {
                     $this->OrderModel->delete($row["orderId"]);
