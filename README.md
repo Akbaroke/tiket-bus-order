@@ -16,11 +16,52 @@ Dosen           : Agung Nugroho,S.Kom.,M.Kom
 
 </br></br>
 
-## **LOGO**
+ <a href="https://chichatt.vercel.app">
 
-![Frame_37](https://github.com/Akbaroke/ticket-order/assets/93238755/8f901ffe-4e51-4f6c-9d8f-65b16d988e86)
-</br></br>
+<div align="center">    
+  <img src="client/src/assets/Logo.svg" alt="Logo" width="300">
+  </a>
+  <h2 style="font-size:30px;" align="center"><strong>Ticket-Id</strong></h2>
+  <p align="center">
+    <a href="https://github.com/Akbaroke/Chichat/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/Akbaroke/Chichat/issues">Request Feature</a>
+  </p>
 
-## **USE-CASE**
+</div>
 
-![use case](https://github.com/Akbaroke/ticket-order/assets/115305578/999ed7c0-6de9-47ad-af49-d93ec237c8c5)
+## Introduction
+
+Ticket-id is an online platform application that provides bus ticket booking services.
+<br/>
+"Enjoy Your Seamless Bus Ticketing Experience!"
+
+<br/>
+
+## Tech Stack
+
+- Reactjs Vite
+- TailwindCss
+- CI4
+- MySql
+
+
+<br/>
+
+## Features
+
+-
+
+<br/>
+
+## Dashboard Admin, User, Relasi DATABASE
+
+<br/>
+
+## Links
+
+- Web : 
+- Repo : [https://github.com/Akbaroke/Chichat](https://github.com/Akbaroke/ticket-order)
+- demo application :
+
+
