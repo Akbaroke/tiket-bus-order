@@ -32,7 +32,6 @@ class Ticket extends Migration
                 'type' => 'INT',
                 'required' => true,
                 'constraint' => 11,
-                'unique' => true
             ],
             'code' => [
                 'type' => 'VARCHAR',

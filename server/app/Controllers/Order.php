@@ -106,7 +106,7 @@ class Order extends ResourceController
                     }
 
                     if ($seats[$i] > $findSchedule->seatingCapacity || $seats[$i] <= 0) throw new \Exception("tempat duduk " . $seats[$i] . " tidak ada karena tempat duduk cuma ada 1 sampai " . $findSchedule->seatingCapacity, 400);
-                    $existingOrder = $this->TicketModel->where('seat', $seats[$i])->first();
+                    $existingOrder = $this->TicketModel->join("order as o", "o.orderId = ticket.orderId")->where(['o.scheduleId' => $scheduleId, 'seat' => $seats[$i]])->first();
                     if ($existingOrder !== null) {
                         throw new \Exception("tempat duduk '" . $seats[$i] . "' sudah ada yang menempati", 400);
                     }

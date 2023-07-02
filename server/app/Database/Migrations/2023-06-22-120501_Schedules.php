@@ -43,7 +43,7 @@ class Schedules extends Migration
             'busId' => [
                 'type' => 'VARCHAR',
                 'required' => true,
-                'constraint' => 36
+                'constraint' => 36,
             ],
             'price' => [
                 'type' => 'BIGINT',
