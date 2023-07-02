@@ -16,7 +16,7 @@ Dosen           : Agung Nugroho,S.Kom.,M.Kom
 
 </br></br>
 
- <a href="https://chichatt.vercel.app">
+ <a href="[https://tiket-id.vercel.app)">
 
 <div align="center">    
   <img src="client/src/assets/Logo.svg" alt="Logo" width="300">
@@ -30,7 +30,7 @@ Dosen           : Agung Nugroho,S.Kom.,M.Kom
 
 </div>
 
-## Introduction
+## About App
 
 Ticket-id is an online platform application that provides bus ticket booking services.
 <br/>
@@ -50,18 +50,33 @@ Ticket-id is an online platform application that provides bus ticket booking ser
 
 ## Features
 
--
+- Find Schedule
+- Select Schedule
+- Select seat
+- Buy a ticket
+- Payment
 
 <br/>
 
-## Dashboard Admin, User, Relasi DATABASE
-
+## Dashboard Khusus Admin
+  <img src="admin.png" alt="Logo" width="500">
+  </a>
 <br/>
 
+## Dashboard User
+  <img src="user.png" alt="Logo" width="500">
+  </a>
+  <br/>
+
+## Relasi db
+ <img src="Screenshot 2023-07-01 205322.png" alt="Logo" width="500">
+  </a>
+  <br/>
+  
 ## Links
 
-- Web : 
+- Web : https://tiket-id.vercel.app
 - Repo : [https://github.com/Akbaroke/Chichat](https://github.com/Akbaroke/ticket-order)
-- demo application :
+- Demo application :
 
 
