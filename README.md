@@ -16,11 +16,12 @@ Dosen           : Agung Nugroho,S.Kom.,M.Kom
 
 </br></br>
 
+ <a href="https://chichatt.vercel.app">
 
-![logo3_2 0](https://github.com/Akbaroke/ticket-order/assets/115305578/4f3bbce5-ad6a-4b66-bfe6-d796e098ad5d) 
-
-<div align="center">
-  <h2 style="font-size:30px;" align="center"><strong>GOBUS</strong></h2>
+<div align="center">    
+  <img src="client/src/assets/Logo.svg" alt="Logo" width="300">
+  </a>
+  <h2 style="font-size:30px;" align="center"><strong>Ticket-Id</strong></h2>
   <p align="center">
     <a href="https://github.com/Akbaroke/Chichat/issues">Report Bug</a>
     ·
@@ -29,9 +30,9 @@ Dosen           : Agung Nugroho,S.Kom.,M.Kom
 
 </div>
 
-## About App
+## Introduction
 
-Gobus is an online platform application that provides bus ticket booking services.
+Ticket-id is an online platform application that provides bus ticket booking services.
 <br/>
 "Enjoy Your Seamless Bus Ticketing Experience!"
 
