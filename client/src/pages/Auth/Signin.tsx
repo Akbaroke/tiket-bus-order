@@ -57,7 +57,8 @@ function Signin(): JSX.Element {
         email: value.email,
         password: value.password,
       })
-      if (data.status) {
+
+      if (data.status === 200) {
         dispatch(setUser(data.data))
         notifySuccess('Signin successful!', 'signin')
         form.setValues({

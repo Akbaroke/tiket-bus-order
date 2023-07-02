@@ -8,6 +8,7 @@ import { BsGithub } from 'react-icons/bs'
 
 export default function Auth() {
   const [value, setValue] = React.useState<string>('signin')
+  console.log(import.meta.env.VITE_APP_URL)
 
   return (
     <div className="bg-[#F4F7FE] w-screen h-screen grid place-items-center">

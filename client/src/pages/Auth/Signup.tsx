@@ -7,8 +7,6 @@ import {
   notifySuccess,
 } from '../../components/Toast'
 import axios from '../../api'
-import { useDispatch } from 'react-redux/es/exports'
-import { setUser } from '../../redux/actions/user'
 import { useForm } from '@mantine/form'
 import { Button, PasswordInput, TextInput } from '@mantine/core'
 
