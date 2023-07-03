@@ -16,11 +16,12 @@ Dosen           : Agung Nugroho,S.Kom.,M.Kom
 
 </br></br>
 
+ <a href="[https://tiket-id.vercel.app)">
 
-![logo3_2 0](https://github.com/Akbaroke/ticket-order/assets/115305578/4f3bbce5-ad6a-4b66-bfe6-d796e098ad5d) 
-
-<div align="center">
-  <h2 style="font-size:30px;" align="center"><strong>GOBUS</strong></h2>
+<div align="center">    
+  <img src="client/src/assets/Logo.svg" alt="Logo" width="300">
+  </a>
+  <h2 style="font-size:30px;" align="center"><strong>Ticket-Id</strong></h2>
   <p align="center">
     <a href="https://github.com/Akbaroke/Chichat/issues">Report Bug</a>
     ·
@@ -31,7 +32,7 @@ Dosen           : Agung Nugroho,S.Kom.,M.Kom
 
 ## About App
 
-Gobus is an online platform application that provides bus ticket booking services.
+Ticket-id is an online platform application that provides bus ticket booking services.
 <br/>
 "Enjoy Your Seamless Bus Ticketing Experience!"
 
@@ -49,18 +50,33 @@ Gobus is an online platform application that provides bus ticket booking service
 
 ## Features
 
--
+- Find Schedule
+- Select Schedule
+- Select seat
+- Buy a ticket
+- Payment
 
 <br/>
 
-## Dashboard Admin, User, Relasi DATABASE
-
+## Dashboard Khusus Admin
+  <img src="admin.png" alt="Logo" width="500">
+  </a>
 <br/>
 
+## Dashboard User
+  <img src="user.png" alt="Logo" width="500">
+  </a>
+  <br/>
+
+## Relasi db
+ <img src="Screenshot 2023-07-01 205322.png" alt="Logo" width="500">
+  </a>
+  <br/>
+  
 ## Links
 
-- Web : 
+- Web : https://tiket-id.vercel.app
 - Repo : [https://github.com/Akbaroke/Chichat](https://github.com/Akbaroke/ticket-order)
-- demo application :
+- Demo application :
 
 
