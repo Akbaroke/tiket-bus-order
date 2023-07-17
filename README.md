@@ -79,7 +79,7 @@ Aplikasi Pemesanan Tiket Bis ini dirancang untuk memberikan kemudahan dan kenyam
 
 <br/>
 
-## Dashboard Khusus Admin
+## Dashboard Admin
   <img src="_screenshots/admin.png" alt="Admin Page" width="500">
 <br/>
 
