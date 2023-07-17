@@ -70,7 +70,7 @@ function Signup({
         password: value.password,
         confirmPassword: value.confirmPassword,
       })
-      if (data.status) {
+      if (data.status === 200) {
         notifySuccess('Signup successful!', 'signup')
         form.setValues({
           email: '',
